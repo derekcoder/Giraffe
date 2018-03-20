@@ -1,0 +1,6 @@
+framework module Pods_Giraffe_Tests {
+  umbrella header "Pods-Giraffe_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

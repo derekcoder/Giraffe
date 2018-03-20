@@ -1,0 +1,16 @@
+PODS:
+  - Giraffe (0.1.0)
+
+DEPENDENCIES:
+  - Giraffe (from `../`)
+
+EXTERNAL SOURCES:
+  Giraffe:
+    :path: ../
+
+SPEC CHECKSUMS:
+  Giraffe: 6f2ff40f454ff1bc615e591656e89a5af06d4ff9
+
+PODFILE CHECKSUM: 2b5856d12b51a016d057a79963bd7e2d66328bb9
+
+COCOAPODS: 1.3.1

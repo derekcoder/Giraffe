@@ -29,8 +29,8 @@
 
 /* Begin PBXFileReference section */
 		213FC6FE68B1C5387D5F4C80 /* Pods-Giraffe_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Giraffe_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Giraffe_Example/Pods-Giraffe_Example.release.xcconfig"; sourceTree = "<group>"; };
-		359E481B334B224691985517 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		4FC30BACAF6722EB93C60539 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		359E481B334B224691985517 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		4FC30BACAF6722EB93C60539 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		53132565214E8F0F6207E9CC /* Pods-Giraffe_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Giraffe_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Giraffe_Example/Pods-Giraffe_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* Giraffe_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Giraffe_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -45,7 +45,7 @@
 		7C949D8FE0E60FD0B64092CF /* Pods-Giraffe_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Giraffe_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Giraffe_Tests/Pods-Giraffe_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		902FCE1993F660BA67FAC516 /* Pods-Giraffe_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Giraffe_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Giraffe_Tests/Pods-Giraffe_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		C024C4CDCC7979EB81796652 /* Pods_Giraffe_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Giraffe_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C11CAB5A9F6FAFB439F41C98 /* Giraffe.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = Giraffe.podspec; path = ../Giraffe.podspec; sourceTree = "<group>"; };
+		C11CAB5A9F6FAFB439F41C98 /* Giraffe.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Giraffe.podspec; path = ../Giraffe.podspec; sourceTree = "<group>"; };
 		ED484D1BA7D0D1EAD972B298 /* Pods_Giraffe_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Giraffe_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -518,6 +518,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Giraffe/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
@@ -533,6 +534,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Giraffe/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";

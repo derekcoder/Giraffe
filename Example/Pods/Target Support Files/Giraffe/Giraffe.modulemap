@@ -1,0 +1,6 @@
+framework module Giraffe {
+  umbrella header "Giraffe-umbrella.h"
+
+  export *
+  module * { export * }
+}
