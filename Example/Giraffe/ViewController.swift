@@ -7,12 +7,14 @@
 //
 
 import UIKit
+import Giraffe
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        let method = HttpMethod<Data>.get
+        print(method)
     }
 
     override func didReceiveMemoryWarning() {

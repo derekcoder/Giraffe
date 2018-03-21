@@ -28,7 +28,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "607FACE41AFB9204008FA782"
+               BlueprintIdentifier = "656D50F72061F8EE00EE0B73"
                BuildableName = "Giraffe_Tests.xctest"
                BlueprintName = "Giraffe_Tests"
                ReferencedContainer = "container:Giraffe.xcodeproj">
@@ -47,7 +47,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "607FACE41AFB9204008FA782"
+               BlueprintIdentifier = "656D50F72061F8EE00EE0B73"
                BuildableName = "Giraffe_Tests.xctest"
                BlueprintName = "Giraffe_Tests"
                ReferencedContainer = "container:Giraffe.xcodeproj">

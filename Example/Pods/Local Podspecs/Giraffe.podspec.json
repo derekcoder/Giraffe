@@ -1,9 +1,9 @@
 {
   "name": "Giraffe",
   "version": "0.1.0",
-  "summary": "A short description of Giraffe.",
-  "description": "TODO: Add long description of the pod here.",
-  "homepage": "https://github.com/derekcoder@gmail.com/Giraffe",
+  "summary": "Lightweight & Elegant Networking Library in Swift",
+  "description": "Giraffe is a lightweight and elegant networking library in swift. The idea and most of codes comes from SwiftTalk.",
+  "homepage": "https://github.com/derekcoder/Giraffe",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
@@ -12,11 +12,11 @@
     "derekcoder@gmail.com": "derekcoder@gmail.com"
   },
   "source": {
-    "git": "https://github.com/derekcoder@gmail.com/Giraffe.git",
+    "git": "https://github.com/derekcoder/Giraffe.git",
     "tag": "0.1.0"
   },
   "platforms": {
-    "ios": "8.0"
+    "ios": "10.0"
   },
   "source_files": "Giraffe/Classes/**/*"
 }
