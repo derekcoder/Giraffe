@@ -14,6 +14,7 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		656D50FB2061F8EE00EE0B73 /* Giraffe_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656D50FA2061F8EE00EE0B73 /* Giraffe_Tests.swift */; };
+		656D51032061FB8200EE0B73 /* SHA1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656D51022061FB8200EE0B73 /* SHA1Tests.swift */; };
 		AFEFE98AA9C4E609AEE1A54C /* Pods_Giraffe_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C024C4CDCC7979EB81796652 /* Pods_Giraffe_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +43,7 @@
 		656D50F82061F8EE00EE0B73 /* Giraffe_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Giraffe_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		656D50FA2061F8EE00EE0B73 /* Giraffe_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Giraffe_Tests.swift; sourceTree = "<group>"; };
 		656D50FC2061F8EE00EE0B73 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		656D51022061FB8200EE0B73 /* SHA1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SHA1Tests.swift; sourceTree = "<group>"; };
 		7C949D8FE0E60FD0B64092CF /* Pods-Giraffe_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Giraffe_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Giraffe_Tests/Pods-Giraffe_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		902FCE1993F660BA67FAC516 /* Pods-Giraffe_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Giraffe_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Giraffe_Tests/Pods-Giraffe_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		C024C4CDCC7979EB81796652 /* Pods_Giraffe_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Giraffe_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -136,6 +138,7 @@
 			children = (
 				656D50FA2061F8EE00EE0B73 /* Giraffe_Tests.swift */,
 				656D50FC2061F8EE00EE0B73 /* Info.plist */,
+				656D51022061FB8200EE0B73 /* SHA1Tests.swift */,
 			);
 			path = Giraffe_Tests;
 			sourceTree = "<group>";
@@ -371,6 +374,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				656D51032061FB8200EE0B73 /* SHA1Tests.swift in Sources */,
 				656D50FB2061F8EE00EE0B73 /* Giraffe_Tests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
