@@ -93,4 +93,19 @@ public final class Webservice {
             DispatchQueue.main.async { completion(result) }
         }) .resume()
     }
+    
+    public func load<A>(_ resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
+        let request = URLRequest(resource: resource, authenticationToken: authenticationToken)
+        session.dataTask(with: request, completionHandler: { data, response, _ in
+            let result: Result<A>
+            let httpResponse = response as? HTTPURLResponse
+            if let httpResponse = httpResponse, httpResponse.statusCode == 401 {
+                result = Result.error(WebserviceError.notAuthenticated)
+            } else {
+                let parsed = data.flatMap(resource.parse)
+                result = Result(parsed, or: WebserviceError.other)
+            }
+            DispatchQueue.main.async { completion(result, httpResponse) }
+        }) .resume()
+    }
 }
