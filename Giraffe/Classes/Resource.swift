@@ -39,6 +39,7 @@ public struct Resource<A> {
     public var url: URL
     public var method: HttpMethod<Data?> = .get
     public var parse: (Data) -> A?
+    public var headers: [String: String]? = nil
 
     public init(url: URL, method: HttpMethod<Data?> = .get, parse: @escaping (Data) -> A?) {
         self.url = url
@@ -48,31 +49,30 @@ public struct Resource<A> {
 }
 
 extension Resource {
-    public init(url: URL, parseJSON: @escaping (Any) -> A?) {
+    public init(url: URL, method: HttpMethod<Data?> = .get , parseJSON: @escaping (Any) -> A?) {
         self.url = url
-        self.method = .get
+        self.method = method
         self.parse = { data in
             let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions())
             return json.flatMap(parseJSON)
         }
     }
     
-    public init(url: URL, method: HttpMethod<Any>, parseJSON: @escaping (Any) -> A?) throws {
+    public init(url: URL, jsonMethod: HttpMethod<Any>, parseJSON: @escaping (Any) -> A?) throws {
         self.url = url
-        self.method = try method.map { jsonObject in
+        self.method = try jsonMethod.map { jsonObject in
             try JSONSerialization.data(withJSONObject: jsonObject, options: JSONSerialization.WritingOptions())
         }
         self.parse = { data in
             let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions())
             return json.flatMap(parseJSON)
         }
-        
     }
 }
 
 extension Resource where A: RangeReplaceableCollection {
-    public init(url: URL, method: HttpMethod<Any> = .get, parseElement: @escaping (JSONDictionary) -> A.Iterator.Element?) throws {
-        self = try Resource(url: url, method: method, parseJSON: { json in
+    public init(url: URL, jsonMethod: HttpMethod<Any> = .get, parseElement: @escaping (JSONDictionary) -> A.Iterator.Element?) throws {
+        self = try Resource(url: url, jsonMethod: jsonMethod, parseJSON: { json in
             guard let jsonDicts = json as? [JSONDictionary] else { return nil }
             let result = jsonDicts.flatMap(parseElement)
             return A(result)

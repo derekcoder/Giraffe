@@ -49,6 +49,9 @@ public enum WebserviceError: Error {
 extension URLRequest {
     public init<A>(resource: Resource<A>, authenticationToken: String? = nil) {
         self.init(url: resource.url)
+        setValue("application/json", forHTTPHeaderField: "Content-Type")
+        setValue("application/json", forHTTPHeaderField: "Accept")
+
         httpMethod = resource.method.method
         if case let .post(data) = resource.method {
             if let data = data {
@@ -59,6 +62,10 @@ extension URLRequest {
         }
         if let token = authenticationToken {
             setValue(token, forHTTPHeaderField: "Authorization")
+        }
+        
+        if let headers = resource.headers {
+            headers.forEach { setValue($1, forHTTPHeaderField: $0) }
         }
     }
 }

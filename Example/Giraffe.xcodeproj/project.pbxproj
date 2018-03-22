@@ -47,7 +47,7 @@
 		7C949D8FE0E60FD0B64092CF /* Pods-Giraffe_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Giraffe_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Giraffe_Tests/Pods-Giraffe_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		902FCE1993F660BA67FAC516 /* Pods-Giraffe_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Giraffe_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Giraffe_Tests/Pods-Giraffe_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		C024C4CDCC7979EB81796652 /* Pods_Giraffe_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Giraffe_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C11CAB5A9F6FAFB439F41C98 /* Giraffe.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Giraffe.podspec; path = ../Giraffe.podspec; sourceTree = "<group>"; };
+		C11CAB5A9F6FAFB439F41C98 /* Giraffe.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Giraffe.podspec; path = ../Giraffe.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		ED484D1BA7D0D1EAD972B298 /* Pods_Giraffe_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Giraffe_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 

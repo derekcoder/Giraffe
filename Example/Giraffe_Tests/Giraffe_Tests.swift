@@ -72,7 +72,7 @@ class Giraffe_Tests: XCTestCase {
     }
     
     func testURLRequestInitForGet() {
-        let resource = try! Resource<[Episode]>(url: url, method: .get, parseJSON: { json in
+        let resource = Resource<[Episode]>(url: url, method: .get, parseJSON: { json in
             guard let dictionaries = json as? [JSONDictionary] else { return nil }
             return dictionaries.flatMap(Episode.init)
         })
@@ -84,7 +84,7 @@ class Giraffe_Tests: XCTestCase {
     func testURLRequestInitForPost() {
         let json = ["id": "id"]
         let method: HttpMethod<Any> = .post(data: json)
-        let resource = try! Resource<[Episode]>(url: url, method: method, parseJSON: { json in
+        let resource = try! Resource<[Episode]>(url: url, jsonMethod: method, parseJSON: { json in
             guard let dictionaries = json as? [JSONDictionary] else { return nil }
             return dictionaries.flatMap(Episode.init)
         })
@@ -118,5 +118,5 @@ class Giraffe_Tests: XCTestCase {
         }
         
         wait(for: [expectation], timeout: 10.0)
-    }
+    }    
 }
