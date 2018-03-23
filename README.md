@@ -1,5 +1,7 @@
 # Giraffe
 
+Ideas and some of codes are referenced by [SwiftTalk](https://talk.objc.io/).
+
 [![CI Status](http://img.shields.io/travis/derekcoder@gmail.com/Giraffe.svg?style=flat)](https://travis-ci.org/derekcoder@gmail.com/Giraffe)
 [![Version](https://img.shields.io/cocoapods/v/Giraffe.svg?style=flat)](http://cocoapods.org/pods/Giraffe)
 [![License](https://img.shields.io/cocoapods/l/Giraffe.svg?style=flat)](http://cocoapods.org/pods/Giraffe)
