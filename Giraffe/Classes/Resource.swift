@@ -41,10 +41,11 @@ public struct Resource<A> {
     public var parse: (Data) -> A?
     public var headers: [String: String]? = nil
 
-    public init(url: URL, method: HttpMethod<Data?> = .get, parse: @escaping (Data) -> A?) {
+    public init(url: URL, method: HttpMethod<Data?> = .get, headers: [String: String]? = nil, parse: @escaping (Data) -> A?) {
         self.url = url
         self.parse = parse
         self.method = method
+        self.headers = headers
     }
 }
 

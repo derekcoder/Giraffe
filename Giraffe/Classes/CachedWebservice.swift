@@ -61,16 +61,21 @@ public final class CachedWebservice {
     public func load<A>(_ resource: Resource<A>, skipCache: Bool = false, update: @escaping (Result<A>) -> ()) {
         let dataResource = Resource(url: resource.url, method: resource.method, parse: { $0 })
 
-        if skipCache == false, let result = cache.load(resource: resource) {
-            update(.success(result))
-        }
-        webservice.load(dataResource) { result in
-            switch result {
-            case .error(let error):
-                update(.error(error))
-            case .success(let data):
-                self.cache.save(data, for: resource)
-                update(Result(resource.parse(data), or: WebserviceError.other))
+        DispatchQueue.global().async {
+            if skipCache == false, let result = self.cache.load(resource: resource) {
+                DispatchQueue.main.async {
+                    update(.success(result))
+                }
+            }
+            
+            self.webservice.load(dataResource) { result in
+                switch result {
+                case .error(let error):
+                    update(.error(error))
+                case .success(let data):
+                    self.cache.save(data, for: resource)
+                    update(Result(resource.parse(data), or: WebserviceError.other))
+                }
             }
         }
     }

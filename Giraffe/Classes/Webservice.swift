@@ -49,9 +49,7 @@ public enum WebserviceError: Error {
 extension URLRequest {
     public init<A>(resource: Resource<A>, authenticationToken: String? = nil) {
         self.init(url: resource.url)
-        setValue("application/json", forHTTPHeaderField: "Content-Type")
-        setValue("application/json", forHTTPHeaderField: "Accept")
-
+        
         httpMethod = resource.method.method
         if case let .post(data) = resource.method {
             if let data = data {
@@ -66,19 +64,27 @@ extension URLRequest {
         
         if let headers = resource.headers {
             headers.forEach { setValue($1, forHTTPHeaderField: $0) }
+        } else {
+            setValue("application/json", forHTTPHeaderField: "Content-Type")
+            setValue("application/json", forHTTPHeaderField: "Accept")
         }
     }
 }
 
-var session: URLSession {
-    let config = URLSessionConfiguration.default
-    config.urlCache = nil
-    return URLSession(configuration: config)
-}
-
 public final class Webservice {
     public var authenticationToken: String?
-    public init() { }
+    public var session: URLSession
+    
+    public convenience init() {
+        let config = URLSessionConfiguration.default
+        config.urlCache = nil
+        let session = URLSession(configuration: config)
+        self.init(session: session)
+    }
+    
+    public init(session: URLSession) {
+        self.session = session
+    }
     
     public func load<A>(_ resource: Resource<A>, completion: @escaping (Result<A>) -> ()) {
         let request = URLRequest(resource: resource, authenticationToken: authenticationToken)
