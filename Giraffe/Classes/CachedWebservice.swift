@@ -73,8 +73,13 @@ public final class CachedWebservice {
                 case .error(let error):
                     update(.error(error))
                 case .success(let data):
-                    self.cache.save(data, for: resource)
-                    update(Result(resource.parse(data), or: WebserviceError.other))
+                    DispatchQueue.global().async {
+                        self.cache.save(data, for: resource)
+                        let result = resource.parse(data)
+                        DispatchQueue.main.async {
+                            update(Result(result, or: WebserviceError.other))
+                        }
+                    }
                 }
             }
         }

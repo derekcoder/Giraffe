@@ -40,6 +40,7 @@ public struct Resource<A> {
     public var method: HttpMethod<Data?> = .get
     public var parse: (Data) -> A?
     public var headers: [String: String]? = nil
+    public var timeoutInterval: TimeInterval = 60.0 // in seconds, default: 60 seconds
 
     public init(url: URL, method: HttpMethod<Data?> = .get, headers: [String: String]? = nil, parse: @escaping (Data) -> A?) {
         self.url = url
@@ -75,7 +76,7 @@ extension Resource where A: RangeReplaceableCollection {
     public init(url: URL, jsonMethod: HttpMethod<Any> = .get, parseElement: @escaping (JSONDictionary) -> A.Iterator.Element?) throws {
         self = try Resource(url: url, jsonMethod: jsonMethod, parseJSON: { json in
             guard let jsonDicts = json as? [JSONDictionary] else { return nil }
-            let result = jsonDicts.flatMap(parseElement)
+            let result = jsonDicts.compactMap(parseElement)
             return A(result)
         })
     }

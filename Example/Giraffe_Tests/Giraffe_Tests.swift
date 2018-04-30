@@ -74,7 +74,7 @@ class Giraffe_Tests: XCTestCase {
     func testURLRequestInitForGet() {
         let resource = Resource<[Episode]>(url: url, method: .get, parseJSON: { json in
             guard let dictionaries = json as? [JSONDictionary] else { return nil }
-            return dictionaries.flatMap(Episode.init)
+            return dictionaries.compactMap(Episode.init)
         })
         let request = URLRequest(resource: resource, authenticationToken: "token")
         XCTAssertEqual(request.httpMethod, "GET")
@@ -86,7 +86,7 @@ class Giraffe_Tests: XCTestCase {
         let method: HttpMethod<Any> = .post(data: json)
         let resource = try! Resource<[Episode]>(url: url, jsonMethod: method, parseJSON: { json in
             guard let dictionaries = json as? [JSONDictionary] else { return nil }
-            return dictionaries.flatMap(Episode.init)
+            return dictionaries.compactMap(Episode.init)
         })
         let request = URLRequest(resource: resource)
         XCTAssertEqual(request.httpMethod, "POST")
