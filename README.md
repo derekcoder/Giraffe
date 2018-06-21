@@ -7,6 +7,20 @@ Ideas and some of codes are referenced by [SwiftTalk](https://talk.objc.io/).
 [![License](https://img.shields.io/cocoapods/l/Giraffe.svg?style=flat)](http://cocoapods.org/pods/Giraffe)
 [![Platform](https://img.shields.io/cocoapods/p/Giraffe.svg?style=flat)](http://cocoapods.org/pods/Giraffe)
 
+## Features
+
+- [x] GET request
+
+- [x] POST request
+
+- [x] HTTP headers
+
+- [x] Authorization
+
+- [ ] Cancel request
+
+      
+
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
@@ -24,7 +38,7 @@ pod 'Giraffe'
 
 ## Author
 
-derekcoder@gmail.com, derekcoder@gmail.com
+derekcoder@gmail.com
 
 ## License
 
