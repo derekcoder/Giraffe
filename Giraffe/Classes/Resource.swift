@@ -38,11 +38,11 @@ public enum HttpMethod<A> {
 public struct Resource<A> {
     public var url: URL
     public var method: HttpMethod<Data?> = .get
-    public var parse: (Data) -> A?
+    public var parse: (Data, HTTPURLResponse) -> Result<A>
     public var headers: [String: String]? = nil
-    public var timeoutInterval: TimeInterval = 60.0 // in seconds, default: 60 seconds
-
-    public init(url: URL, method: HttpMethod<Data?> = .get, headers: [String: String]? = nil, parse: @escaping (Data) -> A?) {
+    public var timeoutInterval: TimeInterval = 20.0 // in seconds, default: 60 seconds
+    
+    public init(url: URL, method: HttpMethod<Data?> = .get, headers: [String: String]? = nil, parse: @escaping (Data, HTTPURLResponse) -> Result<A>) {
         self.url = url
         self.parse = parse
         self.method = method
@@ -51,33 +51,35 @@ public struct Resource<A> {
 }
 
 extension Resource {
-    public init(url: URL, method: HttpMethod<Data?> = .get , parseJSON: @escaping (Any) -> A?) {
+    public init(url: URL, method: HttpMethod<Data?> = .get , parseJSON: @escaping (Any, HTTPURLResponse) -> Result<A>) {
         self.url = url
         self.method = method
-        self.parse = { data in
-            let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions())
-            return json.flatMap(parseJSON)
+        self.parse = { data, response in
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions()) else {
+                return Result.error(WebserviceError.jsonParsingFailed)
+            }
+            return parseJSON(json, response)
         }
     }
     
-    public init(url: URL, jsonMethod: HttpMethod<Any>, parseJSON: @escaping (Any) -> A?) throws {
+    public init(url: URL, jsonMethod: HttpMethod<Any>, parse: @escaping (Data, HTTPURLResponse) -> Result<A>) {
         self.url = url
-        self.method = try jsonMethod.map { jsonObject in
-            try JSONSerialization.data(withJSONObject: jsonObject, options: JSONSerialization.WritingOptions())
-        }
-        self.parse = { data in
-            let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions())
-            return json.flatMap(parseJSON)
+        self.parse = parse
+        self.method = jsonMethod.map { jsonObject in
+            try! JSONSerialization.data(withJSONObject: jsonObject, options: JSONSerialization.WritingOptions())
         }
     }
-}
-
-extension Resource where A: RangeReplaceableCollection {
-    public init(url: URL, jsonMethod: HttpMethod<Any> = .get, parseElement: @escaping (JSONDictionary) -> A.Iterator.Element?) throws {
-        self = try Resource(url: url, jsonMethod: jsonMethod, parseJSON: { json in
-            guard let jsonDicts = json as? [JSONDictionary] else { return nil }
-            let result = jsonDicts.compactMap(parseElement)
-            return A(result)
-        })
+    
+    public init(url: URL, jsonMethod: HttpMethod<Any>, parseJSON: @escaping (Any, HTTPURLResponse) -> Result<A>) {
+        self.url = url
+        self.method = jsonMethod.map { jsonObject in
+            try! JSONSerialization.data(withJSONObject: jsonObject, options: JSONSerialization.WritingOptions())
+        }
+        self.parse = { data, response in
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions()) else {
+                return Result.error(WebserviceError.jsonParsingFailed)
+            }
+            return parseJSON(json, response)
+        }
     }
 }

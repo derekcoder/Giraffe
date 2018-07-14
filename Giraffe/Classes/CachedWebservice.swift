@@ -10,6 +10,7 @@
 
 import Foundation
 
+/*
 struct FileStorage {
     let baseURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
     
@@ -84,4 +85,4 @@ public final class CachedWebservice {
             }
         }
     }
-}
+}*/

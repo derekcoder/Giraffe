@@ -26,6 +26,22 @@ extension Result {
         }
     }
     
+    public init(error: Error) {
+        self = .error(error)
+    }
+    
+    public init(_ error: Error) {
+        self = .error(error)
+    }
+    
+    public init(value: A) {
+        self = .success(value)
+    }
+    
+    public init(_ value: A) {
+        self = .success(value)
+    }
+    
     public var value: A? {
         guard case .success(let v) = self else { return nil }
         return v
@@ -43,6 +59,8 @@ extension Result {
 
 public enum WebserviceError: Error {
     case notAuthenticated
+    case notHTTP
+    case jsonParsingFailed
     case other
 }
 
@@ -57,7 +75,14 @@ extension URLRequest {
             } else {
                 setValue("0", forHTTPHeaderField: "Content-Length")
             }
+        } else if case let .put(data) = resource.method {
+            if let data = data {
+                httpBody = data
+            } else {
+                setValue("0", forHTTPHeaderField: "Content-Length")
+            }
         }
+        
         if let token = authenticationToken {
             setValue(token, forHTTPHeaderField: "Authorization")
         }
@@ -91,11 +116,18 @@ public final class Webservice {
         session.dataTask(with: request, completionHandler: { data, response, _ in
             DispatchQueue.global().async {
                 let result: Result<A>
-                if let httpResponse = response as? HTTPURLResponse , httpResponse.statusCode == 401 {
-                    result = Result.error(WebserviceError.notAuthenticated)
+                if let httpResponse = response as? HTTPURLResponse {
+                    if httpResponse.statusCode == 401 {
+                        result = Result.error(WebserviceError.notAuthenticated)
+                    } else {
+                        if let data = data {
+                            result = resource.parse(data, httpResponse)
+                        } else {
+                            result = Result.error(WebserviceError.other)
+                        }
+                    }
                 } else {
-                    let parsed = data.flatMap(resource.parse)
-                    result = Result(parsed, or: WebserviceError.other)
+                    result = Result.error(WebserviceError.notHTTP)
                 }
                 
                 DispatchQueue.main.async { completion(result) }
@@ -103,18 +135,22 @@ public final class Webservice {
         }) .resume()
     }
     
-    public func load<A>(_ resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
+    public func load<A>(_ resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse) -> ()) {
         let request = URLRequest(resource: resource, authenticationToken: authenticationToken)
         session.dataTask(with: request, completionHandler: { data, response, _ in
             DispatchQueue.global().async {
                 let result: Result<A>
-                let httpResponse = response as? HTTPURLResponse
-                if let httpResponse = httpResponse, httpResponse.statusCode == 401 {
+                let httpResponse = response as! HTTPURLResponse
+                if httpResponse.statusCode == 401 {
                     result = Result.error(WebserviceError.notAuthenticated)
                 } else {
-                    let parsed = data.flatMap(resource.parse)
-                    result = Result(parsed, or: WebserviceError.other)
+                    if let data = data {
+                        result = resource.parse(data, httpResponse)
+                    } else {
+                        result = Result.error(WebserviceError.other)
+                    }
                 }
+                
                 DispatchQueue.main.async { completion(result, httpResponse) }
             }
         }) .resume()
