@@ -115,19 +115,18 @@ public final class Webservice {
         let request = URLRequest(resource: resource, authenticationToken: authenticationToken)
         session.dataTask(with: request, completionHandler: { data, response, _ in
             DispatchQueue.global().async {
-                let result: Result<A>
-                if let httpResponse = response as? HTTPURLResponse {
-                    if httpResponse.statusCode == 401 {
-                        result = Result.error(WebserviceError.notAuthenticated)
-                    } else {
-                        if let data = data {
-                            result = resource.parse(data, httpResponse)
-                        } else {
-                            result = Result.error(WebserviceError.other)
-                        }
-                    }
-                } else {
-                    result = Result.error(WebserviceError.notHTTP)
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    DispatchQueue.main.async { completion(Result.error(WebserviceError.notHTTP)) }
+                    return
+                }
+                guard httpResponse.statusCode != 401 else {
+                    DispatchQueue.main.async { completion(Result.error(WebserviceError.notAuthenticated)) }
+                    return
+                }
+                
+                guard let result = data.map({ resource.parse($0, httpResponse) }) else {
+                    DispatchQueue.main.async { completion(Result.error(WebserviceError.other)) }
+                    return
                 }
                 
                 DispatchQueue.main.async { completion(result) }
@@ -135,20 +134,22 @@ public final class Webservice {
         }) .resume()
     }
     
-    public func load<A>(_ resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse) -> ()) {
+    public func load<A>(_ resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
         let request = URLRequest(resource: resource, authenticationToken: authenticationToken)
         session.dataTask(with: request, completionHandler: { data, response, _ in
             DispatchQueue.global().async {
-                let result: Result<A>
-                let httpResponse = response as! HTTPURLResponse
-                if httpResponse.statusCode == 401 {
-                    result = Result.error(WebserviceError.notAuthenticated)
-                } else {
-                    if let data = data {
-                        result = resource.parse(data, httpResponse)
-                    } else {
-                        result = Result.error(WebserviceError.other)
-                    }
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    DispatchQueue.main.async { completion(Result.error(WebserviceError.notHTTP), nil) }
+                    return
+                }
+                guard httpResponse.statusCode != 401 else {
+                    DispatchQueue.main.async { completion(Result.error(WebserviceError.notAuthenticated), httpResponse) }
+                    return
+                }
+                
+                guard let result = data.map({ resource.parse($0, httpResponse) }) else {
+                    DispatchQueue.main.async { completion(Result.error(WebserviceError.other), httpResponse) }
+                    return
                 }
                 
                 DispatchQueue.main.async { completion(result, httpResponse) }
