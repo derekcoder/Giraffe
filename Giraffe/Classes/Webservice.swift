@@ -81,6 +81,12 @@ extension URLRequest {
             } else {
                 setValue("0", forHTTPHeaderField: "Content-Length")
             }
+        } else if case let .patch(data) = resource.method {
+            if let data = data {
+                httpBody = data
+            } else {
+                setValue("0", forHTTPHeaderField: "Content-Length")
+            }
         }
         
         if let token = authenticationToken {

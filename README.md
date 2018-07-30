@@ -9,14 +9,14 @@ Ideas and some of codes are referenced by [SwiftTalk](https://talk.objc.io/).
 
 ## Features
 
-- [x] GET request
-
-- [x] POST request
-
+- [x] HTTP Method
+    - [x] GET
+    - [x] POST
+    - [x] DELETE
+    - [x] PUT
+    - [x] PATCH
 - [x] HTTP headers
-
 - [x] Authorization
-
 - [ ] Cancel request
 
       
