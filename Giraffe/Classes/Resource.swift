@@ -42,19 +42,19 @@ public struct Resource<A> {
     public var url: URL
     public var method: HttpMethod<Data?> = .get
     public var parse: (Data, HTTPURLResponse) -> Result<A>
-    public var headers: [String: String]? = nil
+    public var headers: [HTTPRequestHeaderField: String]? = nil
     public var timeoutInterval: TimeInterval = 20.0 // in seconds, default: 60 seconds
 }
 
 extension Resource {
-    public init(url: URL, method: HttpMethod<Data?> = .get, headers: [String: String]? = nil, parse: @escaping (Data, HTTPURLResponse) -> Result<A>) {
+    public init(url: URL, method: HttpMethod<Data?> = .get, headers: [HTTPRequestHeaderField: String]? = nil, parse: @escaping (Data, HTTPURLResponse) -> Result<A>) {
         self.url = url
         self.parse = parse
         self.method = method
         self.headers = headers
     }
 
-    public init(url: URL, method: HttpMethod<Data?> = .get, headers: [String: String]? = nil, parseJSON: @escaping (Any, HTTPURLResponse) -> Result<A>) {
+    public init(url: URL, method: HttpMethod<Data?> = .get, headers: [HTTPRequestHeaderField: String]? = nil, parseJSON: @escaping (Any, HTTPURLResponse) -> Result<A>) {
         self.url = url
         self.method = method
         self.headers = headers
@@ -66,7 +66,7 @@ extension Resource {
         }
     }
     
-    public init(url: URL, jsonMethod: HttpMethod<Any>, headers: [String: String]? = nil, parse: @escaping (Data, HTTPURLResponse) -> Result<A>) {
+    public init(url: URL, jsonMethod: HttpMethod<Any>, headers: [HTTPRequestHeaderField: String]? = nil, parse: @escaping (Data, HTTPURLResponse) -> Result<A>) {
         self.url = url
         self.parse = parse
         self.headers = headers
@@ -75,7 +75,7 @@ extension Resource {
         }
     }
     
-    public init(url: URL, jsonMethod: HttpMethod<Any>, headers: [String: String]? = nil, parseJSON: @escaping (Any, HTTPURLResponse) -> Result<A>) {
+    public init(url: URL, jsonMethod: HttpMethod<Any>, headers: [HTTPRequestHeaderField: String]? = nil, parseJSON: @escaping (Any, HTTPURLResponse) -> Result<A>) {
         self.url = url
         self.method = jsonMethod.map { jsonObject in
             try! JSONSerialization.data(withJSONObject: jsonObject, options: JSONSerialization.WritingOptions())

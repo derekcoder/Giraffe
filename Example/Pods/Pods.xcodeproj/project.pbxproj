@@ -12,6 +12,7 @@
 		2F18A556770BC067DBF69F7C1D010DF3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
 		34FF253D5F2A63139E4836CE7A469978 /* Pods-Giraffe_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 32C62F0BAF3D96FE6227EC3E94D030EC /* Pods-Giraffe_Example-dummy.m */; };
 		410E189794B5553F8B93AC8E1378CE96 /* Giraffe-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D39D05F090171A176E5DA1C673CC644 /* Giraffe-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		65CA57E02137C687003A7A91 /* HTTPHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CA57DF2137C687003A7A91 /* HTTPHeader.swift */; };
 		7B24BFB976A37EBE9D10D3EC445CBFFA /* Pods-Giraffe_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1182120D1D846E7CDC4AB15F737BAFBD /* Pods-Giraffe_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		804ADB1ED03A2080E24425A8D3CBDBA5 /* Giraffe-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E68CFD25897AED5EC45AD03252A1436 /* Giraffe-dummy.m */; };
 		851B41D9C09C6EAA10085DA6E09FEDCC /* Pods-Giraffe_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B2F4827014033FD8B2061AA1F9AE4 /* Pods-Giraffe_Tests-dummy.m */; };
@@ -48,6 +49,7 @@
 		504FE6BED19A60E2EE493D2D5B019022 /* Pods-Giraffe_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Giraffe_Example.release.xcconfig"; sourceTree = "<group>"; };
 		522577BFDAF993CC4F82AF035A235E83 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5661B0109A7F0C24DD1DBE6AD35F949E /* Pods-Giraffe_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Giraffe_Tests-frameworks.sh"; sourceTree = "<group>"; };
+		65CA57DF2137C687003A7A91 /* HTTPHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPHeader.swift; sourceTree = "<group>"; };
 		6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		6E68CFD25897AED5EC45AD03252A1436 /* Giraffe-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Giraffe-dummy.m"; sourceTree = "<group>"; };
 		7A542361EC8B2355C9E2C8CEEB84A729 /* Pods-Giraffe_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Giraffe_Example-frameworks.sh"; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				A08F19DADD41DDC39DB8E1755835C21A /* CachedWebservice.swift */,
+				65CA57DF2137C687003A7A91 /* HTTPHeader.swift */,
 				D2DCCCACAC3773F40E83D0838D2D87E9 /* Resource.swift */,
 				CEA02A8C6DB588B9A8B1B7F806D9DA2D /* SHA1.swift */,
 				3B4F0D0E4FDBAECAC66EE05CC7081D90 /* Webservice.swift */,
@@ -356,6 +359,7 @@
 				804ADB1ED03A2080E24425A8D3CBDBA5 /* Giraffe-dummy.m in Sources */,
 				F2718DF4ADFBD3AA889AA5B443593811 /* Resource.swift in Sources */,
 				DF031D61EABCF46021275D57E24DBC01 /* SHA1.swift in Sources */,
+				65CA57E02137C687003A7A91 /* HTTPHeader.swift in Sources */,
 				0A7A8C59CF1C012B5E300E2557D6134C /* Webservice.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

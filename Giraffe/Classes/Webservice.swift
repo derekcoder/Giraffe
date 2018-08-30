@@ -73,19 +73,19 @@ extension URLRequest {
             if let data = data {
                 httpBody = data
             } else {
-                setValue("0", forHTTPHeaderField: "Content-Length")
+                setHeaderValue("0", for: .contentLength)
             }
         } else if case let .put(data) = resource.method {
             if let data = data {
                 httpBody = data
             } else {
-                setValue("0", forHTTPHeaderField: "Content-Length")
+                setHeaderValue("0", for: .contentLength)
             }
         } else if case let .patch(data) = resource.method {
             if let data = data {
                 httpBody = data
             } else {
-                setValue("0", forHTTPHeaderField: "Content-Length")
+                setHeaderValue("0", for: .contentLength)
             }
         }
         
@@ -94,11 +94,23 @@ extension URLRequest {
         }
         
         if let headers = resource.headers {
-            headers.forEach { setValue($1, forHTTPHeaderField: $0) }
-        } else {
-            setValue("application/json", forHTTPHeaderField: "Content-Type")
-            setValue("application/json", forHTTPHeaderField: "Accept")
+            headers.forEach { setHeaderValue($1, for: $0) }
         }
+        
+        if headerValue(for: .contentType) == nil {
+            setHeaderValue(MediaType.appJSON.rawValue, for: .contentType)
+        }
+        if headerValue(for: .accept) == nil {
+            setHeaderValue(MediaType.appJSON.rawValue, for: .accept)
+        }
+    }
+    
+    public mutating func setHeaderValue(_ value: String?, for field: HTTPRequestHeaderField) {
+        setValue(value, forHTTPHeaderField: field.rawValue)
+    }
+    
+    public func headerValue(for field: HTTPRequestHeaderField) -> String? {
+        return value(forHTTPHeaderField: field.rawValue)
     }
 }
 
