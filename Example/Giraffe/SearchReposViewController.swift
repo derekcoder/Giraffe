@@ -10,22 +10,40 @@ import UIKit
 import Giraffe
 
 class SearchReposViewController: UITableViewController {
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
+    
     var webservice: Webservice!
+    private var repos: [Repo] = []
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        loadData()
-    }
-    
-    private func loadData() {
-        let resource = Repo.searchResource(text: "Giraffe")
-        webservice.load(resource) { result in
+    private func search(text: String) {
+        spinner.startAnimating()
+        let resource = Repo.searchResource(text: text)
+        webservice.load(resource) { [weak self] result in
+            self?.spinner.stopAnimating()
             switch result {
             case .error(let error): print("Failed to search repos: \(error)")
             case .success(let repos):
-                print(repos)
+                self?.repos = repos
+                self?.tableView.reloadData()
             }
         }
     }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return repos.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "RepoCell", for: indexPath)
+        cell.textLabel?.text = repos[indexPath.row].fullName
+        return cell
+    }
 }
 
+extension SearchReposViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        guard let text = searchBar.text else { return }
+        search(text: text)
+    }
+}

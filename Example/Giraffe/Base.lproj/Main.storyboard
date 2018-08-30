@@ -17,21 +17,30 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <searchBar key="tableHeaderView" contentMode="redraw" id="DYm-aC-VNm">
+                        <searchBar key="tableHeaderView" contentMode="redraw" id="230-QY-qQr">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <textInputTraits key="textInputTraits"/>
                             <connections>
-                                <outlet property="delegate" destination="r95-M7-t5X" id="io8-Wp-pYU"/>
+                                <outlet property="delegate" destination="r95-M7-t5X" id="RUr-1H-Qba"/>
                             </connections>
                         </searchBar>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="Evj-Dr-rCl">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="RepoCell" textLabel="UlA-e0-6zU" style="IBUITableViewCellStyleDefault" id="Evj-Dr-rCl">
                                 <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Evj-Dr-rCl" id="KlQ-kC-SAF">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="341" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="UlA-e0-6zU">
+                                            <rect key="frame" x="16" y="0.0" width="324" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
@@ -40,21 +49,29 @@
                             <outlet property="delegate" destination="r95-M7-t5X" id="hV9-09-ZHR"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Search Repos" id="H2a-kH-0bh"/>
+                    <navigationItem key="navigationItem" title="Search Repos" id="H2a-kH-0bh">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="RAp-Yj-EIn">
+                            <view key="customView" contentMode="scaleToFill" id="MTN-sI-Mzg">
+                                <rect key="frame" x="326" y="5.5" width="33" height="33"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ia9-T9-yqg">
+                                        <rect key="frame" x="7" y="7" width="20" height="20"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="ia9-T9-yqg" firstAttribute="centerX" secondItem="MTN-sI-Mzg" secondAttribute="centerX" id="cM4-3o-rkS"/>
+                                    <constraint firstItem="ia9-T9-yqg" firstAttribute="centerY" secondItem="MTN-sI-Mzg" secondAttribute="centerY" id="uZa-An-iy0"/>
+                                </constraints>
+                            </view>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
-                        <outlet property="searchDisplayController" destination="Wms-7r-pKy" id="eJu-aq-0Gf"/>
+                        <outlet property="spinner" destination="ia9-T9-yqg" id="X8u-dE-BWL"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WdC-eE-l8M" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <searchDisplayController id="Wms-7r-pKy">
-                    <connections>
-                        <outlet property="delegate" destination="r95-M7-t5X" id="zXX-hK-xCp"/>
-                        <outlet property="searchBar" destination="DYm-aC-VNm" id="Wjo-Q0-a9A"/>
-                        <outlet property="searchContentsController" destination="r95-M7-t5X" id="uze-sD-M23"/>
-                        <outlet property="searchResultsDataSource" destination="r95-M7-t5X" id="XQP-YC-FLm"/>
-                        <outlet property="searchResultsDelegate" destination="r95-M7-t5X" id="m0j-py-d2N"/>
-                    </connections>
-                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="-169" y="254"/>
         </scene>
