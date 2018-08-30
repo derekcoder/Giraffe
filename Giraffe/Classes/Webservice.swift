@@ -10,60 +10,6 @@
 
 import Foundation
 
-public typealias JSONDictionary = [String: Any]
-
-public enum Result<A> {
-    case success(A)
-    case error(Error)
-}
-
-extension Result {
-    public init(_ value: A?, or error: Error) {
-        if let value = value {
-            self = .success(value)
-        } else {
-            self = .error(error)
-        }
-    }
-    
-    public init(error: Error) {
-        self = .error(error)
-    }
-    
-    public init(_ error: Error) {
-        self = .error(error)
-    }
-    
-    public init(value: A) {
-        self = .success(value)
-    }
-    
-    public init(_ value: A) {
-        self = .success(value)
-    }
-    
-    public var value: A? {
-        guard case .success(let v) = self else { return nil }
-        return v
-    }
-    
-    public func map<B>(_ transform: (A) throws -> B) rethrows -> Result<B> {
-        switch self {
-        case .success(let value):
-            return .success(try transform(value))
-        case .error(let error):
-            return .error(error)
-        }
-    }
-}
-
-public enum WebserviceError: Error {
-    case notAuthenticated
-    case notHTTP
-    case jsonParsingFailed
-    case other
-}
-
 extension URLRequest {
     public init<A>(resource: Resource<A>, authenticationToken: String? = nil) {
         self.init(url: resource.url, timeoutInterval: resource.timeoutInterval)
@@ -134,16 +80,21 @@ public final class Webservice {
         session.dataTask(with: request, completionHandler: { data, response, _ in
             DispatchQueue.global().async {
                 guard let httpResponse = response as? HTTPURLResponse else {
-                    DispatchQueue.main.async { completion(Result.error(WebserviceError.notHTTP)) }
+                    DispatchQueue.main.async {
+                        completion(Result(error: GiraffeError.notHTTP))
+                    }
                     return
                 }
-                guard httpResponse.statusCode != 401 else {
-                    DispatchQueue.main.async { completion(Result.error(WebserviceError.notAuthenticated)) }
+                guard httpResponse.statusCode != HTTPStatus.unauthorized.rawValue else {
+                    DispatchQueue.main.async {
+                        completion(Result(error: GiraffeError.unauthorized))
+                    }
                     return
                 }
-                
                 guard let result = data.map({ resource.parse($0, httpResponse) }) else {
-                    DispatchQueue.main.async { completion(Result.error(WebserviceError.other)) }
+                    DispatchQueue.main.async {
+                        completion(Result(error: GiraffeError.other))
+                    }
                     return
                 }
                 
@@ -157,16 +108,21 @@ public final class Webservice {
         session.dataTask(with: request, completionHandler: { data, response, _ in
             DispatchQueue.global().async {
                 guard let httpResponse = response as? HTTPURLResponse else {
-                    DispatchQueue.main.async { completion(Result.error(WebserviceError.notHTTP), nil) }
+                    DispatchQueue.main.async {
+                        completion(Result(error: GiraffeError.notHTTP), nil)
+                    }
                     return
                 }
-                guard httpResponse.statusCode != 401 else {
-                    DispatchQueue.main.async { completion(Result.error(WebserviceError.notAuthenticated), httpResponse) }
+                guard httpResponse.statusCode != HTTPStatus.unauthorized.rawValue else {
+                    DispatchQueue.main.async {
+                        completion(Result(error: GiraffeError.unauthorized), httpResponse)
+                    }
                     return
                 }
-                
                 guard let result = data.map({ resource.parse($0, httpResponse) }) else {
-                    DispatchQueue.main.async { completion(Result.error(WebserviceError.other), httpResponse) }
+                    DispatchQueue.main.async {
+                        completion(Result(error: GiraffeError.other), httpResponse)
+                    }
                     return
                 }
                 

@@ -16,18 +16,20 @@ struct Config {
 extension Repo {
     init?(json: JSONDictionary) {
         guard let id = json["id"] as? Int,
-            let name = json["name"] as? String,
             let fullName = json["full_name"] as? String else { return nil }
         self.id = id
-        self.name = name
         self.fullName = fullName
     }
     
     static func searchResource(text: String) -> Resource<[Repo]> {
         let url = Config.baseURL.appendingPathComponent("search/repositories").encoded(parameters: ["q": "\(text)+language:swift"])
         return Resource(url: url, parseJSON: { json, response in
-            guard let dict = json as? JSONDictionary else { return Result(WebserviceError.jsonParsingFailed) }
-            guard let itemsDict = dict["items"] as? [JSONDictionary] else { return Result(WebserviceError.jsonParsingFailed) }
+            guard let dict = json as? JSONDictionary else {
+                return Result(error: GiraffeError.jsonParsingFailed)
+            }
+            guard let itemsDict = dict["items"] as? [JSONDictionary] else {
+                return Result(error: GiraffeError.jsonParsingFailed)
+            }
             let repos = itemsDict.compactMap(Repo.init)
             return Result(repos)
         })

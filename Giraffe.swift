@@ -7,6 +7,8 @@
 
 import Foundation
 
+public typealias JSONDictionary = [String: Any]
+
 extension URL {
     public mutating func encode(parameters: JSONDictionary) {
         self = encoded(parameters: parameters)

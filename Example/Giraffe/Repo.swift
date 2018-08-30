@@ -10,6 +10,5 @@ import Foundation
 
 struct Repo {
     let id: Int
-    let name: String
     let fullName: String
 }

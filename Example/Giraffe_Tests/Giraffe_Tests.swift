@@ -31,14 +31,12 @@ extension Episode {
     }
     
     static let all = Resource<[Episode]>(url: url, parseJSON: { (json, _) -> Result<[Episode]> in
-        guard let dicts = json as? [JSONDictionary] else { return Result(WebserviceError.jsonParsingFailed) }
+        guard let dicts = json as? [JSONDictionary] else {
+            return Result(error: GiraffeError.jsonParsingFailed)
+        }
         let value = dicts.compactMap(Episode.init)
         return Result(value)
     })
-}
-
-enum TestError: Error {
-    case other
 }
 
 class Giraffe_Tests: XCTestCase {
@@ -64,20 +62,22 @@ class Giraffe_Tests: XCTestCase {
     
     func testResult() {
         let person = Episode(id: "id", title: "title")
-        let result = Result<Episode>(person, or: TestError.other)
+        let result = Result<Episode>(person, or: GiraffeError.other)
         XCTAssertEqual(result.value!, person)
     }
     
     func testResultMap() {
         let person = Episode(id: "id", title: "title")
-        let result = Result<Episode>(person, or: TestError.other)
+        let result = Result<Episode>(person, or: GiraffeError.other)
         let transformed = result.map { "\($0.id)" }
         XCTAssertEqual(transformed.value!, "id")
     }
     
     func testURLRequestInitForGet() {
         let resource = Resource<[Episode]>(url: url, method: .get, parseJSON: { (json, _) -> Result<[Episode]> in
-            guard let dictionaries = json as? [JSONDictionary] else { return Result(WebserviceError.jsonParsingFailed) }
+            guard let dictionaries = json as? [JSONDictionary] else {
+                return Result(error: GiraffeError.jsonParsingFailed)
+            }
             let value = dictionaries.compactMap(Episode.init)
             return Result(value)
         })
@@ -90,7 +90,9 @@ class Giraffe_Tests: XCTestCase {
         let json = ["id": "id"]
         let method: HttpMethod<Any> = .post(data: json)
         let resource = Resource<[Episode]>(url: url, jsonMethod: method, parseJSON: { (json, _) -> Result<[Episode]> in
-            guard let dictionaries = json as? [JSONDictionary] else { return Result(WebserviceError.jsonParsingFailed) }
+            guard let dictionaries = json as? [JSONDictionary] else {
+                return Result(error: GiraffeError.jsonParsingFailed)
+            }
             let value = dictionaries.compactMap(Episode.init)
             return Result(value)
         })
