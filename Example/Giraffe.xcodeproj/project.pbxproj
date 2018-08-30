@@ -9,12 +9,15 @@
 /* Begin PBXBuildFile section */
 		236401ADDF27401A04BBB905 /* Pods_Giraffe_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED484D1BA7D0D1EAD972B298 /* Pods_Giraffe_Tests.framework */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
-		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
+		607FACD81AFB9204008FA782 /* SearchReposViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* SearchReposViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		656D50FB2061F8EE00EE0B73 /* Giraffe_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656D50FA2061F8EE00EE0B73 /* Giraffe_Tests.swift */; };
 		656D51032061FB8200EE0B73 /* SHA1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656D51022061FB8200EE0B73 /* SHA1Tests.swift */; };
+		65CA57E22137D38C003A7A91 /* Repo+Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CA57E12137D38C003A7A91 /* Repo+Resource.swift */; };
+		65CA57E42137D395003A7A91 /* Repo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CA57E32137D395003A7A91 /* Repo.swift */; };
+		65CA57E62137D6B0003A7A91 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CA57E52137D6B0003A7A91 /* App.swift */; };
 		AFEFE98AA9C4E609AEE1A54C /* Pods_Giraffe_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C024C4CDCC7979EB81796652 /* Pods_Giraffe_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -36,7 +39,7 @@
 		607FACD01AFB9204008FA782 /* Giraffe_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Giraffe_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		607FACD71AFB9204008FA782 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		607FACD71AFB9204008FA782 /* SearchReposViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchReposViewController.swift; sourceTree = "<group>"; };
 		607FACDA1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -44,6 +47,9 @@
 		656D50FA2061F8EE00EE0B73 /* Giraffe_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Giraffe_Tests.swift; sourceTree = "<group>"; };
 		656D50FC2061F8EE00EE0B73 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		656D51022061FB8200EE0B73 /* SHA1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SHA1Tests.swift; sourceTree = "<group>"; };
+		65CA57E12137D38C003A7A91 /* Repo+Resource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Repo+Resource.swift"; sourceTree = "<group>"; };
+		65CA57E32137D395003A7A91 /* Repo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repo.swift; sourceTree = "<group>"; };
+		65CA57E52137D6B0003A7A91 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		7C949D8FE0E60FD0B64092CF /* Pods-Giraffe_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Giraffe_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Giraffe_Tests/Pods-Giraffe_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		902FCE1993F660BA67FAC516 /* Pods-Giraffe_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Giraffe_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Giraffe_Tests/Pods-Giraffe_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		C024C4CDCC7979EB81796652 /* Pods_Giraffe_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Giraffe_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -104,11 +110,12 @@
 		607FACD21AFB9204008FA782 /* Example for Giraffe */ = {
 			isa = PBXGroup;
 			children = (
-				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
-				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
-				607FACDC1AFB9204008FA782 /* Images.xcassets */,
-				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
+				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
+				65CA57E52137D6B0003A7A91 /* App.swift */,
+				607FACD71AFB9204008FA782 /* SearchReposViewController.swift */,
+				65CA57E32137D395003A7A91 /* Repo.swift */,
+				65CA57E12137D38C003A7A91 /* Repo+Resource.swift */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
 			);
 			name = "Example for Giraffe";
@@ -118,6 +125,8 @@
 		607FACD31AFB9204008FA782 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
+				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACD41AFB9204008FA782 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -365,8 +374,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
+				607FACD81AFB9204008FA782 /* SearchReposViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				65CA57E22137D38C003A7A91 /* Repo+Resource.swift in Sources */,
+				65CA57E62137D6B0003A7A91 /* App.swift in Sources */,
+				65CA57E42137D395003A7A91 /* Repo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
