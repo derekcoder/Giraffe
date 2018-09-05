@@ -36,7 +36,7 @@ extension URLRequest {
         }
         
         if let token = authenticationToken {
-            setValue(token, forHTTPHeaderField: "Authorization")
+            setHeaderValue(token, for: .authorization)
         }
         
         if let headers = resource.headers {

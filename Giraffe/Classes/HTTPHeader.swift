@@ -12,6 +12,7 @@ public enum HTTPRequestHeaderField: String {
     case acceptCharset = "Accept-Charset"
     case acceptEncoding = "Accept-Encoding"
     case acceptLanguage = "Accept-Language"
+    case authorization = "Authorization"
     
     case cacheControl = "Cache-Control"
     case contentMD5 = "Content-MD5"
