@@ -5,6 +5,8 @@
 //  Created by Derek on 30/8/18.
 //
 
+// Referenced from https://talk.objc.io/
+
 import Foundation
 
 public enum Result<A> {
