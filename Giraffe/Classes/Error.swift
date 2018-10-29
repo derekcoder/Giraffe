@@ -36,6 +36,7 @@ public enum HTTPStatus: Int {
     case created = 201
     case accepted = 202
     case noContent = 204
+    case resetContent = 205
     
     case badRequest = 400
     case unauthorized = 401
@@ -59,7 +60,7 @@ public enum HTTPStatus: Int {
 extension HTTPStatus {
     public var error: GiraffeError? {
         switch self {
-        case .ok, .created, .accepted, .noContent: return nil
+        case .ok, .created, .accepted, .noContent, .resetContent: return nil
         case .badRequest: return GiraffeError.badRequest
         case .unauthorized: return GiraffeError.unauthorized
         case .paymentRequired: return GiraffeError.paymentRequired
