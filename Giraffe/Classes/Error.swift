@@ -85,16 +85,18 @@ public protocol ResultErrorReason {
     
 }
 
-public enum APIClientError: Error {
-    public enum ResponseErrorReason {
-        case unauthorized     // 401
-        case notFound         // 404
-        case others(statusCode: Int)
-    }
-
-    case apiFailed(ResponseErrorReason)
-    case invalidResponse
-    case notHTTP
-    case apiResultFailed(ResultErrorReason)
-}
-
+//public enum APIClientError: Error {
+//    public enum ResponseErrorReason {
+//        case unauthorized     // 401
+//        case forbidden        // 403
+//        case notFound         // 404
+//        case conflict         // 409
+//        case others(statusCode: Int)
+//    }
+//
+//    case apiFailed(ResponseErrorReason)
+//    case invalidResponse
+//    case notHTTP
+//    case apiResultFailed(ResultErrorReason)
+//}
+//

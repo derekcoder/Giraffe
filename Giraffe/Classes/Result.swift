@@ -11,11 +11,11 @@ import Foundation
 
 public enum Result<A> {
     case success(A)
-    case failure(APIClientError)
+    case failure(Swift.Error)
 }
 
 extension Result {
-    public init(error: APIClientError) {
+    public init(error: Swift.Error) {
         self = .failure(error)
     }
     
@@ -28,7 +28,7 @@ extension Result {
         return v
     }
     
-    public var error: APIClientError? {
+    public var error: Swift.Error? {
         guard case .failure(let e) = self else { return nil }
         return e
     }

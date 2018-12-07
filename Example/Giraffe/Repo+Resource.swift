@@ -13,6 +13,10 @@ struct Config {
     static let baseURL = URL(string: "https://api.github.com")!
 }
 
+enum RepoError: Swift.Error {
+    case invalidResponse
+}
+
 extension Repo {
     init?(json: JSONDictionary) {
         guard let id = json["id"] as? Int,
@@ -23,13 +27,11 @@ extension Repo {
     
     static func searchResource(text: String) -> Resource<[Repo]> {
         let url = Config.baseURL.appendingPathComponent("search/repositories").encoded(parameters: ["q": "\(text)+language:swift"])
-        return Resource(url: url, parseJSON: { json, response in
-            guard let dict = json as? JSONDictionary else {
-                return Result(error: .invalidResponse)
+        return Resource(url: url, parseJSON: { json, response, error in
+            guard let dict = json as? JSONDictionary, let itemsDict = dict["items"] as? [JSONDictionary] else {
+                return Result(error: RepoError.invalidResponse)
             }
-            guard let itemsDict = dict["items"] as? [JSONDictionary] else {
-                return Result(error: .invalidResponse)
-            }
+//            return Result(error: RepoError.noResult)
             let repos = itemsDict.compactMap(Repo.init)
             return Result(value: repos)
         })

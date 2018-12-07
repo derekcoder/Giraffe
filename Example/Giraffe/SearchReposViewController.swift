@@ -21,7 +21,14 @@ class SearchReposViewController: UITableViewController {
         webservice.load(resource) { [weak self] result in
             self?.spinner.stopAnimating()
             switch result {
-            case .failure(let error): print("Failed to search repos: \(error)")
+            case .failure(let error):
+                if let repoError = error as? RepoError {
+                    switch repoError {
+                    case .noResult: print("No result")
+                    }
+                } else {
+                    print(error.localizedDescription)
+                }
             case .success(let repos):
                 self?.repos = repos
                 self?.tableView.reloadData()
