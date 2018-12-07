@@ -59,8 +59,9 @@ extension Resource {
         self.method = method
         self.headers = headers
         self.parse = { data, response in
+            
             guard let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions()) else {
-                return Result(error: GiraffeError.jsonParsingFailed)
+                return Result(error: APIClientError.invalidResponse)
             }
             return parseJSON(json, response)
         }
@@ -83,7 +84,7 @@ extension Resource {
         self.headers = headers
         self.parse = { data, response in
             guard let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions()) else {
-                return Result(error: GiraffeError.jsonParsingFailed)
+                return Result(error: APIClientError.invalidResponse)
             }
             return parseJSON(json, response)
         }

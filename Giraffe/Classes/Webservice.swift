@@ -77,56 +77,54 @@ public final class Webservice {
     
     public func load<A>(_ resource: Resource<A>, completion: @escaping (Result<A>) -> ()) {
         let request = URLRequest(resource: resource, authenticationToken: authenticationToken)
-        session.dataTask(with: request, completionHandler: { data, response, _ in
-            DispatchQueue.global().async {
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    DispatchQueue.main.async {
-                        completion(Result(error: GiraffeError.notHTTP))
-                    }
+        session.dataTask(with: request, completionHandler: { data, response, error in
+            guard let httpResponse = response as? HTTPURLResponse else {
+                DispatchQueue.main.async { completion(Result(error: .notHTTP)) }
+                return
+            }
+            
+            if error != nil {
+                let statusCode = httpResponse.statusCode
+                guard let status = HTTPStatus(rawValue: statusCode) else {
+                    DispatchQueue.main.async { completion(Result(error: .apiFailed(.others(statusCode: statusCode)))) }
                     return
                 }
-                guard httpResponse.statusCode != HTTPStatus.unauthorized.rawValue else {
-                    DispatchQueue.main.async {
-                        completion(Result(error: GiraffeError.unauthorized))
-                    }
-                    return
+                switch status {
+                case .unauthorized: DispatchQueue.main.async { completion(Result(error: .apiFailed(.unauthorized))) }
+                default: DispatchQueue.main.async { completion(Result(error: .apiFailed(.others(statusCode: statusCode)))) }
                 }
-                guard let result = data.map({ resource.parse($0, httpResponse) }) else {
-                    DispatchQueue.main.async {
-                        completion(Result(error: GiraffeError.other))
-                    }
-                    return
+            } else { // important: if error == nil, data must not be nil
+                DispatchQueue.global().async {
+                    let result = resource.parse(data!, httpResponse)
+                    DispatchQueue.main.async { completion(result) }
                 }
-                
-                DispatchQueue.main.async { completion(result) }
             }
         }) .resume()
     }
     
     public func load<A>(_ resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
         let request = URLRequest(resource: resource, authenticationToken: authenticationToken)
-        session.dataTask(with: request, completionHandler: { data, response, _ in
-            DispatchQueue.global().async {
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    DispatchQueue.main.async {
-                        completion(Result(error: GiraffeError.notHTTP), nil)
-                    }
+        session.dataTask(with: request, completionHandler: { data, response, error in
+            guard let httpResponse = response as? HTTPURLResponse else {
+                DispatchQueue.main.async { completion(Result(error: .notHTTP), nil) }
+                return
+            }
+            
+            if error != nil {
+                let statusCode = httpResponse.statusCode
+                guard let status = HTTPStatus(rawValue: statusCode) else {
+                    DispatchQueue.main.async { completion(Result(error: .apiFailed(.others(statusCode: statusCode))), httpResponse) }
                     return
                 }
-                guard httpResponse.statusCode != HTTPStatus.unauthorized.rawValue else {
-                    DispatchQueue.main.async {
-                        completion(Result(error: GiraffeError.unauthorized), httpResponse)
-                    }
-                    return
+                switch status {
+                case .unauthorized: DispatchQueue.main.async { completion(Result(error: .apiFailed(.unauthorized)), httpResponse) }
+                default: DispatchQueue.main.async { completion(Result(error: .apiFailed(.others(statusCode: statusCode))), httpResponse) }
                 }
-                guard let result = data.map({ resource.parse($0, httpResponse) }) else {
-                    DispatchQueue.main.async {
-                        completion(Result(error: GiraffeError.other), httpResponse)
-                    }
-                    return
+            } else { // important: if error == nil, data must not be nil
+                DispatchQueue.global().async {
+                    let result = resource.parse(data!, httpResponse)
+                    DispatchQueue.main.async { completion(result, httpResponse) }
                 }
-                
-                DispatchQueue.main.async { completion(result, httpResponse) }
             }
         }) .resume()
     }

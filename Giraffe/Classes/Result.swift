@@ -11,31 +11,15 @@ import Foundation
 
 public enum Result<A> {
     case success(A)
-    case error(Error)
+    case failure(APIClientError)
 }
 
 extension Result {
-    public init(_ value: A?, or error: Error) {
-        if let value = value {
-            self = .success(value)
-        } else {
-            self = .error(error)
-        }
-    }
-    
-    public init(error: Error) {
-        self = .error(error)
-    }
-    
-    public init(_ error: Error) {
-        self = .error(error)
+    public init(error: APIClientError) {
+        self = .failure(error)
     }
     
     public init(value: A) {
-        self = .success(value)
-    }
-    
-    public init(_ value: A) {
         self = .success(value)
     }
     
@@ -44,12 +28,8 @@ extension Result {
         return v
     }
     
-    public func map<B>(_ transform: (A) throws -> B) rethrows -> Result<B> {
-        switch self {
-        case .success(let value):
-            return .success(try transform(value))
-        case .error(let error):
-            return .error(error)
-        }
+    public var error: APIClientError? {
+        guard case .failure(let e) = self else { return nil }
+        return e
     }
 }

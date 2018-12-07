@@ -25,13 +25,13 @@ extension Repo {
         let url = Config.baseURL.appendingPathComponent("search/repositories").encoded(parameters: ["q": "\(text)+language:swift"])
         return Resource(url: url, parseJSON: { json, response in
             guard let dict = json as? JSONDictionary else {
-                return Result(error: GiraffeError.jsonParsingFailed)
+                return Result(error: .invalidResponse)
             }
             guard let itemsDict = dict["items"] as? [JSONDictionary] else {
-                return Result(error: GiraffeError.jsonParsingFailed)
+                return Result(error: .invalidResponse)
             }
             let repos = itemsDict.compactMap(Repo.init)
-            return Result(repos)
+            return Result(value: repos)
         })
     }
 }
