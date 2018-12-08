@@ -23,7 +23,7 @@ extension User {
         let url = Config.baseURL.appendingPathComponent("users/\(login)")
         return Resource(url: url, parseJSON: { obj, _, _ in
             guard let json = obj as? JSONDictionary, let user = User(json: json) else {
-                return Result(error: GiraffeError.jsonParsingFailed)
+                return Result(error: GiraffeError.invalidResponse)
             }
             return Result(value: user)
         })
@@ -43,7 +43,7 @@ extension User {
         let url = Config.baseURL.appendingPathComponent("/users/\(login)/repos").encoded(parameters: ["sort": "pushed"])
         return Resource(url: url, parseJSON: { obj, _, _ in
             guard let json = obj as? [JSONDictionary] else {
-                return Result(error: GiraffeError.jsonParsingFailed)
+                return Result(error: GiraffeError.invalidResponse)
             }
             let repos = json.compactMap(Repo.init)
             return Result(value: repos)

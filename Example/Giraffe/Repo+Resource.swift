@@ -9,10 +9,6 @@
 import Foundation
 import Giraffe
 
-struct Config {
-    static let baseURL = URL(string: "https://api.github.com")!
-}
-
 extension Repo {
     init?(json: JSONDictionary) {
         guard let id = json["id"] as? Int,
@@ -26,7 +22,7 @@ extension Repo {
         let url = Config.baseURL.appendingPathComponent("search/repositories").encoded(parameters: ["q": "\(text)+language:swift"])
         return Resource(url: url, parseJSON: { json, response, error in
             guard let dict = json as? JSONDictionary, let itemsDict = dict["items"] as? [JSONDictionary] else {
-                return Result(error: GiraffeError.jsonParsingFailed)
+                return Result(error: GiraffeError.invalidResponse)
             }
             let repos = itemsDict.compactMap(Repo.init)
             return Result(value: repos)
@@ -37,7 +33,7 @@ extension Repo {
         let url = Config.baseURL.appendingPathComponent("repos/\(fullName)")
         return Resource(url: url, parseJSON: { obj, _, _ in
             guard let json = obj as? JSONDictionary, let repo = Repo(json: json) else {
-                return Result(error: GiraffeError.jsonParsingFailed)
+                return Result(error: GiraffeError.invalidResponse)
             }
             return Result(value: repo)
         })

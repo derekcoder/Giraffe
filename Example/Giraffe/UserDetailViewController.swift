@@ -66,7 +66,7 @@ class UserDetailViewController: UITableViewController {
         loadUser()
     }
     
-    // MARK: - UITableViewDataSource
+    // MARK: - UITableViewDataSource & UITableViewDelegate
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         guard user != nil else { return 0 }

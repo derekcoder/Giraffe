@@ -44,7 +44,7 @@ class ReposViewController: UITableViewController {
         loadRepos()
     }
 
-    // MARK: - UITableViewDataSource
+    // MARK: - UITableViewDataSource & UITableViewDelegate
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return repos.count
@@ -56,5 +56,9 @@ class ReposViewController: UITableViewController {
         cell.fullNameLabel.text = repo.fullName
         cell.descriptionLabel.text = repo.description ?? "--"
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

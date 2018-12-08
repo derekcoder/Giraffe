@@ -32,7 +32,7 @@ extension Episode {
     
     static let all = Resource<[Episode]>(url: url, parseJSON: { (json, _, _) -> Result<[Episode]> in
         guard let dicts = json as? [JSONDictionary] else {
-            return Result(error: GiraffeError.jsonParsingFailed)
+            return Result(error: GiraffeError.invalidResponse)
         }
         let value = dicts.compactMap(Episode.init)
         return Result(value: value)
@@ -69,7 +69,7 @@ class Giraffe_Tests: XCTestCase {
     func testURLRequestInitForGet() {
         let resource = Resource<[Episode]>(url: url, method: .get, parseJSON: { (json, _, _) -> Result<[Episode]> in
             guard let dictionaries = json as? [JSONDictionary] else {
-                return Result(error: GiraffeError.jsonParsingFailed)
+                return Result(error: GiraffeError.invalidResponse)
             }
             let value = dictionaries.compactMap(Episode.init)
             return Result(value: value)
@@ -84,7 +84,7 @@ class Giraffe_Tests: XCTestCase {
         let method: HttpMethod<Any> = .post(data: json)
         let resource = Resource<[Episode]>(url: url, jsonMethod: method, parseJSON: { (json, _, _) -> Result<[Episode]> in
             guard let dictionaries = json as? [JSONDictionary] else {
-                return Result(error: GiraffeError.jsonParsingFailed)
+                return Result(error: GiraffeError.invalidResponse)
             }
             let value = dictionaries.compactMap(Episode.init)
             return Result(value: value)

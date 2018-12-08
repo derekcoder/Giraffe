@@ -7,29 +7,6 @@
 
 import Foundation
 
-public enum GiraffeError: Error {
-    case notHTTP
-    case jsonParsingFailed
-    case other
-    
-    case badRequest
-    case unauthorized
-    case paymentRequired
-    case forbidden
-    case notFound
-    case methodNotAllowed
-    case notAcceptable
-    case proxyAuthenticationRequired
-    case requestTimeout
-    case conflict
-    case internalServerError
-    case notImplemented
-    case badGateway
-    case serviceUnavailable
-    case gatewayTimeout
-    case httpVersionNotSupported
-}
-
 public enum HTTPStatus: Int {
     case ok = 200
     
@@ -58,45 +35,18 @@ public enum HTTPStatus: Int {
 }
 
 extension HTTPStatus {
-    public var error: GiraffeError? {
-        switch self {
-        case .ok, .created, .accepted, .noContent, .resetContent: return nil
-        case .badRequest: return GiraffeError.badRequest
-        case .unauthorized: return GiraffeError.unauthorized
-        case .paymentRequired: return GiraffeError.paymentRequired
-        case .forbidden: return GiraffeError.forbidden
-        case .notFound: return GiraffeError.notFound
-        case .methodNotAllowed: return GiraffeError.methodNotAllowed
-        case .notAcceptable: return GiraffeError.notAcceptable
-        case .proxyAuthenticationRequired: return GiraffeError.proxyAuthenticationRequired
-        case .requestTimeout: return GiraffeError.requestTimeout
-        case .conflict: return GiraffeError.conflict
-        case .internalServerError: return GiraffeError.internalServerError
-        case .notImplemented: return GiraffeError.notImplemented
-        case .badGateway: return GiraffeError.badGateway
-        case .serviceUnavailable: return GiraffeError.serviceUnavailable
-        case .gatewayTimeout: return GiraffeError.gatewayTimeout
-        case .httpVersionNotSupported: return GiraffeError.httpVersionNotSupported
+    var success: Bool {
+        if rawValue >= 200 && rawValue < 300 {
+            return true
         }
+        return false
+    }
+    
+    var failure: Bool {
+        return !success
     }
 }
 
-public protocol ResultErrorReason {
-    
+public enum GiraffeError: Swift.Error {
+    case invalidResponse
 }
-
-//public enum APIClientError: Error {
-//    public enum ResponseErrorReason {
-//        case unauthorized     // 401
-//        case forbidden        // 403
-//        case notFound         // 404
-//        case conflict         // 409
-//        case others(statusCode: Int)
-//    }
-//
-//    case apiFailed(ResponseErrorReason)
-//    case invalidResponse
-//    case notHTTP
-//    case apiResultFailed(ResultErrorReason)
-//}
-//

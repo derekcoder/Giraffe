@@ -21,15 +21,7 @@ class SearchReposViewController: UITableViewController {
         webservice.load(resource) { [weak self] result in
             self?.spinner.stopAnimating()
             switch result {
-            case .failure(let error):
-                if let giraffeError = error as? GiraffeError {
-                    switch giraffeError {
-                    case .jsonParsingFailed: print("JSON parsing failed")
-                    default: print(giraffeError.localizedDescription)
-                    }
-                } else {
-                    print(error.localizedDescription)
-                }
+            case .failure(let error): print(error.localizedDescription)
             case .success(let repos):
                 self?.repos = repos
                 self?.tableView.reloadData()
