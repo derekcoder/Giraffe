@@ -20,11 +20,11 @@ extension Repo {
     
     static func searchResource(text: String) -> Resource<[Repo]> {
         let url = Config.baseURL.appendingPathComponent("search/repositories").encoded(parameters: ["q": "\(text)+language:swift"])
-        return Resource(url: url, parseJSON: { json, response, error in
-            guard let dict = json as? JSONDictionary, let itemsDict = dict["items"] as? [JSONDictionary] else {
+        return Resource(url: url, parseJSON: { obj, _, _ in
+            guard let json = obj as? JSONDictionary, let items = json["items"] as? [JSONDictionary] else {
                 return Result(error: GiraffeError.invalidResponse)
             }
-            let repos = itemsDict.compactMap(Repo.init)
+            let repos = items.compactMap(Repo.init)
             return Result(value: repos)
         })
     }

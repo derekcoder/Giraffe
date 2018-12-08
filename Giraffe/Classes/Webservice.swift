@@ -78,26 +78,27 @@ public final class Webservice {
     public func load<A>(_ resource: Resource<A>, completion: @escaping (Result<A>) -> ()) {
         let request = URLRequest(resource: resource, authenticationToken: authenticationToken)
         session.dataTask(with: request, completionHandler: { data, response, error in
-            if error != nil {
-                
-            } else { // important: if error == nil, data must not be nil
-                DispatchQueue.global().async {
-                    let result = resource.parse(data!, response, error)
-                    DispatchQueue.main.async { completion(result) }
-                }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                DispatchQueue.main.async { completion(Result(error: GiraffeError.notHTTP)) }
+                return
+            }
+            DispatchQueue.global().async {
+                let result = resource.parse(data, httpResponse, error)
+                DispatchQueue.main.async { completion(result) }
             }
         }) .resume()
     }
     
-    public func load<A>(_ resource: Resource<A>, completion: @escaping (Result<A>, URLResponse?) -> ()) {
+    public func load<A>(_ resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
         let request = URLRequest(resource: resource, authenticationToken: authenticationToken)
         session.dataTask(with: request, completionHandler: { data, response, error in
-            if error != nil {
-            } else { // important: if error == nil, data must not be nil
-                DispatchQueue.global().async {
-                    let result = resource.parse(data!, response, error)
-                    DispatchQueue.main.async { completion(result, response) }
-                }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                DispatchQueue.main.async { completion(Result(error: GiraffeError.notHTTP), nil) }
+                return
+            }
+            DispatchQueue.global().async {
+                let result = resource.parse(data, httpResponse, error)
+                DispatchQueue.main.async { completion(result, httpResponse) }
             }
         }) .resume()
     }
