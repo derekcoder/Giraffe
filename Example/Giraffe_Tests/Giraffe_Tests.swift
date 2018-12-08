@@ -30,9 +30,9 @@ extension Episode {
         self.title = title
     }
     
-    static let all = Resource<[Episode]>(url: url, parseJSON: { (json, _) -> Result<[Episode]> in
+    static let all = Resource<[Episode]>(url: url, parseJSON: { (json, _, _) -> Result<[Episode]> in
         guard let dicts = json as? [JSONDictionary] else {
-            return Result(error: .invalidResponse)
+            return Result(error: GiraffeError.jsonParsingFailed)
         }
         let value = dicts.compactMap(Episode.init)
         return Result(value: value)
@@ -67,9 +67,9 @@ class Giraffe_Tests: XCTestCase {
     }
     
     func testURLRequestInitForGet() {
-        let resource = Resource<[Episode]>(url: url, method: .get, parseJSON: { (json, _) -> Result<[Episode]> in
+        let resource = Resource<[Episode]>(url: url, method: .get, parseJSON: { (json, _, _) -> Result<[Episode]> in
             guard let dictionaries = json as? [JSONDictionary] else {
-                return Result(error: APIClientError.invalidResponse)
+                return Result(error: GiraffeError.jsonParsingFailed)
             }
             let value = dictionaries.compactMap(Episode.init)
             return Result(value: value)
@@ -82,9 +82,9 @@ class Giraffe_Tests: XCTestCase {
     func testURLRequestInitForPost() {
         let json = ["id": "id"]
         let method: HttpMethod<Any> = .post(data: json)
-        let resource = Resource<[Episode]>(url: url, jsonMethod: method, parseJSON: { (json, _) -> Result<[Episode]> in
+        let resource = Resource<[Episode]>(url: url, jsonMethod: method, parseJSON: { (json, _, _) -> Result<[Episode]> in
             guard let dictionaries = json as? [JSONDictionary] else {
-                return Result(error: APIClientError.invalidResponse)
+                return Result(error: GiraffeError.jsonParsingFailed)
             }
             let value = dictionaries.compactMap(Episode.init)
             return Result(value: value)

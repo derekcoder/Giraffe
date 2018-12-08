@@ -22,9 +22,10 @@ class SearchReposViewController: UITableViewController {
             self?.spinner.stopAnimating()
             switch result {
             case .failure(let error):
-                if let repoError = error as? RepoError {
-                    switch repoError {
-                    case .noResult: print("No result")
+                if let giraffeError = error as? GiraffeError {
+                    switch giraffeError {
+                    case .jsonParsingFailed: print("JSON parsing failed")
+                    default: print(giraffeError.localizedDescription)
                     }
                 } else {
                     print(error.localizedDescription)

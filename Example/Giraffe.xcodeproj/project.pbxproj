@@ -19,6 +19,10 @@
 		65CA57E42137D395003A7A91 /* Repo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CA57E32137D395003A7A91 /* Repo.swift */; };
 		65CA57E62137D6B0003A7A91 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CA57E52137D6B0003A7A91 /* App.swift */; };
 		AFEFE98AA9C4E609AEE1A54C /* Pods_Giraffe_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C024C4CDCC7979EB81796652 /* Pods_Giraffe_Example.framework */; };
+		DC1D4C5121BB69B6004DCEEC /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1D4C5021BB69B6004DCEEC /* User.swift */; };
+		DC1D4C5321BB69F6004DCEEC /* User+Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1D4C5221BB69F6004DCEEC /* User+Resource.swift */; };
+		DC1D4C5521BB6DC6004DCEEC /* UserDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1D4C5421BB6DC6004DCEEC /* UserDetailViewController.swift */; };
+		DC1D4C5721BBA4A7004DCEEC /* ReposViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1D4C5621BBA4A7004DCEEC /* ReposViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +58,10 @@
 		902FCE1993F660BA67FAC516 /* Pods-Giraffe_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Giraffe_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Giraffe_Tests/Pods-Giraffe_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		C024C4CDCC7979EB81796652 /* Pods_Giraffe_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Giraffe_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C11CAB5A9F6FAFB439F41C98 /* Giraffe.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Giraffe.podspec; path = ../Giraffe.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		DC1D4C5021BB69B6004DCEEC /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		DC1D4C5221BB69F6004DCEEC /* User+Resource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+Resource.swift"; sourceTree = "<group>"; };
+		DC1D4C5421BB6DC6004DCEEC /* UserDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailViewController.swift; sourceTree = "<group>"; };
+		DC1D4C5621BBA4A7004DCEEC /* ReposViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReposViewController.swift; sourceTree = "<group>"; };
 		ED484D1BA7D0D1EAD972B298 /* Pods_Giraffe_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Giraffe_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -113,7 +121,11 @@
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				65CA57E52137D6B0003A7A91 /* App.swift */,
+				DC1D4C5421BB6DC6004DCEEC /* UserDetailViewController.swift */,
+				DC1D4C5621BBA4A7004DCEEC /* ReposViewController.swift */,
 				607FACD71AFB9204008FA782 /* SearchReposViewController.swift */,
+				DC1D4C5021BB69B6004DCEEC /* User.swift */,
+				DC1D4C5221BB69F6004DCEEC /* User+Resource.swift */,
 				65CA57E32137D395003A7A91 /* Repo.swift */,
 				65CA57E12137D38C003A7A91 /* Repo+Resource.swift */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
@@ -374,8 +386,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC1D4C5721BBA4A7004DCEEC /* ReposViewController.swift in Sources */,
 				607FACD81AFB9204008FA782 /* SearchReposViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				DC1D4C5521BB6DC6004DCEEC /* UserDetailViewController.swift in Sources */,
+				DC1D4C5121BB69B6004DCEEC /* User.swift in Sources */,
+				DC1D4C5321BB69F6004DCEEC /* User+Resource.swift in Sources */,
 				65CA57E22137D38C003A7A91 /* Repo+Resource.swift in Sources */,
 				65CA57E62137D6B0003A7A91 /* App.swift in Sources */,
 				65CA57E42137D395003A7A91 /* Repo.swift in Sources */,
