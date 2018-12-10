@@ -81,12 +81,19 @@ extension Webservice {
     public func load<A>(_ resource: Resource<A>, cachePolicy: GiraffeCachePolicy = .reloadIgnoringCacheData, completion: @escaping (Result<A>) -> ()) {
         let request = URLRequest(resource: resource, authenticationToken: configuration.authenticationToken)
         
+        let cachedResponse = self.loadCachedResponse(for: resource)
+        if let cachedResponse = cachedResponse,
+            Date().timeIntervalSince(cachedResponse.createdDate) < 5 {
+            completion(cachedResponse.result)
+            return
+        }
+        
         switch cachePolicy {
         case .reloadIgnoringCacheData:
             sendRequest(request, cachePolicy: cachePolicy, resource: resource, completion: completion)
         case .reloadCacheDataElseLoad:
             DispatchQueue.global().async {
-                if let cachedResponse = self.loadCachedResponse(for: resource) {
+                if let cachedResponse = cachedResponse {
                     DispatchQueue.main.async {
                         completion(cachedResponse.result)
                     }
@@ -100,7 +107,7 @@ extension Webservice {
             }
         case .returnCacheDataDontLoad:
             DispatchQueue.global().async {
-                guard let cachedResponse = self.loadCachedResponse(for: resource) else {
+                guard let cachedResponse = cachedResponse else {
                     DispatchQueue.main.async {
                         completion(Result(error: GiraffeError.noCacheData))
                     }
