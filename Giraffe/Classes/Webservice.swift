@@ -11,7 +11,7 @@
 import Foundation
 
 extension URLRequest {
-    public init<A>(resource: Resource<A>, cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy, authenticationToken: String? = nil) {
+    public init<A>(resource: Resource<A>, cachePolicy: URLRequest.CachePolicy = .reloadIgnoringCacheData, authenticationToken: String? = nil) {
         self.init(url: resource.url, timeoutInterval: resource.timeoutInterval)
         
         httpMethod = resource.method.method
@@ -75,13 +75,13 @@ public final class Webservice {
 }
 
 extension Webservice {
-    public func load<A>(_ resource: Resource<A>, cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy, completion: @escaping (Result<A>) -> ()) {
+    public func load<A>(_ resource: Resource<A>, cachePolicy: URLRequest.CachePolicy = .reloadIgnoringCacheData, completion: @escaping (Result<A>) -> ()) {
         sendRequest(for: resource, cachePolicy: cachePolicy) { result, _ in
             completion(result)
         }
     }
     
-    public func load<A>(_ resource: Resource<A>, cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
+    public func load<A>(_ resource: Resource<A>, cachePolicy: URLRequest.CachePolicy = .reloadIgnoringCacheData, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
         sendRequest(for: resource, cachePolicy: cachePolicy, completion: completion)
     }
     
