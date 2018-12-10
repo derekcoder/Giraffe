@@ -79,8 +79,6 @@ public final class Webservice {
 
 extension Webservice {
     public func load<A>(_ resource: Resource<A>, cachePolicy: GiraffeCachePolicy = .reloadIgnoringCacheData, completion: @escaping (Result<A>) -> ()) {
-        let request = URLRequest(resource: resource, authenticationToken: configuration.authenticationToken)
-        
         let cachedResponse = self.loadCachedResponse(for: resource)
         if let cachedResponse = cachedResponse,
             Date().timeIntervalSince(cachedResponse.createdDate) < 5 {
@@ -88,6 +86,8 @@ extension Webservice {
             return
         }
         
+        let request = URLRequest(resource: resource, authenticationToken: configuration.authenticationToken)
+
         switch cachePolicy {
         case .reloadIgnoringCacheData:
             sendRequest(request, cachePolicy: cachePolicy, resource: resource, completion: completion)
@@ -121,14 +121,21 @@ extension Webservice {
     }
     
     public func load<A>(_ resource: Resource<A>, cachePolicy: GiraffeCachePolicy = .reloadIgnoringCacheData, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
-        let request = URLRequest(resource: resource, authenticationToken: configuration.authenticationToken)
+        let cachedResponse = self.loadCachedResponse(for: resource)
+        if let cachedResponse = cachedResponse,
+            Date().timeIntervalSince(cachedResponse.createdDate) < 5 {
+            completion(cachedResponse.result, cachedResponse.httpResponse)
+            return
+        }
         
+        let request = URLRequest(resource: resource, authenticationToken: configuration.authenticationToken)
+
         switch cachePolicy {
         case .reloadIgnoringCacheData:
             sendRequest(request, cachePolicy: cachePolicy, resource: resource, completion: completion)
         case .reloadCacheDataElseLoad:
             DispatchQueue.global().async {
-                if let cachedResponse = self.loadCachedResponse(for: resource) {
+                if let cachedResponse = cachedResponse {
                     DispatchQueue.main.async {
                         completion(cachedResponse.result, cachedResponse.httpResponse)
                     }
@@ -142,7 +149,7 @@ extension Webservice {
             }
         case .returnCacheDataDontLoad:
             DispatchQueue.global().async {
-                guard let cachedResponse = self.loadCachedResponse(for: resource) else {
+                guard let cachedResponse = cachedResponse else {
                     DispatchQueue.main.async {
                         completion(Result(error: GiraffeError.noCacheData), nil)
                     }
