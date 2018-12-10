@@ -26,7 +26,8 @@ class ReposViewController: UITableViewController {
     }
     
     private func loadRepos() {
-        webservice.load(user.reposResource) { [weak self] result in
+        webservice.load(user.reposResource, cachePolicy: .reloadCacheDataElseLoad) { [weak self] result in
+            print("Loaded repos...")
             guard let self = self else { return }
             self.refreshControl?.endRefreshing()
             switch result {
