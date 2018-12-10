@@ -11,11 +11,7 @@ import Giraffe
 
 final class App {
     let window: UIWindow
-    let webservice: Webservice = {
-        var config = GiraffeConfiguration()
-        config.dontRequestWhenTimeTooShort = true
-        return Webservice(configuration: config)
-    }()
+    let webservice: Webservice = Webservice(configuration: GiraffeConfiguration())
     
     init(window: UIWindow) {
         self.window = window

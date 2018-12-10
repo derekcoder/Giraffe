@@ -50,5 +50,4 @@ extension HTTPStatus {
 public enum GiraffeError: Swift.Error {
     case invalidResponse
     case notHTTP
-    case noCacheData
 }

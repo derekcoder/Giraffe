@@ -11,7 +11,7 @@
 import Foundation
 
 extension URLRequest {
-    public init<A>(resource: Resource<A>, authenticationToken: String? = nil) {
+    public init<A>(resource: Resource<A>, cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy, authenticationToken: String? = nil) {
         self.init(url: resource.url, timeoutInterval: resource.timeoutInterval)
         
         httpMethod = resource.method.method
@@ -49,6 +49,8 @@ extension URLRequest {
         if headerValue(for: .accept) == nil {
             setHeaderValue(MediaType.appJSON.rawValue, for: .accept)
         }
+        
+        self.cachePolicy = cachePolicy
     }
     
     public mutating func setHeaderValue(_ value: String?, for field: HTTPRequestHeaderField) {
@@ -64,134 +66,36 @@ public final class Webservice {
     public let session: URLSession
     public var configuration: GiraffeConfiguration
         
-    public convenience init(configuration: GiraffeConfiguration = GiraffeConfiguration.default) {
-        let config = URLSessionConfiguration.default
-        config.urlCache = nil
-        let session = URLSession(configuration: config)
-        self.init(session: session, configuration: configuration)
-    }
-    
-    public init(session: URLSession, configuration: GiraffeConfiguration = GiraffeConfiguration.default) {
-        self.session = session
+    public init(configuration: GiraffeConfiguration = GiraffeConfiguration.default) {
+        let sessionConfig = URLSessionConfiguration.default
+        sessionConfig.urlCache = configuration.cache
+        self.session = URLSession(configuration: sessionConfig)
         self.configuration = configuration
     }
 }
 
 extension Webservice {
-    public func load<A>(_ resource: Resource<A>, cachePolicy: GiraffeCachePolicy = .reloadIgnoringCacheData, completion: @escaping (Result<A>) -> ()) {
-        let cachedResponse = self.loadCachedResponse(for: resource)
-        if let cachedResponse = cachedResponse,
-            Date().timeIntervalSince(cachedResponse.createdDate) < 5 {
-            completion(cachedResponse.result)
-            return
+    public func load<A>(_ resource: Resource<A>, cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy, completion: @escaping (Result<A>) -> ()) {
+        sendRequest(for: resource, cachePolicy: cachePolicy) { result, _ in
+            completion(result)
         }
-        
-        let request = URLRequest(resource: resource, authenticationToken: configuration.authenticationToken)
-
-        switch cachePolicy {
-        case .reloadIgnoringCacheData:
-            sendRequest(request, cachePolicy: cachePolicy, resource: resource, completion: completion)
-        case .reloadCacheDataElseLoad:
+    }
+    
+    public func load<A>(_ resource: Resource<A>, cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
+        sendRequest(for: resource, cachePolicy: cachePolicy, completion: completion)
+    }
+    
+    private func sendRequest<A>(for resource: Resource<A>, cachePolicy: URLRequest.CachePolicy, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
+        let request = URLRequest(resource: resource, cachePolicy: cachePolicy, authenticationToken: configuration.authenticationToken)
+        session.dataTask(with: request, completionHandler: { data, response, error in
             DispatchQueue.global().async {
-                if let cachedResponse = cachedResponse {
-                    DispatchQueue.main.async {
-                        completion(cachedResponse.result)
-                    }
-                    if !self.configuration.dontRequestWhenTimeTooShort ||
-                        Date().timeIntervalSince(cachedResponse.createdDate) > self.configuration.timeIntervalForDontRequest {
-                        self.sendRequest(request, cachePolicy: cachePolicy, resource: resource, completion: completion)
-                    }
+                let result: Result<A>
+                let httpResponse = response as? HTTPURLResponse
+                if let httpResponse = httpResponse {
+                    result = resource.parse(data, httpResponse, error)
                 } else {
-                    self.sendRequest(request, cachePolicy: cachePolicy, resource: resource, completion: completion)
+                    result = Result(error: GiraffeError.notHTTP)
                 }
-            }
-        case .returnCacheDataDontLoad:
-            DispatchQueue.global().async {
-                guard let cachedResponse = cachedResponse else {
-                    DispatchQueue.main.async {
-                        completion(Result(error: GiraffeError.noCacheData))
-                    }
-                    return
-                }
-                DispatchQueue.main.async {
-                    completion(cachedResponse.result)
-                }
-            }
-        }
-    }
-    
-    public func load<A>(_ resource: Resource<A>, cachePolicy: GiraffeCachePolicy = .reloadIgnoringCacheData, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
-        let cachedResponse = self.loadCachedResponse(for: resource)
-        if let cachedResponse = cachedResponse,
-            Date().timeIntervalSince(cachedResponse.createdDate) < 5 {
-            completion(cachedResponse.result, cachedResponse.httpResponse)
-            return
-        }
-        
-        let request = URLRequest(resource: resource, authenticationToken: configuration.authenticationToken)
-
-        switch cachePolicy {
-        case .reloadIgnoringCacheData:
-            sendRequest(request, cachePolicy: cachePolicy, resource: resource, completion: completion)
-        case .reloadCacheDataElseLoad:
-            DispatchQueue.global().async {
-                if let cachedResponse = cachedResponse {
-                    DispatchQueue.main.async {
-                        completion(cachedResponse.result, cachedResponse.httpResponse)
-                    }
-                    if !self.configuration.dontRequestWhenTimeTooShort ||
-                        Date().timeIntervalSince(cachedResponse.createdDate) > self.configuration.timeIntervalForDontRequest {
-                        self.sendRequest(request, cachePolicy: cachePolicy, resource: resource, completion: completion)
-                    }
-                } else {
-                    self.sendRequest(request, cachePolicy: cachePolicy, resource: resource, completion: completion)
-                }
-            }
-        case .returnCacheDataDontLoad:
-            DispatchQueue.global().async {
-                guard let cachedResponse = cachedResponse else {
-                    DispatchQueue.main.async {
-                        completion(Result(error: GiraffeError.noCacheData), nil)
-                    }
-                    return
-                }
-                DispatchQueue.main.async {
-                    completion(cachedResponse.result, cachedResponse.httpResponse)
-                }
-            }
-        }
-    }
-    
-    private func sendRequest<A>(_ request: URLRequest, cachePolicy: GiraffeCachePolicy, resource: Resource<A>, completion: @escaping (Result<A>) -> ()) {
-        session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
-            guard let self = self else { return }
-            
-            let cachedResponse = CachedResponse(resource: resource, response: response, data: data, createdDate: Date())
-            if cachePolicy.needSave {
-                self.saveCachedResponse(cachedResponse)
-            }
-            
-            DispatchQueue.global().async {
-                let result = cachedResponse.result
-                DispatchQueue.main.async {
-                    completion(result)
-                }
-            }
-        }) .resume()
-    }
-    
-    private func sendRequest<A>(_ request: URLRequest, cachePolicy: GiraffeCachePolicy, resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
-        session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
-            guard let self = self else { return }
-            
-            let cachedResponse = CachedResponse(resource: resource, response: response, data: data, createdDate: Date())
-            if cachePolicy.needSave {
-                self.saveCachedResponse(cachedResponse)
-            }
-            
-            DispatchQueue.global().async {
-                let result = cachedResponse.result
-                let httpResponse = cachedResponse.httpResponse
                 DispatchQueue.main.async {
                     completion(result, httpResponse)
                 }
