@@ -11,4 +11,5 @@ import Foundation
 struct Repo {
     let id: Int
     let fullName: String
+    let description: String?
 }

@@ -77,27 +77,13 @@ public final class Webservice {
     
     public func load<A>(_ resource: Resource<A>, completion: @escaping (Result<A>) -> ()) {
         let request = URLRequest(resource: resource, authenticationToken: authenticationToken)
-        session.dataTask(with: request, completionHandler: { data, response, _ in
+        session.dataTask(with: request, completionHandler: { data, response, error in
+            guard let httpResponse = response as? HTTPURLResponse else {
+                DispatchQueue.main.async { completion(Result(error: GiraffeError.notHTTP)) }
+                return
+            }
             DispatchQueue.global().async {
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    DispatchQueue.main.async {
-                        completion(Result(error: GiraffeError.notHTTP))
-                    }
-                    return
-                }
-                guard httpResponse.statusCode != HTTPStatus.unauthorized.rawValue else {
-                    DispatchQueue.main.async {
-                        completion(Result(error: GiraffeError.unauthorized))
-                    }
-                    return
-                }
-                guard let result = data.map({ resource.parse($0, httpResponse) }) else {
-                    DispatchQueue.main.async {
-                        completion(Result(error: GiraffeError.other))
-                    }
-                    return
-                }
-                
+                let result = resource.parse(data, httpResponse, error)
                 DispatchQueue.main.async { completion(result) }
             }
         }) .resume()
@@ -105,27 +91,13 @@ public final class Webservice {
     
     public func load<A>(_ resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
         let request = URLRequest(resource: resource, authenticationToken: authenticationToken)
-        session.dataTask(with: request, completionHandler: { data, response, _ in
+        session.dataTask(with: request, completionHandler: { data, response, error in
+            guard let httpResponse = response as? HTTPURLResponse else {
+                DispatchQueue.main.async { completion(Result(error: GiraffeError.notHTTP), nil) }
+                return
+            }
             DispatchQueue.global().async {
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    DispatchQueue.main.async {
-                        completion(Result(error: GiraffeError.notHTTP), nil)
-                    }
-                    return
-                }
-                guard httpResponse.statusCode != HTTPStatus.unauthorized.rawValue else {
-                    DispatchQueue.main.async {
-                        completion(Result(error: GiraffeError.unauthorized), httpResponse)
-                    }
-                    return
-                }
-                guard let result = data.map({ resource.parse($0, httpResponse) }) else {
-                    DispatchQueue.main.async {
-                        completion(Result(error: GiraffeError.other), httpResponse)
-                    }
-                    return
-                }
-                
+                let result = resource.parse(data, httpResponse, error)
                 DispatchQueue.main.async { completion(result, httpResponse) }
             }
         }) .resume()

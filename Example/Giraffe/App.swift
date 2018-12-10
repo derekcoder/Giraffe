@@ -15,7 +15,24 @@ final class App {
     
     init(window: UIWindow) {
         self.window = window
-        configureSearchReposVC()
+        configureUserDetail()
+    }
+    
+    private func configureUserDetail() {
+        let nav = window.rootViewController as! UINavigationController
+        let userDetailVC = nav.viewControllers[0] as! UserDetailViewController
+        userDetailVC.didShowRepos = { [unowned self, unowned nav] user in
+            self.showRepos(for: user, from: nav)
+        }
+        userDetailVC.webservice = webservice
+    }
+    
+    private func showRepos(for user: User, from: UINavigationController) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let reposVC = storyboard.instantiateViewController(withIdentifier: "Repos") as! ReposViewController
+        reposVC.webservice = webservice
+        reposVC.user = user
+        from.pushViewController(reposVC, animated: true)
     }
     
     private func configureSearchReposVC() {
