@@ -12,7 +12,7 @@
         <!--Search Repos-->
         <scene sceneID="Vgi-hw-ap5">
             <objects>
-                <tableViewController id="r95-M7-t5X" customClass="SearchReposViewController" customModule="Giraffe_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="Search" id="r95-M7-t5X" customClass="SearchReposViewController" customModule="Giraffe_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="ONf-we-Cfn">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -50,7 +50,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Search Repos" id="H2a-kH-0bh">
-                        <barButtonItem key="rightBarButtonItem" style="plain" id="RAp-Yj-EIn">
+                        <barButtonItem key="rightBarButtonItem" style="done" id="RAp-Yj-EIn">
                             <view key="customView" contentMode="scaleToFill" id="MTN-sI-Mzg">
                                 <rect key="frame" x="326" y="5.5" width="33" height="33"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -160,6 +160,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="USER" id="zQP-J0-Gen"/>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="Yka-aV-RCm">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <connections>
                             <action selector="refresh" destination="OmC-NC-LAL" eventType="valueChanged" id="Sdy-Sl-llo"/>
@@ -230,6 +231,7 @@
                         </connections>
                     </tableView>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="qYf-ze-yji">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <connections>
                             <action selector="refresh" destination="PB4-EY-Lpi" eventType="valueChanged" id="XAF-jr-RH2"/>
