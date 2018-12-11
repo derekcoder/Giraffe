@@ -35,14 +35,14 @@ public enum HTTPStatus: Int {
 }
 
 extension HTTPStatus {
-    var success: Bool {
+    public var success: Bool {
         if rawValue >= 200 && rawValue < 300 {
             return true
         }
         return false
     }
     
-    var failure: Bool {
+    public var failure: Bool {
         return !success
     }
 }
