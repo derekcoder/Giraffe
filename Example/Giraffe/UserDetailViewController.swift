@@ -26,12 +26,12 @@ class UserDetailViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         refreshControl?.beginRefreshing()
-        loadUser()
+        loadUser(cacheMode: .cacheThenReload)
     }
     
-    private func loadUser(cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy) {
+    private func loadUser(cacheMode: CacheMode) {
         let resource = User.resource(for: "derekcoder")
-        webservice.load(resource, cachePolicy: cachePolicy) { [weak self] result in
+        webservice.load(resource, cacheMode: cacheMode) { [weak self] result in
             guard let self = self else { return }
             self.refreshControl?.endRefreshing()
             switch result {
@@ -63,7 +63,7 @@ class UserDetailViewController: UITableViewController {
     // MARK: - Action
     
     @IBAction func refresh() {
-        loadUser(cachePolicy: .reloadIgnoringCacheData)
+        loadUser(cacheMode: .onlyReload)
     }
     
     // MARK: - UITableViewDataSource & UITableViewDelegate

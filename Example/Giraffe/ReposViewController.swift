@@ -22,11 +22,11 @@ class ReposViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         refreshControl?.beginRefreshing()
-        loadRepos()
+        loadRepos(cacheMode: .cacheThenReload)
     }
     
-    private func loadRepos(cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy) {
-        webservice.load(user.reposResource, cachePolicy: cachePolicy) { [weak self] result in
+    private func loadRepos(cacheMode: CacheMode) {
+        webservice.load(user.reposResource, cacheMode: cacheMode) { [weak self] result in
             guard let self = self else { return }
             self.refreshControl?.endRefreshing()
             switch result {
@@ -41,7 +41,7 @@ class ReposViewController: UITableViewController {
     // MARK: - Action
 
     @IBAction func refresh() {
-        loadRepos(cachePolicy: .reloadIgnoringCacheData)
+        loadRepos(cacheMode: .onlyReload)
     }
 
     // MARK: - UITableViewDataSource & UITableViewDelegate

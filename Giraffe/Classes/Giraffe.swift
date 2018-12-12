@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CommonCrypto
 
 public typealias JSONDictionary = [String: Any]
 
@@ -62,5 +63,19 @@ extension Dictionary where Key == String {
         let components = self.compactMap { queryComponent(key: $0, value: $1) }
         let result = components.map { "\($0)=\($1)"}.joined(separator: "&")
         return result
+    }
+}
+
+extension String {
+    var md5: String {
+        guard let data = self.data(using: .utf8) else {
+            return self
+        }
+        var digest = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
+        _ = data.withUnsafeBytes { bytes in
+            return CC_MD5(bytes, CC_LONG(data.count), &digest)
+        }
+        
+        return digest.map { String(format: "%02x", $0) }.joined()
     }
 }
