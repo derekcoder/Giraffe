@@ -22,7 +22,7 @@ class ReposViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         refreshControl?.beginRefreshing()
-        loadRepos(strategy: .cacheOrReload)
+        loadRepos(strategy: .cacheThenReload(returnOnce: false))
     }
     
     private func loadRepos(strategy: Giraffe.Strategy) {
@@ -32,6 +32,7 @@ class ReposViewController: UITableViewController {
             switch result {
             case .failure(let error): print(error.localizedDescription)
             case .success(let repos):
+                print("loaded repos")
                 self.repos = repos
                 self.tableView.reloadData()
             }
