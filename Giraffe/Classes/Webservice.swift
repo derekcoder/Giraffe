@@ -88,32 +88,32 @@ extension Webservice {
         case .onlyReload: sendRequest(for: resource, completion: completion)
         case .onlyCache:
             CallbackQueue.globalAsync.execute {
-                self.printDebugMessage("loading cached data")
+                self.printDebugMessage("loading cached data", for: resource)
                 if let cachedResponse = self.loadCachedResponse(for: resource) {
                     let result = cachedResponse.result
                     CallbackQueue.mainAsync.execute {
-                        self.printDebugMessage("loaded cached data")
+                        self.printDebugMessage("loaded cached data", for: resource)
                         completion(result, cachedResponse.httpResponse)
                     }
                 } else {
                     CallbackQueue.mainAsync.execute {
-                        self.printDebugMessage("no cache data")
+                        self.printDebugMessage("no cache data", for: resource)
                         completion(Result(error: GiraffeError.noCacheData), nil)
                     }
                 }
             }
         case .cacheThenReload:
             DispatchQueue.global().async {
-                self.printDebugMessage("loading cached data")
+                self.printDebugMessage("loading cached data", for: resource)
                 if let cachedResponse = self.loadCachedResponse(for: resource) {
                     let result = cachedResponse.result
                     CallbackQueue.mainAsync.execute {
-                        self.printDebugMessage("loaded cached data")
+                        self.printDebugMessage("loaded cached data", for: resource)
                         completion(result, cachedResponse.httpResponse)
                         self.sendRequest(for: resource, completion: completion)
                     }
                 } else {
-                    self.printDebugMessage("no cache data")
+                    self.printDebugMessage("no cache data, for: resource", for: resource)
                     self.sendRequest(for: resource, completion: completion)
                 }
             }
@@ -121,18 +121,18 @@ extension Webservice {
     }
     
     private func sendRequest<A>(for resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
-        printDebugMessage("sending request")
+        printDebugMessage("sending request", for: resource)
         let request = URLRequest(resource: resource, authenticationToken: configuration.authenticationToken)
         session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
             guard let self = self else { return }
             CallbackQueue.globalAsync.execute {
-                self.printDebugMessage("saving data into cache")
+                self.printDebugMessage("saving data into cache", for: resource)
                 let cachedResponse = CachedResponse(resource: resource, response: response, data: data, createdDate: Date())
                 self.saveCachedResponse(cachedResponse)
                 
                 let result = cachedResponse.result
                 CallbackQueue.mainAsync.execute {
-                    self.printDebugMessage("loaded data from request")
+                    self.printDebugMessage("loaded data from request", for: resource)
                     completion(result, cachedResponse.httpResponse)
                 }
             }
@@ -141,8 +141,8 @@ extension Webservice {
 }
 
 extension Webservice {
-    func printDebugMessage(_ message: String) {
+    func printDebugMessage<A>(_ message: String, for resource: Resource<A>) {
         guard configuration.debugEnabled else { return }
-        print("****** Giraffe: \(message)")
+        print("****** Giraffe: \(message) - \(resource.url.absoluteString)")
     }
 }
