@@ -11,7 +11,11 @@ import Giraffe
 
 final class App {
     let window: UIWindow
-    let webservice: Webservice = Webservice(configuration: GiraffeConfiguration())
+    let webservice: Webservice = {
+        let config = Giraffe.Configuration()
+        config.debugEnabled = true
+        return Webservice(configuration: config)
+    }()
     
     init(window: UIWindow) {
         self.window = window

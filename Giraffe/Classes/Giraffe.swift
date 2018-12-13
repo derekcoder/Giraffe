@@ -6,7 +6,39 @@
 //
 
 import Foundation
-import CommonCrypto
+
+public struct Giraffe {
+    public class Configuration {
+        public var authenticationToken: String? = nil
+        public let cache = URLCache(memoryCapacity: 10 * 1024 * 1024, diskCapacity: 40 * 1024 * 1024, diskPath: "com.derekcoder.urlcache")
+        public var debugEnabled = false
+        
+        public static var `default`: Configuration {
+            return Configuration()
+        }
+        
+        public init() { }
+    }
+    
+    public enum Strategy {
+        case onlyReload
+        case onlyCache
+        case cacheThenReload
+    }
+}
+
+
+public enum CallbackQueue {
+    case mainAsync
+    case globalAsync
+    
+    public func execute(_ block: @escaping () -> ()) {
+        switch self {
+        case .mainAsync: DispatchQueue.main.async { block() }
+        case .globalAsync: DispatchQueue.global().async { block() }
+        }
+    }
+}
 
 public typealias JSONDictionary = [String: Any]
 
@@ -63,19 +95,5 @@ extension Dictionary where Key == String {
         let components = self.compactMap { queryComponent(key: $0, value: $1) }
         let result = components.map { "\($0)=\($1)"}.joined(separator: "&")
         return result
-    }
-}
-
-extension String {
-    var md5: String {
-        guard let data = self.data(using: .utf8) else {
-            return self
-        }
-        var digest = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
-        _ = data.withUnsafeBytes { bytes in
-            return CC_MD5(bytes, CC_LONG(data.count), &digest)
-        }
-        
-        return digest.map { String(format: "%02x", $0) }.joined()
     }
 }

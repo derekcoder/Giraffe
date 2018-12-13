@@ -62,9 +62,9 @@ public extension URLRequest {
 
 public final class Webservice {
     public let session: URLSession
-    public var configuration: GiraffeConfiguration
+    public var configuration: Giraffe.Configuration
         
-    public init(configuration: GiraffeConfiguration = GiraffeConfiguration.default) {
+    public init(configuration: Giraffe.Configuration = Giraffe.Configuration.default) {
         let sessionConfig = URLSessionConfiguration.default
         sessionConfig.urlCache = nil
         self.session = URLSession(configuration: sessionConfig)
@@ -73,74 +73,76 @@ public final class Webservice {
 }
 
 extension Webservice {
-    public func load<A>(_ resource: Resource<A>, cacheMode: CacheMode = .onlyReload, completion: @escaping (Result<A>) -> ()) {
-        sendRequest(for: resource, cacheMode: cacheMode) { result, _ in
+    public func load<A>(_ resource: Resource<A>, strategy: Giraffe.Strategy = .onlyReload, completion: @escaping (Result<A>) -> ()) {
+        loadDataByStategy(strategy, resource: resource) { result, _ in
             completion(result)
         }
     }
     
-    public func load<A>(_ resource: Resource<A>, cacheMode: CacheMode = .onlyReload, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
-        sendRequest(for: resource, cacheMode: cacheMode, completion: completion)
+    public func load<A>(_ resource: Resource<A>, strategy: Giraffe.Strategy = .onlyReload, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
+        loadDataByStategy(strategy, resource: resource, completion: completion)
     }
     
-    private func sendRequest<A>(for resource: Resource<A>, cacheMode: CacheMode, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
-        let request = URLRequest(resource: resource, authenticationToken: configuration.authenticationToken)
-        
-        guard let url = request.url else {
-            completion(Result(error: GiraffeError.invalidRequest), nil)
-            return
-        }
-        
-        switch cacheMode {
-        case .onlyReload:
-            session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
-                guard let self = self else { return }
-                DispatchQueue.global().async {
-                    let result = self.generateResult(resource: resource, data: data, response: response, error: error)
-                    
-                    if let data = data {
-                        self.configuration.newCache.store(data: data, forKey: url.absoluteString)
-                    }
-                    DispatchQueue.main.async {
-                        completion(result.0, result.1)
-                    }
-                }
-            }).resume()
+    private func loadDataByStategy<A>(_ strategy: Giraffe.Strategy, resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
+        switch strategy {
+        case .onlyReload: sendRequest(for: resource, completion: completion)
         case .onlyCache:
-            if let data = configuration.newCache.data(forKey: url.absoluteString) {
-                DispatchQueue.global().async {
-                    let result = self.generateResult(resource: resource, data: data, response: nil, error: nil)
-                    DispatchQueue.main.async {
-                        completion(result.0, result.1)
+            CallbackQueue.globalAsync.execute {
+                self.printDebugMessage("loading cached data")
+                if let cachedResponse = self.loadCachedResponse(for: resource) {
+                    let result = cachedResponse.result
+                    CallbackQueue.mainAsync.execute {
+                        self.printDebugMessage("loaded cached data")
+                        completion(result, cachedResponse.httpResponse)
                     }
-                }
-            } else {
-                DispatchQueue.main.async {
-                    completion(Result(error: GiraffeError.invalidRequest), nil)
+                } else {
+                    CallbackQueue.mainAsync.execute {
+                        self.printDebugMessage("no cache data")
+                        completion(Result(error: GiraffeError.noCacheData), nil)
+                    }
                 }
             }
         case .cacheThenReload:
-            if let data = configuration.newCache.data(forKey: url.absoluteString) {
-                DispatchQueue.global().async {
-                    let result = self.generateResult(resource: resource, data: data, response: nil, error: nil)
-                    DispatchQueue.main.async {
-                        completion(result.0, result.1)
+            DispatchQueue.global().async {
+                self.printDebugMessage("loading cached data")
+                if let cachedResponse = self.loadCachedResponse(for: resource) {
+                    let result = cachedResponse.result
+                    CallbackQueue.mainAsync.execute {
+                        self.printDebugMessage("loaded cached data")
+                        completion(result, cachedResponse.httpResponse)
+                        self.sendRequest(for: resource, completion: completion)
                     }
-                    
+                } else {
+                    self.printDebugMessage("no cache data")
+                    self.sendRequest(for: resource, completion: completion)
                 }
             }
         }
-        
     }
     
-    private func generateResult<A>(resource: Resource<A>, data: Data?, response: URLResponse?, error: Error?) -> (Result<A>, HTTPURLResponse?) {
-        let httpResponse = response as? HTTPURLResponse
-        let result: Result<A>
-        if let httpResponse = httpResponse {
-            result = resource.parse(data, httpResponse, error)
-        } else {
-            result = Result(error: GiraffeError.notHTTP)
-        }
-        return (result, httpResponse)
+    private func sendRequest<A>(for resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
+        printDebugMessage("sending request")
+        let request = URLRequest(resource: resource, authenticationToken: configuration.authenticationToken)
+        session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
+            guard let self = self else { return }
+            CallbackQueue.globalAsync.execute {
+                self.printDebugMessage("saving data into cache")
+                let cachedResponse = CachedResponse(resource: resource, response: response, data: data, createdDate: Date())
+                self.saveCachedResponse(cachedResponse)
+                
+                let result = cachedResponse.result
+                CallbackQueue.mainAsync.execute {
+                    self.printDebugMessage("loaded data from request")
+                    completion(result, cachedResponse.httpResponse)
+                }
+            }
+        }).resume()
+    }
+}
+
+extension Webservice {
+    func printDebugMessage(_ message: String) {
+        guard configuration.debugEnabled else { return }
+        print("****** Giraffe: \(message)")
     }
 }
