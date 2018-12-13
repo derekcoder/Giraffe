@@ -117,6 +117,20 @@ extension Webservice {
                     self.sendRequest(for: resource, completion: completion)
                 }
             }
+        case .cacheOrReload:
+            DispatchQueue.global().async {
+                self.printDebugMessage("loading cached data", for: resource)
+                if let cachedResponse = self.loadCachedResponse(for: resource) {
+                    let result = cachedResponse.result
+                    CallbackQueue.mainAsync.execute {
+                        self.printDebugMessage("loaded cached data", for: resource)
+                        completion(result, cachedResponse.httpResponse)
+                    }
+                } else {
+                    self.printDebugMessage("no cache data, for: resource", for: resource)
+                    self.sendRequest(for: resource, completion: completion)
+                }
+            }
         }
     }
     

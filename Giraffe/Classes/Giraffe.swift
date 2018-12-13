@@ -24,6 +24,7 @@ public struct Giraffe {
         case onlyReload
         case onlyCache
         case cacheThenReload
+        case cacheOrReload
     }
 }
 
