@@ -73,23 +73,28 @@ public final class Webservice {
 }
 
 extension Webservice {
-    public func load<A>(_ resource: Resource<A>, strategy: Giraffe.Strategy = .onlyReload, completion: @escaping (Result<A>) -> ()) {
-        loadDataByStategy(strategy, resource: resource) { result, _ in
+    public func load<A>(_ resource: Resource<A>, strategy: Giraffe.Strategy = .onlyReload, expiration: CacheExpiration = .none, completion: @escaping (Result<A>) -> ()) {
+        loadDataByStategy(strategy, expiration: expiration, resource: resource) { result, _ in
             completion(result)
         }
     }
     
-    public func load<A>(_ resource: Resource<A>, strategy: Giraffe.Strategy = .onlyReload, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
-        loadDataByStategy(strategy, resource: resource, completion: completion)
+    public func load<A>(_ resource: Resource<A>, strategy: Giraffe.Strategy = .onlyReload, expiration: CacheExpiration = .none, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
+        loadDataByStategy(strategy, expiration: expiration, resource: resource, completion: completion)
     }
     
-    private func loadDataByStategy<A>(_ strategy: Giraffe.Strategy, resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
+    private func loadDataByStategy<A>(_ strategy: Giraffe.Strategy, expiration: CacheExpiration = .none, resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
+        guard case .get = resource.method else {
+            sendRequest(for: resource, needComplete: true, completion: completion)
+            return
+        }
+        
         switch strategy {
         case .onlyReload: sendRequest(for: resource, needComplete: true, completion: completion)
         case .onlyCache:
             CallbackQueue.globalAsync.execute {
                 self.printDebugMessage("loading cached data", for: resource)
-                if let cachedResponse = self.loadCachedResponse(for: resource) {
+                if let cachedResponse = self.loadCachedResponse(for: resource, expiration: expiration) {
                     let result = cachedResponse.result
                     CallbackQueue.mainAsync.execute {
                         self.printDebugMessage("loaded cached data", for: resource)
@@ -105,7 +110,7 @@ extension Webservice {
         case .cacheThenReload(let returnOnce):
             DispatchQueue.global().async {
                 self.printDebugMessage("loading cached data", for: resource)
-                if let cachedResponse = self.loadCachedResponse(for: resource) {
+                if let cachedResponse = self.loadCachedResponse(for: resource, expiration: expiration) {
                     let result = cachedResponse.result
                     CallbackQueue.mainAsync.execute {
                         self.printDebugMessage("loaded cached data", for: resource)
@@ -113,21 +118,21 @@ extension Webservice {
                         self.sendRequest(for: resource, needComplete: !returnOnce, completion: completion)
                     }
                 } else {
-                    self.printDebugMessage("no cache data, for: resource", for: resource)
+                    self.printDebugMessage("no cache data", for: resource)
                     self.sendRequest(for: resource, needComplete: true, completion: completion)
                 }
             }
         case .cacheOrReload:
             DispatchQueue.global().async {
                 self.printDebugMessage("loading cached data", for: resource)
-                if let cachedResponse = self.loadCachedResponse(for: resource) {
+                if let cachedResponse = self.loadCachedResponse(for: resource, expiration: expiration) {
                     let result = cachedResponse.result
                     CallbackQueue.mainAsync.execute {
                         self.printDebugMessage("loaded cached data", for: resource)
                         completion(result, cachedResponse.httpResponse)
                     }
                 } else {
-                    self.printDebugMessage("no cache data, for: resource", for: resource)
+                    self.printDebugMessage("no cache data", for: resource)
                     self.sendRequest(for: resource, needComplete: true, completion: completion)
                 }
             }
@@ -142,7 +147,10 @@ extension Webservice {
             CallbackQueue.globalAsync.execute {
                 self.printDebugMessage("saving data into cache", for: resource)
                 let cachedResponse = CachedResponse(resource: resource, response: response, data: data, createdDate: Date())
-                self.saveCachedResponse(cachedResponse)
+                
+                if case .get = resource.method {
+                    self.saveCachedResponse(cachedResponse)
+                }
                 
                 let result = cachedResponse.result
                 CallbackQueue.mainAsync.execute {
