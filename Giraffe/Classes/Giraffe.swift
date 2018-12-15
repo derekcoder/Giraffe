@@ -39,8 +39,8 @@ public enum CacheExpiration {
         switch self {
         case .none: return nil
         case .seconds(let seconds): return date.addingTimeInterval(-seconds)
-        case .hours(let hours): return date.addingTimeInterval(TimeInterval(60 * 60 * hours))
-        case .days(let days): return date.addingTimeInterval(TimeInterval(24 * 60 * 60 * days))
+        case .hours(let hours): return date.addingTimeInterval(-TimeInterval(60 * 60 * hours))
+        case .days(let days): return date.addingTimeInterval(-TimeInterval(24 * 60 * 60 * days))
         case .date(let ref): return ref
         }
     }
