@@ -82,13 +82,14 @@ extension Webservice {
 public extension Webservice {
     func removeCache<A>(for resource: Resource<A>) {
         printDebugMessage("removed data from cache", for: resource)
-        let urlRequest = URLRequest(resource: resource)
-        configuration.cache.removeCachedResponse(for: urlRequest)
-        
-        if var cachedResponse = loadCachedResponse(for: resource, expiration: .none) {
+        let request = URLRequest(resource: resource)
+        if let cachedURLResponse = configuration.cache.cachedResponse(for: request) {
+            var cachedResponse = CachedResponse(resource: resource, cachedURLResponse: cachedURLResponse)
             cachedResponse.expired = true
             saveCachedResponse(cachedResponse)
-        }
+            
+            configuration.cache.removeCachedResponse(for: request)
+        }        
     }
     
     func removeAllCaches() {
