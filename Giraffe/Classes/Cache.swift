@@ -59,10 +59,43 @@ extension Webservice {
         let request = URLRequest(resource: resource)
         guard let cachedURLResponse = configuration.cache.cachedResponse(for: request) else { return nil }
         let cachedResponse = CachedResponse(resource: resource, cachedURLResponse: cachedURLResponse)
+        if let httpURLResponse = cachedResponse.response as? HTTPURLResponse,
+            let allHeaders = httpURLResponse.allHeaderFields as? [String: String],
+            let cacheControl = allHeaders["Cache-Control"],
+            cacheControl == "max-age=0" {
+            printDebugMessage("cached data is expired", for: resource)
+            return nil
+        }
         guard !expiration.isExpired(for: cachedResponse.createdDate) else {
-            self.printDebugMessage("cached data is expired", for: resource)
+            printDebugMessage("cached data is expired", for: resource)
             return nil
         }
         return cachedResponse
+    }
+}
+
+public extension Webservice {
+    func removeCache<A>(for resource: Resource<A>) {
+        printDebugMessage("removed data from cache", for: resource)
+        let urlRequest = URLRequest(resource: resource)
+        configuration.cache.removeCachedResponse(for: urlRequest)
+        
+        if let cachedURLResponse = configuration.cache.cachedResponse(for: urlRequest),
+            let httpURLResponse = cachedURLResponse.response as? HTTPURLResponse,
+            let url = httpURLResponse.url {
+            var allHeaders = (httpURLResponse.allHeaderFields as? [String: String]) ?? [:]
+            allHeaders["Cache-Control"] = "max-age=0"
+            let expiredHTTPURLResponse = HTTPURLResponse(url: url,
+                                                         statusCode: httpURLResponse.statusCode,
+                                                         httpVersion: "HTTP/1.1",
+                                                         headerFields: allHeaders)
+            
+            let expiredCachedResponse = CachedResponse(resource: resource, response: expiredHTTPURLResponse, data: cachedURLResponse.data, createdDate: Date())
+            saveCachedResponse(expiredCachedResponse)
+        }
+    }
+    
+    func removeAllCaches() {
+        configuration.cache.removeAllCachedResponses()
     }
 }
