@@ -12,9 +12,18 @@ struct CachedResponse<A> {
     let response: URLResponse?
     let data: Data?
     let createdDate: Date
+    var expired: Bool
 }
 
 extension CachedResponse {
+    init(resource: Resource<A>, response: URLResponse?, data: Data?) {
+        self.resource = resource
+        self.response = response
+        self.data = data
+        self.createdDate = Date()
+        self.expired = false
+    }
+    
     var request: URLRequest {
         return URLRequest(resource: resource)
     }
@@ -25,12 +34,15 @@ extension CachedResponse {
         self.data = cachedURLResponse.data
         
         let createdDate = cachedURLResponse.userInfo?["created_date"] as? Date
+        let expired = cachedURLResponse.userInfo?["expired"] as? Bool
         self.createdDate = createdDate ?? Date()
+        self.expired = expired ?? false
     }
     
     var cachedURLResponse: CachedURLResponse? {
         guard let response = response, let data = data else { return nil }
-        let cachedURLResponse = CachedURLResponse(response: response, data: data, userInfo: ["created_date": createdDate], storagePolicy: .allowed)
+        let userInfo: [String: Any] = ["created_date": createdDate, "expired": expired]
+        let cachedURLResponse = CachedURLResponse(response: response, data: data, userInfo: userInfo, storagePolicy: .allowed)
         return cachedURLResponse
     }
     
@@ -59,14 +71,7 @@ extension Webservice {
         let request = URLRequest(resource: resource)
         guard let cachedURLResponse = configuration.cache.cachedResponse(for: request) else { return nil }
         let cachedResponse = CachedResponse(resource: resource, cachedURLResponse: cachedURLResponse)
-        if let httpURLResponse = cachedResponse.response as? HTTPURLResponse,
-            let allHeaders = httpURLResponse.allHeaderFields as? [String: String],
-            let cacheControl = allHeaders["Cache-Control"],
-            cacheControl == "max-age=0" {
-            printDebugMessage("cached data is expired", for: resource)
-            return nil
-        }
-        guard !expiration.isExpired(for: cachedResponse.createdDate) else {
+        guard !cachedResponse.expired && !expiration.isExpired(for: cachedResponse.createdDate) else {
             printDebugMessage("cached data is expired", for: resource)
             return nil
         }
@@ -80,18 +85,9 @@ public extension Webservice {
         let urlRequest = URLRequest(resource: resource)
         configuration.cache.removeCachedResponse(for: urlRequest)
         
-        if let cachedURLResponse = configuration.cache.cachedResponse(for: urlRequest),
-            let httpURLResponse = cachedURLResponse.response as? HTTPURLResponse,
-            let url = httpURLResponse.url {
-            var allHeaders = (httpURLResponse.allHeaderFields as? [String: String]) ?? [:]
-            allHeaders["Cache-Control"] = "max-age=0"
-            let expiredHTTPURLResponse = HTTPURLResponse(url: url,
-                                                         statusCode: httpURLResponse.statusCode,
-                                                         httpVersion: "HTTP/1.1",
-                                                         headerFields: allHeaders)
-            
-            let expiredCachedResponse = CachedResponse(resource: resource, response: expiredHTTPURLResponse, data: cachedURLResponse.data, createdDate: Date())
-            saveCachedResponse(expiredCachedResponse)
+        if var cachedResponse = loadCachedResponse(for: resource, expiration: .none) {
+            cachedResponse.expired = true
+            saveCachedResponse(cachedResponse)
         }
     }
     

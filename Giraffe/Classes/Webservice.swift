@@ -146,7 +146,7 @@ extension Webservice {
             guard let self = self else { return }
             CallbackQueue.globalAsync.execute {
                 self.printDebugMessage("saving data into cache", for: resource)
-                let cachedResponse = CachedResponse(resource: resource, response: response, data: data, createdDate: Date())
+                let cachedResponse = CachedResponse(resource: resource, response: response, data: data)
                 
                 if case .get = resource.method {
                     self.saveCachedResponse(cachedResponse)
