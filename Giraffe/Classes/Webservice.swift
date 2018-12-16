@@ -167,6 +167,7 @@ extension Webservice {
 extension Webservice {
     func printDebugMessage<A>(_ message: String, for resource: Resource<A>) {
         guard configuration.debugEnabled else { return }
+        guard case .get = resource.method else { return }
         print("***** Giraffe: \(message) - \(resource.url.absoluteString)")
     }
 }
