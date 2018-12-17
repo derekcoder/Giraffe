@@ -26,7 +26,7 @@ class UserDetailViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         refreshControl?.beginRefreshing()
-        loadUser(strategy: .cacheThenReload(returnOnce: false))
+        loadUser(strategy: .cacheThenReload)
     }
     
     private func loadUser(strategy: Giraffe.Strategy) {

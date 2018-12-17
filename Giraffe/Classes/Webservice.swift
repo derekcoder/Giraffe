@@ -91,14 +91,14 @@ extension Webservice {
     
     private func loadDataByStategy<A>(_ strategy: Giraffe.Strategy, expiration: CacheExpiration = .none, resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?, Bool) -> ()) {
         guard case .get = resource.method else {
-            sendRequest(for: resource, needComplete: true, completion: { result, response in
+            sendRequest(for: resource, completion: { result, response in
                 completion(result, response, true)
             })
             return
         }
         
         switch strategy {
-        case .onlyReload: sendRequest(for: resource, needComplete: true, completion: { result, response in completion(result, response, true) })
+        case .onlyReload: sendRequest(for: resource, completion: { result, response in completion(result, response, true) })
         case .onlyCache:
             CallbackQueue.globalAsync.execute {
                 self.printDebugMessage("loading cached data", for: resource)
@@ -115,7 +115,7 @@ extension Webservice {
                     }
                 }
             }
-        case .cacheThenReload(let returnOnce):
+        case .cacheThenReload:
             DispatchQueue.global().async {
                 self.printDebugMessage("loading cached data", for: resource)
                 if let cachedResponse = self.loadCachedResponse(for: resource, expiration: expiration) {
@@ -123,15 +123,18 @@ extension Webservice {
                     CallbackQueue.mainAsync.execute {
                         self.printDebugMessage("loaded cached data", for: resource)
                         completion(result, cachedResponse.httpResponse, true)
-                        self.sendRequest(for: resource, needComplete: !returnOnce, completion: { result, response in
+                        self.sendRequest(for: resource, completion: { result, response in
                             completion(result, response, false)
                         })
                     }
                 } else {
                     self.printDebugMessage("no cache data", for: resource)
-                    self.sendRequest(for: resource, needComplete: true, completion: { result, response in
-                        completion(result, response, true)
-                    })
+                    CallbackQueue.mainAsync.execute {
+                        completion(Result(error: GiraffeError.noCacheData), nil, true)
+                        self.sendRequest(for: resource, completion: { result, response in
+                            completion(result, response, false)
+                        })
+                    }
                 }
             }
         case .cacheOrReload:
@@ -145,7 +148,7 @@ extension Webservice {
                     }
                 } else {
                     self.printDebugMessage("no cache data", for: resource)
-                    self.sendRequest(for: resource, needComplete: true, completion: { result, response in
+                    self.sendRequest(for: resource, completion: { result, response in
                         completion(result, response, true)
                     })
                 }
@@ -153,7 +156,7 @@ extension Webservice {
         }
     }
     
-    private func sendRequest<A>(for resource: Resource<A>, needComplete: Bool, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
+    private func sendRequest<A>(for resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
         printDebugMessage("sending request", for: resource)
         let request = URLRequest(resource: resource, authenticationToken: configuration.authenticationToken)
         session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
@@ -168,10 +171,8 @@ extension Webservice {
                 
                 let result = cachedResponse.result
                 CallbackQueue.mainAsync.execute {
-                    if needComplete {
-                        self.printDebugMessage("loaded data from request", for: resource)
-                        completion(result, cachedResponse.httpResponse)
-                    }
+                    self.printDebugMessage("loaded data from request", for: resource)
+                    completion(result, cachedResponse.httpResponse)
                 }
             }
         }).resume()

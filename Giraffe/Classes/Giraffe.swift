@@ -23,7 +23,7 @@ public struct Giraffe {
     public enum Strategy {
         case onlyReload
         case onlyCache
-        case cacheThenReload(returnOnce: Bool)
+        case cacheThenReload
         case cacheOrReload
     }
 }
