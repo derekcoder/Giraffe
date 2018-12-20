@@ -68,11 +68,11 @@ extension Resource {
         self.method = method
         self.headers = headers
         self.parse = { data, response, error in
-            if error != nil {
-                return parseJSON(nil, response, error)
-            } else {
-                let json = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions())
+            if let data = data, error == nil {
+                let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions())
                 return parseJSON(json, response, error)
+            } else {
+                return parseJSON(nil, response, error)
             }
         }
     }
@@ -84,11 +84,11 @@ extension Resource {
         }
         self.headers = headers
         self.parse = { data, response, error in
-            if error != nil {
-                return parseJSON(nil, response, error)
-            } else {
-                let json = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions())
+            if let data = data, error == nil {
+                let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions())
                 return parseJSON(json, response, error)
+            } else {
+                return parseJSON(nil, response, error)
             }
         }
     }
