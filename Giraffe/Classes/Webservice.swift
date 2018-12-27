@@ -10,56 +10,6 @@
 
 import Foundation
 
-public extension URLRequest {
-    init<A>(resource: Resource<A>, authenticationToken: String? = nil) {
-        self.init(url: resource.url, timeoutInterval: resource.timeoutInterval)
-        
-        httpMethod = resource.method.method
-        if case let .post(data) = resource.method {
-            if let data = data {
-                httpBody = data
-            } else {
-                setHeaderValue("0", for: .contentLength)
-            }
-        } else if case let .put(data) = resource.method {
-            if let data = data {
-                httpBody = data
-            } else {
-                setHeaderValue("0", for: .contentLength)
-            }
-        } else if case let .patch(data) = resource.method {
-            if let data = data {
-                httpBody = data
-            } else {
-                setHeaderValue("0", for: .contentLength)
-            }
-        }
-        
-        if let token = authenticationToken {
-            setHeaderValue(token, for: .authorization)
-        }
-        
-        if let headers = resource.headers {
-            headers.forEach { setHeaderValue($1, for: $0) }
-        }
-        
-        if headerValue(for: .contentType) == nil {
-            setHeaderValue(MediaType.appJSON.rawValue, for: .contentType)
-        }
-        if headerValue(for: .accept) == nil {
-            setHeaderValue(MediaType.appJSON.rawValue, for: .accept)
-        }
-    }
-    
-    mutating func setHeaderValue(_ value: String?, for field: HTTPRequestHeaderField) {
-        setValue(value, forHTTPHeaderField: field.rawValue)
-    }
-    
-    func headerValue(for field: HTTPRequestHeaderField) -> String? {
-        return value(forHTTPHeaderField: field.rawValue)
-    }
-}
-
 public final class Webservice {
     public let session: URLSession
     public var configuration: Giraffe.Configuration
@@ -70,9 +20,7 @@ public final class Webservice {
         self.session = URLSession(configuration: sessionConfig)
         self.configuration = configuration
     }
-}
 
-extension Webservice {
     public func load<A>(_ resource: Resource<A>, strategy: Giraffe.Strategy = .onlyReload, expiration: CacheExpiration = .none, completion: @escaping (Result<A>) -> ()) {
         loadDataByStategy(strategy, expiration: expiration, resource: resource) { result, _, _ in
             completion(result)
@@ -116,7 +64,7 @@ extension Webservice {
                 }
             }
         case .cacheThenReload:
-            DispatchQueue.global().async {
+            CallbackQueue.globalAsync.execute {
                 self.printDebugMessage("loading cached data", for: resource)
                 if let cachedResponse = self.loadCachedResponse(for: resource, expiration: expiration) {
                     let result = cachedResponse.result
@@ -138,7 +86,7 @@ extension Webservice {
                 }
             }
         case .cacheOrReload:
-            DispatchQueue.global().async {
+            CallbackQueue.globalAsync.execute {
                 self.printDebugMessage("loading cached data", for: resource)
                 if let cachedResponse = self.loadCachedResponse(for: resource, expiration: expiration) {
                     let result = cachedResponse.result
