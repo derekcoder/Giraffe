@@ -29,11 +29,15 @@ class ReposViewController: UITableViewController {
         let option = Giraffe.Option(strategy: strategy)
         webservice.load(user.reposResource, option: option) { [weak self] result in
             guard let self = self else { return }
-            self.refreshControl?.endRefreshing()
             switch result {
-            case .failure(let error): print(error.localizedDescription)
+            case .failure(let error):
+                print("error: \(error)")
+                if !error.isNoCacheData {
+                    self.refreshControl?.endRefreshing()
+                }
             case .success(let repos):
                 print("loaded repos")
+                self.refreshControl?.endRefreshing()
                 self.repos = repos
                 self.tableView.reloadData()
             }
@@ -48,6 +52,8 @@ class ReposViewController: UITableViewController {
     
     @IBAction func removeCache() {
         webservice.removeCache(for: user.reposResource)
+        repos.removeAll()
+        tableView.reloadData()
     }
 
     // MARK: - UITableViewDataSource & UITableViewDelegate

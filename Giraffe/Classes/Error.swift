@@ -52,3 +52,25 @@ public enum GiraffeError: Swift.Error {
     case notHTTP
     case noCacheData
 }
+
+public extension Swift.Error {
+    var giraffeError: GiraffeError? {
+        let error = self as? GiraffeError
+        return error
+    }
+    
+    var isNoCacheData: Bool {
+        guard let ge = giraffeError else { return false }
+        return ge == .noCacheData
+    }
+    
+    var isNotHTTP: Bool {
+        guard let ge = giraffeError else { return false }
+        return ge == .notHTTP
+    }
+    
+    var isInvalidResponse: Bool {
+        guard let ge = giraffeError else { return false }
+        return ge == .invalidResponse
+    }
+}
