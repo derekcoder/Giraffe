@@ -59,6 +59,8 @@ public extension Swift.Error {
         return error
     }
     
+    var isGiraffe: Bool { return (self is GiraffeError) }
+    
     var isNoCacheData: Bool {
         guard let ge = giraffeError else { return false }
         return ge == .noCacheData
