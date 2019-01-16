@@ -63,7 +63,7 @@ extension Webservice {
         configuration.cache.storeCachedResponse(cachedURLResponse, for: cachedResponse.request)
     }
     
-    func loadCachedResponse<A>(for resource: Resource<A>, expiration: CacheExpiration) -> CachedResponse<A>? {
+    func loadCachedResponse<A>(for resource: Resource<A>, expiration: Giraffe.CacheExpiration) -> CachedResponse<A>? {
         let request = URLRequest(resource: resource)
         guard let cachedURLResponse = configuration.cache.cachedResponse(for: request) else { return nil }
         let cachedResponse = CachedResponse(resource: resource, cachedURLResponse: cachedURLResponse)

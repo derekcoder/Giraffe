@@ -27,37 +27,37 @@ public struct Giraffe {
         case cacheOrReload
     }
     
+    public enum CacheExpiration {
+        case none
+        case seconds(TimeInterval)
+        case hours(Int)
+        case days(Int)
+        case date(Date)
+        
+        func estimatedExpirationDateSince(_ date: Date) -> Date? {
+            switch self {
+            case .none: return nil
+            case .seconds(let seconds): return date.addingTimeInterval(-seconds)
+            case .hours(let hours): return date.addingTimeInterval(-TimeInterval(60 * 60 * hours))
+            case .days(let days): return date.addingTimeInterval(-TimeInterval(24 * 60 * 60 * days))
+            case .date(let ref): return ref
+            }
+        }
+        
+        func isExpired(for date: Date) -> Bool {
+            guard let miniExpirationDate = estimatedExpirationDateSince(Date()) else { return false }
+            return date < miniExpirationDate
+        }
+    }
+    
     public struct Option {
         public var strategy: Giraffe.Strategy
-        public var expiration: CacheExpiration
+        public var expiration: Giraffe.CacheExpiration
         
-        public init(strategy: Giraffe.Strategy = .onlyReload, expiration: CacheExpiration = .none) {
+        public init(strategy: Giraffe.Strategy = .onlyReload, expiration: Giraffe.CacheExpiration = .none) {
             self.strategy = strategy
             self.expiration = expiration
         }
-    }
-}
-
-public enum CacheExpiration {
-    case none
-    case seconds(TimeInterval)
-    case hours(Int)
-    case days(Int)
-    case date(Date)
-    
-    func estimatedExpirationDateSince(_ date: Date) -> Date? {
-        switch self {
-        case .none: return nil
-        case .seconds(let seconds): return date.addingTimeInterval(-seconds)
-        case .hours(let hours): return date.addingTimeInterval(-TimeInterval(60 * 60 * hours))
-        case .days(let days): return date.addingTimeInterval(-TimeInterval(24 * 60 * 60 * days))
-        case .date(let ref): return ref
-        }
-    }
-
-    func isExpired(for date: Date) -> Bool {
-        guard let miniExpirationDate = estimatedExpirationDateSince(Date()) else { return false }
-        return date < miniExpirationDate
     }
 }
 
