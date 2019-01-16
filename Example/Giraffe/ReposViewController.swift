@@ -35,8 +35,8 @@ class ReposViewController: UITableViewController {
                 if !error.isNoCacheData {
                     self.refreshControl?.endRefreshing()
                 }
-            case .success(let repos):
-                print("loaded repos")
+            case let .success(repos, isCached):
+                print("loaded \(isCached ? "cached" : "latest") repos")
                 self.refreshControl?.endRefreshing()
                 self.repos = repos
                 self.tableView.reloadData()

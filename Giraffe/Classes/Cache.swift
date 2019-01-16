@@ -47,11 +47,7 @@ extension CachedResponse {
     }
     
     var result: Result<A> {
-        guard let httpResponse = response as? HTTPURLResponse else {
-            return Result(error: GiraffeError.notHTTP)
-        }
-        let result = resource.parse(data, httpResponse, nil)
-        return result
+        return resource.parse(data: data, response: response, error: nil, isCached: true)
     }
     
     var httpResponse: HTTPURLResponse? {

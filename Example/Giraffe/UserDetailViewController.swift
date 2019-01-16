@@ -37,7 +37,7 @@ class UserDetailViewController: UITableViewController {
             self.refreshControl?.endRefreshing()
             switch result {
             case .failure(let error): print(error.localizedDescription)
-            case .success(let user):
+            case .success(let user, _):
                 self.user = user
                 self.tableView.reloadData()
                 self.loadAvatar()
@@ -50,7 +50,7 @@ class UserDetailViewController: UITableViewController {
         webservice.load(resource) { [weak self] result in
             switch result {
             case .failure(let error): print(error.localizedDescription)
-            case .success(let image): self?.updateAvatarImageView(with: image)
+            case .success(let image, _): self?.updateAvatarImageView(with: image)
             }
         }
     }

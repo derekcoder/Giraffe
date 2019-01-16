@@ -30,12 +30,12 @@ extension Episode {
         self.title = title
     }
     
-    static let all = Resource<[Episode]>(url: url, parseJSON: { (json, _, _) -> Result<[Episode]> in
+    static let all = Resource<[Episode]>(url: url, parseJSON: { json, _, _, isCached in
         guard let dicts = json as? [JSONDictionary] else {
             return Result(error: GiraffeError.invalidResponse)
         }
         let value = dicts.compactMap(Episode.init)
-        return Result(value: value)
+        return Result(value: value, isCached: isCached)
     })
 }
 
@@ -62,17 +62,17 @@ class Giraffe_Tests: XCTestCase {
     
     func testResult() {
         let person = Episode(id: "id", title: "title")
-        let result = Result(value: person)
+        let result = Result(value: person, isCached: false)
         XCTAssertEqual(result.value!, person)
     }
     
     func testURLRequestInitForGet() {
-        let resource = Resource<[Episode]>(url: url, method: .get, parseJSON: { (json, _, _) -> Result<[Episode]> in
+        let resource = Resource<[Episode]>(url: url, method: .get, parseJSON: { json, _, _, isCached in
             guard let dictionaries = json as? [JSONDictionary] else {
                 return Result(error: GiraffeError.invalidResponse)
             }
             let value = dictionaries.compactMap(Episode.init)
-            return Result(value: value)
+            return Result(value: value, isCached: isCached)
         })
         let request = URLRequest(resource: resource, authenticationToken: "token")
         XCTAssertEqual(request.httpMethod, "GET")
@@ -82,12 +82,12 @@ class Giraffe_Tests: XCTestCase {
     func testURLRequestInitForPost() {
         let json = ["id": "id"]
         let method: HttpMethod<Any> = .post(data: json)
-        let resource = Resource<[Episode]>(url: url, jsonMethod: method, parseJSON: { (json, _, _) -> Result<[Episode]> in
+        let resource = Resource<[Episode]>(url: url, jsonMethod: method, parseJSON: { json, _, _, isCached in
             guard let dictionaries = json as? [JSONDictionary] else {
                 return Result(error: GiraffeError.invalidResponse)
             }
             let value = dictionaries.compactMap(Episode.init)
-            return Result(value: value)
+            return Result(value: value, isCached: isCached)
         })
         let request = URLRequest(resource: resource)
         XCTAssertEqual(request.httpMethod, "POST")

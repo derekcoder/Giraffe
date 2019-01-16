@@ -10,6 +10,7 @@
 
 import Foundation
 
+
 public final class Webservice {
     public let session: URLSession
     public var configuration: Giraffe.Configuration
@@ -117,7 +118,7 @@ public final class Webservice {
                     self.saveCachedResponse(cachedResponse)
                 }
                 
-                let result = cachedResponse.result
+                let result = resource.parse(data: data, response: response, error: error, isCached: false)
                 CallbackQueue.mainAsync.execute {
                     self.printDebugMessage("loaded data from request", for: resource)
                     completion(result, cachedResponse.httpResponse)
