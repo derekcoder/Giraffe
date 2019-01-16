@@ -31,7 +31,8 @@ class UserDetailViewController: UITableViewController {
     
     private func loadUser(strategy: Giraffe.Strategy) {
         let resource = User.resource(for: "derekcoder")
-        webservice.load(resource, strategy: strategy) { [weak self] result in
+        let option = Giraffe.Option(strategy: strategy)
+        webservice.load(resource, option: option) { [weak self] result in
             guard let self = self else { return }
             self.refreshControl?.endRefreshing()
             switch result {

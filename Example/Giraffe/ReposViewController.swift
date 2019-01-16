@@ -26,7 +26,8 @@ class ReposViewController: UITableViewController {
     }
     
     private func loadRepos(strategy: Giraffe.Strategy) {
-        webservice.load(user.reposResource, strategy: strategy) { [weak self] result in
+        let option = Giraffe.Option(strategy: strategy)
+        webservice.load(user.reposResource, option: option) { [weak self] result in
             guard let self = self else { return }
             self.refreshControl?.endRefreshing()
             switch result {

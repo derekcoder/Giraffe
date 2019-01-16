@@ -21,23 +21,23 @@ public final class Webservice {
         self.configuration = configuration
     }
 
-    public func load<A>(_ resource: Resource<A>, strategy: Giraffe.Strategy = .onlyReload, expiration: CacheExpiration = .none, completion: @escaping (Result<A>) -> ()) {
-        loadDataByStategy(strategy, expiration: expiration, resource: resource) { result, _, _ in
+    public func load<A>(_ resource: Resource<A>, option: Giraffe.Option = Giraffe.Option(), completion: @escaping (Result<A>) -> ()) {
+        loadData(option, resource: resource) { result, _, _ in
             completion(result)
         }
     }
     
-    public func load<A>(_ resource: Resource<A>, strategy: Giraffe.Strategy = .onlyReload, expiration: CacheExpiration = .none, completion: @escaping (Result<A>, Bool) -> ()) {
-        loadDataByStategy(strategy, expiration: expiration, resource: resource) { result, _, isFirst in
+    public func load<A>(_ resource: Resource<A>, option: Giraffe.Option = Giraffe.Option(), completion: @escaping (Result<A>, Bool) -> ()) {
+        loadData(option, resource: resource) { result, _, isFirst in
             completion(result, isFirst)
         }
     }
     
-    public func load<A>(_ resource: Resource<A>, strategy: Giraffe.Strategy = .onlyReload, expiration: CacheExpiration = .none, completion: @escaping (Result<A>, HTTPURLResponse?, Bool) -> ()) {
-        loadDataByStategy(strategy, expiration: expiration, resource: resource, completion: completion)
+    public func load<A>(_ resource: Resource<A>, option: Giraffe.Option = Giraffe.Option(), completion: @escaping (Result<A>, HTTPURLResponse?, Bool) -> ()) {
+        loadData(option, resource: resource, completion: completion)
     }
     
-    private func loadDataByStategy<A>(_ strategy: Giraffe.Strategy, expiration: CacheExpiration = .none, resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?, Bool) -> ()) {
+    private func loadData<A>(_ option: Giraffe.Option, resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?, Bool) -> ()) {
         guard case .get = resource.method else {
             sendRequest(for: resource, completion: { result, response in
                 completion(result, response, true)
@@ -45,12 +45,12 @@ public final class Webservice {
             return
         }
         
-        switch strategy {
+        switch option.strategy {
         case .onlyReload: sendRequest(for: resource, completion: { result, response in completion(result, response, true) })
         case .onlyCache:
             CallbackQueue.globalAsync.execute {
                 self.printDebugMessage("loading cached data", for: resource)
-                if let cachedResponse = self.loadCachedResponse(for: resource, expiration: expiration) {
+                if let cachedResponse = self.loadCachedResponse(for: resource, expiration: option.expiration) {
                     let result = cachedResponse.result
                     CallbackQueue.mainAsync.execute {
                         self.printDebugMessage("loaded cached data", for: resource)
@@ -66,7 +66,7 @@ public final class Webservice {
         case .cacheThenReload:
             CallbackQueue.globalAsync.execute {
                 self.printDebugMessage("loading cached data", for: resource)
-                if let cachedResponse = self.loadCachedResponse(for: resource, expiration: expiration) {
+                if let cachedResponse = self.loadCachedResponse(for: resource, expiration: option.expiration) {
                     let result = cachedResponse.result
                     CallbackQueue.mainAsync.execute {
                         self.printDebugMessage("loaded cached data", for: resource)
@@ -88,7 +88,7 @@ public final class Webservice {
         case .cacheOrReload:
             CallbackQueue.globalAsync.execute {
                 self.printDebugMessage("loading cached data", for: resource)
-                if let cachedResponse = self.loadCachedResponse(for: resource, expiration: expiration) {
+                if let cachedResponse = self.loadCachedResponse(for: resource, expiration: option.expiration) {
                     let result = cachedResponse.result
                     CallbackQueue.mainAsync.execute {
                         self.printDebugMessage("loaded cached data", for: resource)

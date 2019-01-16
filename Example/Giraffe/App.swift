@@ -12,7 +12,7 @@ import Giraffe
 final class App {
     let window: UIWindow
     let webservice: Webservice = {
-        let config = Giraffe.Configuration()
+        var config = Giraffe.Configuration()
         config.debugEnabled = true
         return Webservice(configuration: config)
     }()

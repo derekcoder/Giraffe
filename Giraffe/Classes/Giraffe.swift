@@ -8,7 +8,7 @@
 import Foundation
 
 public struct Giraffe {
-    public class Configuration {
+    public struct Configuration {
         public var authenticationToken: String? = nil
         public let cache = URLCache(memoryCapacity: 10 * 1024 * 1024, diskCapacity: 40 * 1024 * 1024, diskPath: "com.derekcoder.urlcache")
         public var debugEnabled = false
@@ -25,6 +25,16 @@ public struct Giraffe {
         case onlyCache
         case cacheThenReload
         case cacheOrReload
+    }
+    
+    public struct Option {
+        public var strategy: Giraffe.Strategy
+        public var expiration: CacheExpiration
+        
+        public init(strategy: Giraffe.Strategy = .onlyReload, expiration: CacheExpiration = .none) {
+            self.strategy = strategy
+            self.expiration = expiration
+        }
     }
 }
 
