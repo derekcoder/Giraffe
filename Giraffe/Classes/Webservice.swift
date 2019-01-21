@@ -23,31 +23,23 @@ public final class Webservice {
     }
 
     public func load<A>(_ resource: Resource<A>, option: Giraffe.Option = Giraffe.Option(), completion: @escaping (Result<A>) -> ()) {
-        loadData(option, resource: resource) { result, _, _ in
+        loadData(option, resource: resource) { result, _ in
             completion(result)
         }
     }
     
-    public func load<A>(_ resource: Resource<A>, option: Giraffe.Option = Giraffe.Option(), completion: @escaping (Result<A>, Bool) -> ()) {
-        loadData(option, resource: resource) { result, _, isFirst in
-            completion(result, isFirst)
-        }
-    }
-    
-    public func load<A>(_ resource: Resource<A>, option: Giraffe.Option = Giraffe.Option(), completion: @escaping (Result<A>, HTTPURLResponse?, Bool) -> ()) {
+    public func load<A>(_ resource: Resource<A>, option: Giraffe.Option = Giraffe.Option(), completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
         loadData(option, resource: resource, completion: completion)
     }
     
-    private func loadData<A>(_ option: Giraffe.Option, resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?, Bool) -> ()) {
+    private func loadData<A>(_ option: Giraffe.Option, resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
         guard case .get = resource.method else {
-            sendRequest(for: resource, completion: { result, response in
-                completion(result, response, true)
-            })
+            sendRequest(for: resource, completion: completion)
             return
         }
         
         switch option.strategy {
-        case .onlyReload: sendRequest(for: resource, completion: { result, response in completion(result, response, true) })
+        case .onlyReload: sendRequest(for: resource, completion: completion)
         case .onlyCache:
             CallbackQueue.globalAsync.execute {
                 self.printDebugMessage("loading cached data", for: resource)
@@ -55,12 +47,12 @@ public final class Webservice {
                     let result = cachedResponse.result
                     CallbackQueue.mainAsync.execute {
                         self.printDebugMessage("loaded cached data", for: resource)
-                        completion(result, cachedResponse.httpResponse, true)
+                        completion(result, cachedResponse.httpResponse)
                     }
                 } else {
                     CallbackQueue.mainAsync.execute {
                         self.printDebugMessage("no cache data", for: resource)
-                        completion(Result(error: GiraffeError.noCacheData), nil, true)
+                        completion(Result(error: GiraffeError.noCacheData), nil)
                     }
                 }
             }
@@ -71,18 +63,14 @@ public final class Webservice {
                     let result = cachedResponse.result
                     CallbackQueue.mainAsync.execute {
                         self.printDebugMessage("loaded cached data", for: resource)
-                        completion(result, cachedResponse.httpResponse, true)
-                        self.sendRequest(for: resource, completion: { result, response in
-                            completion(result, response, false)
-                        })
+                        completion(result, cachedResponse.httpResponse)
+                        self.sendRequest(for: resource, completion: completion)
                     }
                 } else {
                     self.printDebugMessage("no cache data", for: resource)
                     CallbackQueue.mainAsync.execute {
-                        completion(Result(error: GiraffeError.noCacheData), nil, true)
-                        self.sendRequest(for: resource, completion: { result, response in
-                            completion(result, response, false)
-                        })
+                        completion(Result(error: GiraffeError.noCacheData), nil)
+                        self.sendRequest(for: resource, completion: completion)
                     }
                 }
             }
@@ -93,13 +81,11 @@ public final class Webservice {
                     let result = cachedResponse.result
                     CallbackQueue.mainAsync.execute {
                         self.printDebugMessage("loaded cached data", for: resource)
-                        completion(result, cachedResponse.httpResponse, true)
+                        completion(result, cachedResponse.httpResponse)
                     }
                 } else {
                     self.printDebugMessage("no cache data", for: resource)
-                    self.sendRequest(for: resource, completion: { result, response in
-                        completion(result, response, true)
-                    })
+                    self.sendRequest(for: resource, completion: completion)
                 }
             }
         }

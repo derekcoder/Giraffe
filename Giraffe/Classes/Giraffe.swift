@@ -20,7 +20,7 @@ public struct Giraffe {
         public init() { }
     }
     
-    public enum Strategy {
+    public enum LoadStrategy {
         case onlyReload
         case onlyCache
         case cacheThenReload
@@ -51,10 +51,10 @@ public struct Giraffe {
     }
     
     public struct Option {
-        public var strategy: Giraffe.Strategy
+        public var strategy: Giraffe.LoadStrategy
         public var expiration: Giraffe.CacheExpiration
         
-        public init(strategy: Giraffe.Strategy = .onlyReload, expiration: Giraffe.CacheExpiration = .none) {
+        public init(strategy: Giraffe.LoadStrategy = .onlyReload, expiration: Giraffe.CacheExpiration = .none) {
             self.strategy = strategy
             self.expiration = expiration
         }

@@ -29,15 +29,20 @@ class UserDetailViewController: UITableViewController {
         loadUser(strategy: .cacheThenReload)
     }
     
-    private func loadUser(strategy: Giraffe.Strategy) {
+    private func loadUser(strategy: Giraffe.LoadStrategy) {
         let resource = User.resource(for: "derekcoder")
-        let option = Giraffe.Option(strategy: strategy)
+        let option = Giraffe.Option(strategy: strategy, expiration: .hours(2))
         webservice.load(resource, option: option) { [weak self] result in
             guard let self = self else { return }
-            self.refreshControl?.endRefreshing()
             switch result {
-            case .failure(let error): print(error.localizedDescription)
-            case .success(let user, _):
+            case .failure(let error):
+                print("error: \(error)")
+                if !error.isNoCacheData {
+                    self.refreshControl?.endRefreshing()
+                }
+            case let .success(user, isCached):
+                print("loaded \(isCached ? "cached" : "latest") user")
+                self.refreshControl?.endRefreshing()
                 self.user = user
                 self.tableView.reloadData()
                 self.loadAvatar()

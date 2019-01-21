@@ -25,7 +25,7 @@ class ReposViewController: UITableViewController {
         loadRepos(strategy: .cacheThenReload)
     }
     
-    private func loadRepos(strategy: Giraffe.Strategy) {
+    private func loadRepos(strategy: Giraffe.LoadStrategy) {
         let option = Giraffe.Option(strategy: strategy, expiration: .seconds(5))
         webservice.load(user.reposResource, option: option) { [weak self] result in
             guard let self = self else { return }
@@ -44,7 +44,7 @@ class ReposViewController: UITableViewController {
         }
     }
     
-    // MARK: - Action
+    // MARK: - Action Methods
 
     @IBAction func refresh() {
         loadRepos(strategy: .onlyReload)
