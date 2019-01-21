@@ -1,12 +1,10 @@
 //
 //  Resource.swift
-//  SwiftDevHints
+//  Giraffe
 //
 //  Created by Derek on 2/1/18.
 //  Copyright © 2018 ZHOU DENGFENG DEREK. All rights reserved.
 //
-
-// Referenced from https://talk.objc.io/
 
 import Foundation
 
