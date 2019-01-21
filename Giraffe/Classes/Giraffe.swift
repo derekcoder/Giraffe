@@ -75,12 +75,12 @@ public enum CallbackQueue {
 
 public typealias JSONDictionary = [String: Any]
 
-extension URL {
-    public mutating func encode(parameters: JSONDictionary) {
+public extension URL {
+    mutating func encode(parameters: JSONDictionary) {
         self = encoded(parameters: parameters)
     }
     
-    public func encoded(parameters: JSONDictionary) -> URL {
+    func encoded(parameters: JSONDictionary) -> URL {
         let query = parameters.query()
         
         guard var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: false) else { return self }
