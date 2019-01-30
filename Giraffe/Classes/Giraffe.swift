@@ -91,6 +91,16 @@ public extension URL {
         guard let url = urlComponents.url else { return self }
         return url
     }
+    
+    func appendingQueryItems(_ items: [String: String]) -> URL? {
+        guard var urlComps = URLComponents(url: self, resolvingAgainstBaseURL: true) else { return nil }
+        let currentQueryItems = urlComps.queryItems ?? []
+        var filtered = currentQueryItems.filter { !items.keys.contains($0.name) }
+        let queryItems = items.map { URLQueryItem(name: $0, value: $1) }
+        filtered.append(contentsOf: queryItems)
+        urlComps.queryItems = filtered
+        return urlComps.url
+    }
 }
 
 public enum BoolEncoding {
