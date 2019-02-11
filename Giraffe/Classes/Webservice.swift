@@ -90,7 +90,7 @@ public final class Webservice {
     
     private func sendRequest<A>(for resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
         printDebugMessage("sending request", for: resource)
-        let request = URLRequest(resource: resource, authenticationToken: configuration.authenticationToken)
+        let request = URLRequest(resource: resource, authenticationToken: configuration.authenticationToken, headers: configuration.headers)
         session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
             guard let self = self else { return }
             CallbackQueue.globalAsync.execute {

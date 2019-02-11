@@ -12,6 +12,7 @@ public struct Giraffe {
         public var authenticationToken: String? = nil
         public let cache = URLCache(memoryCapacity: 10 * 1024 * 1024, diskCapacity: 40 * 1024 * 1024, diskPath: "com.derekcoder.urlcache")
         public var debugEnabled = false
+        public var headers: [HTTPRequestHeaderField: String]? = nil
         
         public static var `default`: Configuration {
             return Configuration()

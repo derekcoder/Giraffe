@@ -8,7 +8,7 @@
 import Foundation
 
 public extension URLRequest {
-    init<A>(resource: Resource<A>, authenticationToken: String? = nil) {
+    init<A>(resource: Resource<A>, authenticationToken: String? = nil, headers: [HTTPRequestHeaderField: String]? = nil) {
         self.init(url: resource.url, timeoutInterval: resource.timeoutInterval)
         
         httpMethod = resource.method.method
@@ -36,9 +36,8 @@ public extension URLRequest {
             setHeaderValue(token, for: .authorization)
         }
         
-        if let headers = resource.headers {
-            headers.forEach { setHeaderValue($1, for: $0) }
-        }
+        headers?.forEach { setHeaderValue($1, for: $0) }
+        resource.headers?.forEach { setHeaderValue($1, for: $0) }
         
         if headerValue(for: .contentType) == nil {
             setHeaderValue(MediaType.appJSON.rawValue, for: .contentType)
