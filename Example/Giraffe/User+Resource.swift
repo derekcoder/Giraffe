@@ -40,7 +40,8 @@ extension User {
     }
     
     var reposResource: Resource<[Repo]> {
-        let url = Config.baseURL.appendingPathComponent("/users/\(login)/repos").encoded(parameters: ["sort": "pushed"])
+        let url = Config.baseURL.appendingPathComponent("/users/\(login)/repos")
+                    .appendingQueryItems(["sort": "pushed"])
         return Resource(url: url, parseJSON: { obj, _, _, isCached in
             guard let json = obj as? [JSONDictionary] else {
                 return Result(error: GiraffeError.invalidResponse)

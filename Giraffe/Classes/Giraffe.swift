@@ -77,30 +77,25 @@ public enum CallbackQueue {
 public typealias JSONDictionary = [String: Any]
 
 public extension URL {
-    mutating func encode(parameters: JSONDictionary) {
-        self = encoded(parameters: parameters)
+    mutating func appendQueryItems(_ items: [String: String]) {
+        self = appendingQueryItems(items)
     }
     
-    func encoded(parameters: JSONDictionary) -> URL {
-        let query = parameters.query()
+    func appendingQueryItems(_ items: [String: String]) -> URL {
+        guard var urlComps = URLComponents(url: self, resolvingAgainstBaseURL: true) else { return self }
         
-        guard var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: false) else { return self }
-        guard !parameters.isEmpty else { return self }
+        let currentItems = urlComps.queryItems ?? []
+        let filteredItems = currentItems.filter { !items.keys.contains($0.name) }
+        let addingItems = items.map { URLQueryItem(name: $0, value: $1) }
+        urlComps.queryItems = filteredItems + addingItems
         
-        let percentEncodedQuery = urlComponents.percentEncodedQuery.map { $0 + "&" } ?? ""
-        urlComponents.percentEncodedQuery = percentEncodedQuery + query
-        guard let url = urlComponents.url else { return self }
-        return url
+        return urlComps.url ?? self
     }
-    
-    func appendingQueryItems(_ items: [String: String]) -> URL? {
-        guard var urlComps = URLComponents(url: self, resolvingAgainstBaseURL: true) else { return nil }
-        let currentQueryItems = urlComps.queryItems ?? []
-        var filtered = currentQueryItems.filter { !items.keys.contains($0.name) }
-        let queryItems = items.map { URLQueryItem(name: $0, value: $1) }
-        filtered.append(contentsOf: queryItems)
-        urlComps.queryItems = filtered
-        return urlComps.url
+}
+
+public extension String {
+    var escapedForURLQuery: String {
+        return self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? self
     }
 }
 

@@ -19,7 +19,8 @@ extension Repo {
     }
     
     static func searchResource(text: String) -> Resource<[Repo]> {
-        let url = Config.baseURL.appendingPathComponent("search/repositories").encoded(parameters: ["q": "\(text)+language:swift"])
+        let url = Config.baseURL.appendingPathComponent("search/repositories")
+                    .appendingQueryItems(["q": "\(text)+language:swift"])
         return Resource(url: url, parseJSON: { obj, _, _, isCached in
             guard let json = obj as? JSONDictionary, let items = json["items"] as? [JSONDictionary] else {
                 return Result(error: GiraffeError.invalidResponse)
