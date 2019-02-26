@@ -14,6 +14,8 @@ public struct Giraffe {
         public var debugEnabled = false
         public var headers: [HTTPRequestHeaderField: String]? = nil
         
+        public var conditionalRequestManager = ConditionalRequestManager()
+        
         public static var `default`: Configuration {
             return Configuration()
         }

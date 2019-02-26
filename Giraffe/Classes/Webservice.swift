@@ -99,6 +99,11 @@ public final class Webservice {
                 
                 if case .get = resource.method {
                     self.saveCachedResponse(cachedResponse)
+                    
+                    if let httpURLResponse = response as? HTTPURLResponse {
+                        self.configuration.conditionalRequestManager.setConditionRequest(urlString: resource.url.absoluteString,
+                                                                                        response: httpURLResponse)
+                    }
                 }
                 
                 let result = resource.parse(data: data, response: response, error: error, isCached: false)

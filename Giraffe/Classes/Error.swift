@@ -15,6 +15,8 @@ public enum HTTPStatus: Int {
     case noContent = 204
     case resetContent = 205
     
+    case notModified = 304
+    
     case badRequest = 400
     case unauthorized = 401
     case paymentRequired = 402

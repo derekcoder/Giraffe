@@ -1,0 +1,42 @@
+//
+//  ConditionalRequestManager.swift
+//  Giraffe
+//
+//  Created by derekcoder on 26/2/19.
+//
+
+import Foundation
+
+public class ConditionalRequestManager {
+    private var requests: [String: ConditionalRequest] = [:]
+    
+    func setConditionRequest(urlString: String, response: HTTPURLResponse) {
+        let headers = response.allHeaderFields
+        
+        if response.statusCode == HTTPStatus.ok.rawValue {
+            guard let eTag = headers["ETag"] as? String,
+                let pollInterval = headers["X-Poll-Interval"] as? Double else { return }
+            if let request = requests[urlString] {
+                request.eTag = eTag
+                request.pollInterval = pollInterval
+                request.lastRequested = Date()
+            } else {
+                let newRequest = ConditionalRequest(eTag: eTag, pollInterval: pollInterval, lastRequested: Date())
+                requests[urlString] = newRequest
+            }
+        } else if response.statusCode == HTTPStatus.notModified.rawValue {
+            let request = requests[urlString]
+            request?.lastRequested = Date()
+        }
+    }
+    
+    func isAvailabelForPolling(urlString: String) -> Bool {
+        guard let request = requests[urlString] else { return true }
+        return request.isAvailabelForPolling
+    }
+    
+    func pollingETag(urlString: String) -> String? {
+        guard let request = requests[urlString] else { return nil }
+        return request.eTag
+    }
+}
