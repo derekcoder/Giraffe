@@ -79,4 +79,14 @@ public extension Swift.Error {
         guard let ge = giraffeError else { return false }
         return ge == .invalidResponse
     }
+    
+    var isNotAvailabelForPolling: Bool {
+        guard let ge = giraffeError else { return false }
+        return ge == .notAvailabelForPolling
+    }
+    
+    var isNotModified: Bool {
+        guard let ge = giraffeError else { return false }
+        return ge == .notModified
+    }
 }
