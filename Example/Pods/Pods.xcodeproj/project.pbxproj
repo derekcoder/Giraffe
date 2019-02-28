@@ -21,8 +21,8 @@
 		804ADB1ED03A2080E24425A8D3CBDBA5 /* Giraffe-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E68CFD25897AED5EC45AD03252A1436 /* Giraffe-dummy.m */; };
 		851B41D9C09C6EAA10085DA6E09FEDCC /* Pods-Giraffe_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6B2F4827014033FD8B2061AA1F9AE4 /* Pods-Giraffe_Tests-dummy.m */; };
 		DCB0F9D621D522B2003224ED /* URLRequest+Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB0F9D521D522B2003224ED /* URLRequest+Resource.swift */; };
-		DCBA7CAE2225700800A8EA23 /* ConditionalRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBA7CAD2225700800A8EA23 /* ConditionalRequest.swift */; };
 		DCBA7CB12225711700A8EA23 /* ConditionalRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBA7CB02225711700A8EA23 /* ConditionalRequestManager.swift */; };
+		DCBA7CB3222816CB00A8EA23 /* ConditionalRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBA7CB2222816CA00A8EA23 /* ConditionalRequest.swift */; };
 		E945AB919A5EF7D1059F7682A57AA4DC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
 		F2718DF4ADFBD3AA889AA5B443593811 /* Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DCCCACAC3773F40E83D0838D2D87E9 /* Resource.swift */; };
 		FAFA93DD9B82902DEE378ECCA9F5D479 /* Pods-Giraffe_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = AF7CCEB20247A40860B60484CB09DA2A /* Pods-Giraffe_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -79,8 +79,8 @@
 		D2DCCCACAC3773F40E83D0838D2D87E9 /* Resource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Resource.swift; path = Giraffe/Classes/Resource.swift; sourceTree = "<group>"; };
 		D89F798BE1233DF6F9EB7DCF79992274 /* Giraffe-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Giraffe-prefix.pch"; sourceTree = "<group>"; };
 		DCB0F9D521D522B2003224ED /* URLRequest+Resource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "URLRequest+Resource.swift"; path = "Giraffe/Classes/URLRequest+Resource.swift"; sourceTree = "<group>"; };
-		DCBA7CAD2225700800A8EA23 /* ConditionalRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionalRequest.swift; sourceTree = "<group>"; };
 		DCBA7CB02225711700A8EA23 /* ConditionalRequestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ConditionalRequestManager.swift; path = Giraffe/Classes/ConditionalRequestManager.swift; sourceTree = "<group>"; };
+		DCBA7CB2222816CA00A8EA23 /* ConditionalRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConditionalRequest.swift; path = Giraffe/Classes/ConditionalRequest.swift; sourceTree = "<group>"; };
 		DCE7C18D9A9E7613D0060502C3B287D3 /* Giraffe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Giraffe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F66DA7E807FEC217AD4ACD67701CF2EE /* Pods-Giraffe_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Giraffe_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -249,8 +249,8 @@
 		DCBA7CAF2225701600A8EA23 /* Conditional Request */ = {
 			isa = PBXGroup;
 			children = (
-				DCBA7CAD2225700800A8EA23 /* ConditionalRequest.swift */,
 				DCBA7CB02225711700A8EA23 /* ConditionalRequestManager.swift */,
+				DCBA7CB2222816CA00A8EA23 /* ConditionalRequest.swift */,
 			);
 			name = "Conditional Request";
 			sourceTree = "<group>";
@@ -378,6 +378,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCBA7CB3222816CB00A8EA23 /* ConditionalRequest.swift in Sources */,
 				65CA57F22137FC7F003A7A91 /* HTTPHeader.swift in Sources */,
 				804ADB1ED03A2080E24425A8D3CBDBA5 /* Giraffe-dummy.m in Sources */,
 				6555255421C20AD000575BCE /* Cache.swift in Sources */,
@@ -385,7 +386,6 @@
 				DCB0F9D621D522B2003224ED /* URLRequest+Resource.swift in Sources */,
 				65CA57F12137FC7F003A7A91 /* Giraffe.swift in Sources */,
 				DCBA7CB12225711700A8EA23 /* ConditionalRequestManager.swift in Sources */,
-				DCBA7CAE2225700800A8EA23 /* ConditionalRequest.swift in Sources */,
 				65CA57F02137FC7F003A7A91 /* Result.swift in Sources */,
 				65CA57F42137FD47003A7A91 /* Error.swift in Sources */,
 				0A7A8C59CF1C012B5E300E2557D6134C /* Webservice.swift in Sources */,
