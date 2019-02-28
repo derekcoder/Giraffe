@@ -54,6 +54,12 @@ extension CachedResponse {
         guard let httpResponse = response as? HTTPURLResponse else { return nil }
         return httpResponse
     }
+    
+    var isSuccess: Bool {
+        guard let httpResponse = httpResponse else { return false }
+        guard let httpStatus = HTTPStatus(rawValue: httpResponse.statusCode) else { return false }
+        return httpStatus.success
+    }
 }
 
 extension Webservice {

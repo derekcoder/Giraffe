@@ -89,8 +89,23 @@ public final class Webservice {
     }
     
     private func sendRequest<A>(for resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
+        if case .get = resource.method {
+            let isAvailabel = configuration.conditionalRequestManager.isAvailabelForPolling(urlString: resource.url.absoluteString)
+            if !isAvailabel {
+                CallbackQueue.mainAsync.execute {
+                    completion(Result(error: GiraffeError.notAvailabelForPolling), nil)
+                }
+                return
+            }
+        }
+
+        var request = URLRequest(resource: resource, authenticationToken: configuration.authenticationToken, headers: configuration.headers)
+        
+        if let eTag = configuration.conditionalRequestManager.pollingETag(urlString: resource.url.absoluteString) {
+            request.setHeaderValue(eTag, for: .ifNoneMatch)
+        }
+        
         printDebugMessage("sending request", for: resource)
-        let request = URLRequest(resource: resource, authenticationToken: configuration.authenticationToken, headers: configuration.headers)
         session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
             guard let self = self else { return }
             CallbackQueue.globalAsync.execute {
@@ -98,11 +113,20 @@ public final class Webservice {
                 let cachedResponse = CachedResponse(resource: resource, response: response, data: data)
                 
                 if case .get = resource.method {
-                    self.saveCachedResponse(cachedResponse)
+                    if cachedResponse.isSuccess {
+                        self.saveCachedResponse(cachedResponse)
+                    }
                     
-                    if let httpURLResponse = response as? HTTPURLResponse {
+                    if let httpURLResponse = cachedResponse.httpResponse {
                         self.configuration.conditionalRequestManager.setConditionRequest(urlString: resource.url.absoluteString,
                                                                                         response: httpURLResponse)
+                        
+                        if httpURLResponse.statusCode == HTTPStatus.notModified.rawValue {
+                            CallbackQueue.mainAsync.execute {
+                                completion(Result(error: GiraffeError.notModified), cachedResponse.httpResponse)
+                            }
+                            return
+                        }
                     }
                 }
                 

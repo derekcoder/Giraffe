@@ -21,7 +21,7 @@ extension User {
     
     static func resource(for login: String) -> Resource<User> {
         let url = Config.baseURL.appendingPathComponent("users/\(login)")
-        return Resource(url: url, parseJSON: { obj, _, _, isCached in
+        return Resource(url: url, parseJSON: { obj, response, _, isCached in
             guard let json = obj as? JSONDictionary, let user = User(json: json) else {
                 return Result(error: GiraffeError.invalidResponse)
             }

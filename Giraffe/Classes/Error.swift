@@ -53,6 +53,8 @@ public enum GiraffeError: Swift.Error {
     case invalidResponse
     case notHTTP
     case noCacheData
+    case notAvailabelForPolling
+    case notModified
 }
 
 public extension Swift.Error {
