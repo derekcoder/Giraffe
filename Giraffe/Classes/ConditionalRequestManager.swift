@@ -15,7 +15,8 @@ public class ConditionalRequestManager {
         
         if response.statusCode == HTTPStatus.ok.rawValue {
             guard let eTag = headers["Etag"] as? String else { return }
-            let pollInterval = (headers["X-Poll-Interval"] as? Double) ?? 0.0
+            let pollInterval = Double((headers["X-Poll-Interval"] as? String) ?? "0") ?? 0.0
+            
             if let request = requests[urlString] {
                 request.eTag = eTag
                 request.pollInterval = pollInterval
