@@ -20,15 +20,73 @@ public final class Webservice {
     }
 
     public func load<A>(_ resource: Resource<A>, option: Giraffe.Option = Giraffe.Option(), completion: @escaping (Result<A>) -> ()) {
-        loadData(option, resource: resource) { result, _ in
+        load(resource, option: option) { result, _ in
             completion(result)
         }
     }
     
     public func load<A>(_ resource: Resource<A>, option: Giraffe.Option = Giraffe.Option(), completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
-        loadData(option, resource: resource, completion: completion)
+        guard case .get = resource.method else {
+            sendRequest(for: resource, completion: completion)
+            return
+        }
+        
+        switch option.strategy {
+        case .onlyReload: sendRequest(for: resource, completion: completion)
+        case .onlyCache:
+            CallbackQueue.globalAsync.execute {
+                self.printDebugMessage("loading cached data", for: resource)
+                if let cachedResponse = self.loadCachedResponse(for: resource, expiration: option.expiration) {
+                    let result = cachedResponse.result
+                    CallbackQueue.mainAsync.execute {
+                        self.printDebugMessage("loaded cached data", for: resource)
+                        completion(result, cachedResponse.httpResponse)
+                    }
+                } else {
+                    CallbackQueue.mainAsync.execute {
+                        self.printDebugMessage("no cache data", for: resource)
+                        completion(Result(error: GiraffeError.noCacheData), nil)
+                    }
+                }
+            }
+        case .cacheThenReload:
+            CallbackQueue.globalAsync.execute {
+                self.printDebugMessage("loading cached data", for: resource)
+                if let cachedResponse = self.loadCachedResponse(for: resource, expiration: option.expiration) {
+                    let result = cachedResponse.result
+                    CallbackQueue.mainAsync.execute {
+                        self.printDebugMessage("loaded cached data", for: resource)
+                        completion(result, cachedResponse.httpResponse)
+                        self.sendRequest(for: resource, completion: completion)
+                    }
+                } else {
+                    self.printDebugMessage("no cache data", for: resource)
+                    CallbackQueue.mainAsync.execute {
+//                        completion(Result(error: GiraffeError.noCacheData), nil)
+                        self.sendRequest(for: resource, completion: completion)
+                    }
+                }
+            }
+        case .cacheOrReload:
+            CallbackQueue.globalAsync.execute {
+                self.printDebugMessage("loading cached data", for: resource)
+                if let cachedResponse = self.loadCachedResponse(for: resource, expiration: option.expiration) {
+                    let result = cachedResponse.result
+                    CallbackQueue.mainAsync.execute {
+                        self.printDebugMessage("loaded cached data", for: resource)
+                        completion(result, cachedResponse.httpResponse)
+                    }
+                } else {
+                    self.printDebugMessage("no cache data", for: resource)
+                    CallbackQueue.mainAsync.execute {
+                        self.sendRequest(for: resource, completion: completion)
+                    }
+                }
+            }
+        }
     }
     
+    /*
     private func loadData<A>(_ option: Giraffe.Option, resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
         guard case .get = resource.method else {
             sendRequest(for: resource, completion: completion)
@@ -86,7 +144,7 @@ public final class Webservice {
                 }
             }
         }
-    }
+    }*/
     
     private func sendRequest<A>(for resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
         if case .get = resource.method {

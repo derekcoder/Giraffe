@@ -89,4 +89,8 @@ public extension Swift.Error {
         guard let ge = giraffeError else { return false }
         return ge == .notModified
     }
+    
+    var isNoDataForConditionalRequest: Bool {
+        return isNotAvailabelForPolling || isNotModified
+    }
 }

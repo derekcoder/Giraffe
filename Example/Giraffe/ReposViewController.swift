@@ -26,18 +26,19 @@ class ReposViewController: UITableViewController {
     }
     
     private func loadRepos(strategy: Giraffe.LoadStrategy) {
-        let option = Giraffe.Option(strategy: strategy, expiration: .seconds(5))
+        let option = Giraffe.Option(strategy: strategy, expiration: .days(2))
         webservice.load(user.reposResource, option: option) { [weak self] result in
             guard let self = self else { return }
+            self.refreshControl?.endRefreshing()
             switch result {
             case .failure(let error):
-                print("error: \(error)")
-                if !error.isNoCacheData {
-                    self.refreshControl?.endRefreshing()
+                if error.isNoDataForConditionalRequest {
+                    print("No new data to pull")
+                } else {
+                    print("error: \(error)")
                 }
             case let .success(repos, isCached):
                 print("loaded \(isCached ? "cached" : "latest") repos")
-                self.refreshControl?.endRefreshing()
                 self.repos = repos
                 self.tableView.reloadData()
             }
