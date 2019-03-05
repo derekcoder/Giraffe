@@ -27,12 +27,12 @@ public final class Webservice {
     
     public func load<A>(_ resource: Resource<A>, option: Giraffe.Option = Giraffe.Option(), completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
         guard case .get = resource.method else {
-            sendRequest(for: resource, completion: completion)
+            sendRequest(for: resource, conditionalEnabled: option.conditionalEnabled, completion: completion)
             return
         }
         
         switch option.strategy {
-        case .onlyReload: sendRequest(for: resource, completion: completion)
+        case .onlyReload: sendRequest(for: resource, conditionalEnabled: option.conditionalEnabled, completion: completion)
         case .onlyCache:
             CallbackQueue.globalAsync.execute {
                 self.printDebugMessage("loading cached data", for: resource)
@@ -57,13 +57,13 @@ public final class Webservice {
                     CallbackQueue.mainAsync.execute {
                         self.printDebugMessage("loaded cached data", for: resource)
                         completion(result, cachedResponse.httpResponse)
-                        self.sendRequest(for: resource, completion: completion)
+                        self.sendRequest(for: resource, conditionalEnabled: option.conditionalEnabled, completion: completion)
                     }
                 } else {
                     self.printDebugMessage("no cache data", for: resource)
                     CallbackQueue.mainAsync.execute {
 //                        completion(Result(error: GiraffeError.noCacheData), nil)
-                        self.sendRequest(for: resource, completion: completion)
+                        self.sendRequest(for: resource, conditionalEnabled: option.conditionalEnabled, completion: completion)
                     }
                 }
             }
@@ -79,75 +79,15 @@ public final class Webservice {
                 } else {
                     self.printDebugMessage("no cache data", for: resource)
                     CallbackQueue.mainAsync.execute {
-                        self.sendRequest(for: resource, completion: completion)
+                        self.sendRequest(for: resource, conditionalEnabled: option.conditionalEnabled, completion: completion)
                     }
                 }
             }
         }
     }
-    
-    /*
-    private func loadData<A>(_ option: Giraffe.Option, resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
-        guard case .get = resource.method else {
-            sendRequest(for: resource, completion: completion)
-            return
-        }
         
-        switch option.strategy {
-        case .onlyReload: sendRequest(for: resource, completion: completion)
-        case .onlyCache:
-            CallbackQueue.globalAsync.execute {
-                self.printDebugMessage("loading cached data", for: resource)
-                if let cachedResponse = self.loadCachedResponse(for: resource, expiration: option.expiration) {
-                    let result = cachedResponse.result
-                    CallbackQueue.mainAsync.execute {
-                        self.printDebugMessage("loaded cached data", for: resource)
-                        completion(result, cachedResponse.httpResponse)
-                    }
-                } else {
-                    CallbackQueue.mainAsync.execute {
-                        self.printDebugMessage("no cache data", for: resource)
-                        completion(Result(error: GiraffeError.noCacheData), nil)
-                    }
-                }
-            }
-        case .cacheThenReload:
-            CallbackQueue.globalAsync.execute {
-                self.printDebugMessage("loading cached data", for: resource)
-                if let cachedResponse = self.loadCachedResponse(for: resource, expiration: option.expiration) {
-                    let result = cachedResponse.result
-                    CallbackQueue.mainAsync.execute {
-                        self.printDebugMessage("loaded cached data", for: resource)
-                        completion(result, cachedResponse.httpResponse)
-                        self.sendRequest(for: resource, completion: completion)
-                    }
-                } else {
-                    self.printDebugMessage("no cache data", for: resource)
-                    CallbackQueue.mainAsync.execute {
-                        completion(Result(error: GiraffeError.noCacheData), nil)
-                        self.sendRequest(for: resource, completion: completion)
-                    }
-                }
-            }
-        case .cacheOrReload:
-            CallbackQueue.globalAsync.execute {
-                self.printDebugMessage("loading cached data", for: resource)
-                if let cachedResponse = self.loadCachedResponse(for: resource, expiration: option.expiration) {
-                    let result = cachedResponse.result
-                    CallbackQueue.mainAsync.execute {
-                        self.printDebugMessage("loaded cached data", for: resource)
-                        completion(result, cachedResponse.httpResponse)
-                    }
-                } else {
-                    self.printDebugMessage("no cache data", for: resource)
-                    self.sendRequest(for: resource, completion: completion)
-                }
-            }
-        }
-    }*/
-    
-    private func sendRequest<A>(for resource: Resource<A>, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
-        if case .get = resource.method {
+    private func sendRequest<A>(for resource: Resource<A>, conditionalEnabled: Bool, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
+        if conditionalEnabled, case .get = resource.method {
             let isAvailabel = configuration.conditionalRequestManager.isAvailabelForPolling(urlString: resource.url.absoluteString)
             if !isAvailabel {
                 CallbackQueue.mainAsync.execute {
@@ -159,7 +99,7 @@ public final class Webservice {
 
         var request = URLRequest(resource: resource, authenticationToken: configuration.authenticationToken, headers: configuration.headers)
         
-        if let eTag = configuration.conditionalRequestManager.pollingETag(urlString: resource.url.absoluteString) {
+        if conditionalEnabled, let eTag = configuration.conditionalRequestManager.pollingETag(urlString: resource.url.absoluteString) {
             request.setHeaderValue(eTag, for: .ifNoneMatch)
         }
         
@@ -175,7 +115,7 @@ public final class Webservice {
                         self.saveCachedResponse(cachedResponse)
                     }
                     
-                    if let httpURLResponse = cachedResponse.httpResponse {
+                    if conditionalEnabled, let httpURLResponse = cachedResponse.httpResponse {
                         self.configuration.conditionalRequestManager.setConditionRequest(urlString: resource.url.absoluteString,
                                                                                         response: httpURLResponse)
                         

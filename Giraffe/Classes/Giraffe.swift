@@ -56,10 +56,12 @@ public struct Giraffe {
     public struct Option {
         public var strategy: Giraffe.LoadStrategy
         public var expiration: Giraffe.CacheExpiration
+        public var conditionalEnabled: Bool
         
-        public init(strategy: Giraffe.LoadStrategy = .onlyReload, expiration: Giraffe.CacheExpiration = .none) {
+        public init(strategy: Giraffe.LoadStrategy = .onlyReload, expiration: Giraffe.CacheExpiration = .none, conditionalEnabled: Bool = true) {
             self.strategy = strategy
             self.expiration = expiration
+            self.conditionalEnabled = conditionalEnabled
         }
     }
 }
