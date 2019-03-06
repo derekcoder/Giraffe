@@ -19,6 +19,10 @@ public final class Webservice {
         self.configuration = configuration
     }
 
+    public func removeConditionalRequest<A>(for resource: Resource<A>) {
+        configuration.conditionalRequestManager.removeConditionalRequest(urlString: resource.url.absoluteString)
+    }
+    
     public func load<A>(_ resource: Resource<A>, option: Giraffe.Option = Giraffe.Option(), completion: @escaping (Result<A>) -> ()) {
         load(resource, option: option) { result, _ in
             completion(result)
@@ -107,11 +111,11 @@ public final class Webservice {
         session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
             guard let self = self else { return }
             CallbackQueue.globalAsync.execute {
-                self.printDebugMessage("saving data into cache", for: resource)
                 let cachedResponse = CachedResponse(resource: resource, response: response, data: data)
                 
                 if case .get = resource.method {
                     if cachedResponse.isSuccess {
+                        self.printDebugMessage("saving data into cache", for: resource)
                         self.saveCachedResponse(cachedResponse)
                     }
                     

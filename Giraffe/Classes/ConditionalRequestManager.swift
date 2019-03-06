@@ -40,4 +40,8 @@ public class ConditionalRequestManager {
         guard let request = requests[urlString] else { return nil }
         return request.eTag
     }
+    
+    func removeConditionalRequest(urlString: String) {
+        requests.removeValue(forKey: urlString)
+    }
 }

@@ -53,6 +53,7 @@ class ReposViewController: UITableViewController {
     
     @IBAction func removeCache() {
         webservice.removeCache(for: user.reposResource)
+        webservice.removeConditionalRequest(for: user.reposResource)
         repos.removeAll()
         tableView.reloadData()
     }
