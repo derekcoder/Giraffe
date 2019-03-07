@@ -25,9 +25,6 @@ public class ConditionalRequestManager {
                 let newRequest = ConditionalRequest(eTag: eTag, pollInterval: pollInterval, lastRequested: Date())
                 requests[urlString] = newRequest
             }
-        } else if response.statusCode == HTTPStatus.notModified.rawValue {
-            let request = requests[urlString]
-            request?.lastRequested = Date()
         }
     }
     
