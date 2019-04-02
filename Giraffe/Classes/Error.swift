@@ -53,7 +53,6 @@ public enum GiraffeError: Swift.Error {
     case invalidResponse
     case notHTTP
     case noCacheData
-    case notAvailabelForPolling
     case notModified
 }
 
@@ -80,17 +79,8 @@ public extension Swift.Error {
         return ge == .invalidResponse
     }
     
-    var isNotAvailabelForPolling: Bool {
-        guard let ge = giraffeError else { return false }
-        return ge == .notAvailabelForPolling
-    }
-    
     var isNotModified: Bool {
         guard let ge = giraffeError else { return false }
         return ge == .notModified
-    }
-    
-    var isNoDataForConditionalRequest: Bool {
-        return isNotAvailabelForPolling || isNotModified
-    }
+    }    
 }

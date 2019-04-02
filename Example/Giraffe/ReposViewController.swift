@@ -32,7 +32,7 @@ class ReposViewController: UITableViewController {
             self.refreshControl?.endRefreshing()
             switch result {
             case .failure(let error):
-                if error.isNoDataForConditionalRequest {
+                if error.isNotModified {
                     print("No new data to pull")
                 } else {
                     print("error: \(error)")
@@ -53,7 +53,7 @@ class ReposViewController: UITableViewController {
     
     @IBAction func removeCache() {
         webservice.removeCache(for: user.reposResource)
-        webservice.removeConditionalRequest(for: user.reposResource)
+        webservice.removeHTTPCache(for: user.reposResource)
         repos.removeAll()
         tableView.reloadData()
     }

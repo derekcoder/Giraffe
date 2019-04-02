@@ -31,14 +31,16 @@ class UserDetailViewController: UITableViewController {
     
     private func loadUser(strategy: Giraffe.LoadStrategy) {
         let resource = User.resource(for: "derekcoder")
-        let option = Giraffe.Option(strategy: strategy, expiration: .hours(2))
+        let option = Giraffe.Option(strategy: strategy, expiration: .hours(2), conditionalEnabled: true)
         webservice.load(resource, option: option) { [weak self] result in
             guard let self = self else { return }
+            self.refreshControl?.endRefreshing()
             switch result {
             case .failure(let error):
-                print("error: \(error)")
-                if !error.isNoCacheData {
-                    self.refreshControl?.endRefreshing()
+                if error.isNotModified {
+                    print("No new data to pull")
+                } else {
+                    print("error: \(error)")
                 }
             case let .success(user, isCached):
                 print("loaded \(isCached ? "cached" : "latest") user")

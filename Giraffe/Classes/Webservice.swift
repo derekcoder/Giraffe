@@ -19,8 +19,8 @@ public final class Webservice {
         self.configuration = configuration
     }
 
-    public func removeConditionalRequest<A>(for resource: Resource<A>) {
-        configuration.conditionalRequestManager.removeConditionalRequest(urlString: resource.url.absoluteString)
+    public func removeHTTPCache<A>(for resource: Resource<A>) {
+        configuration.httpCacheManager.removeHTTPCache(for: resource.url.absoluteString)
     }
     
     public func load<A>(_ resource: Resource<A>, option: Giraffe.Option = Giraffe.Option(), completion: @escaping (Result<A>) -> ()) {
@@ -91,20 +91,16 @@ public final class Webservice {
     }
         
     private func sendRequest<A>(for resource: Resource<A>, conditionalEnabled: Bool, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
-        if conditionalEnabled, case .get = resource.method {
-            let isAvailabel = configuration.conditionalRequestManager.isAvailabelForPolling(urlString: resource.url.absoluteString)
-            if !isAvailabel {
-                CallbackQueue.mainAsync.execute {
-                    completion(Result(error: GiraffeError.notAvailabelForPolling), nil)
-                }
-                return
-            }
-        }
-
         var request = URLRequest(resource: resource, authenticationToken: configuration.authenticationToken, headers: configuration.headers)
         
-        if conditionalEnabled, let eTag = configuration.conditionalRequestManager.pollingETag(urlString: resource.url.absoluteString) {
-            request.setHeaderValue(eTag, for: .ifNoneMatch)
+        if conditionalEnabled, let httpCache = configuration.httpCacheManager.httpCache(for: resource.url.absoluteString) {
+            switch httpCache {
+            case .eTag(let eTag): request.setHeaderValue(eTag, for: .ifNoneMatch)
+            case .lastModified(let lastModified): request.setHeaderValue(lastModified, for: .ifModifiedSince)
+            case let .both(eTag, lastModified):
+                request.setHeaderValue(eTag, for: .ifNoneMatch)
+                request.setHeaderValue(lastModified, for: .ifModifiedSince)
+            }
         }
         
         printDebugMessage("sending request", for: resource)
@@ -120,8 +116,8 @@ public final class Webservice {
                     }
                     
                     if conditionalEnabled, let httpURLResponse = cachedResponse.httpResponse {
-                        self.configuration.conditionalRequestManager.setConditionRequest(urlString: resource.url.absoluteString,
-                                                                                        response: httpURLResponse)
+                        self.configuration.httpCacheManager.setHTTPCache(urlString: resource.url.absoluteString,
+                                                                          response: httpURLResponse)
                         
                         if httpURLResponse.statusCode == HTTPStatus.notModified.rawValue {
                             CallbackQueue.mainAsync.execute {
