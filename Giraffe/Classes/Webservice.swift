@@ -31,12 +31,12 @@ public final class Webservice {
     
     public func load<A>(_ resource: Resource<A>, option: Giraffe.Option = Giraffe.Option(), completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
         guard case .get = resource.method else {
-            sendRequest(for: resource, conditionalEnabled: option.conditionalEnabled, completion: completion)
+            sendRequest(for: resource, httpCacheEnabled: option.httpCacheEnabled, completion: completion)
             return
         }
         
         switch option.strategy {
-        case .onlyReload: sendRequest(for: resource, conditionalEnabled: option.conditionalEnabled, completion: completion)
+        case .onlyReload: sendRequest(for: resource, httpCacheEnabled: option.httpCacheEnabled, completion: completion)
         case .onlyCache:
             CallbackQueue.globalAsync.execute {
                 self.printDebugMessage("loading cached data", for: resource)
@@ -61,13 +61,13 @@ public final class Webservice {
                     CallbackQueue.mainAsync.execute {
                         self.printDebugMessage("loaded cached data", for: resource)
                         completion(result, cachedResponse.httpResponse)
-                        self.sendRequest(for: resource, conditionalEnabled: option.conditionalEnabled, completion: completion)
+                        self.sendRequest(for: resource, httpCacheEnabled: option.httpCacheEnabled, completion: completion)
                     }
                 } else {
                     self.printDebugMessage("no cache data", for: resource)
                     CallbackQueue.mainAsync.execute {
 //                        completion(Result(error: GiraffeError.noCacheData), nil)
-                        self.sendRequest(for: resource, conditionalEnabled: option.conditionalEnabled, completion: completion)
+                        self.sendRequest(for: resource, httpCacheEnabled: option.httpCacheEnabled, completion: completion)
                     }
                 }
             }
@@ -83,17 +83,17 @@ public final class Webservice {
                 } else {
                     self.printDebugMessage("no cache data", for: resource)
                     CallbackQueue.mainAsync.execute {
-                        self.sendRequest(for: resource, conditionalEnabled: option.conditionalEnabled, completion: completion)
+                        self.sendRequest(for: resource, httpCacheEnabled: option.httpCacheEnabled, completion: completion)
                     }
                 }
             }
         }
     }
         
-    private func sendRequest<A>(for resource: Resource<A>, conditionalEnabled: Bool, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
+    private func sendRequest<A>(for resource: Resource<A>, httpCacheEnabled: Bool, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
         var request = URLRequest(resource: resource, authenticationToken: configuration.authenticationToken, headers: configuration.headers)
         
-        if conditionalEnabled, let httpCache = configuration.httpCacheManager.httpCache(for: resource.url.absoluteString) {
+        if httpCacheEnabled, let httpCache = configuration.httpCacheManager.httpCache(for: resource.url.absoluteString) {
             switch httpCache {
             case .eTag(let eTag): request.setHeaderValue(eTag, for: .ifNoneMatch)
             case .lastModified(let lastModified): request.setHeaderValue(lastModified, for: .ifModifiedSince)
@@ -115,7 +115,7 @@ public final class Webservice {
                         self.saveCachedResponse(cachedResponse)
                     }
                     
-                    if conditionalEnabled, let httpURLResponse = cachedResponse.httpResponse {
+                    if httpCacheEnabled, let httpURLResponse = cachedResponse.httpResponse {
                         self.configuration.httpCacheManager.setHTTPCache(urlString: resource.url.absoluteString,
                                                                           response: httpURLResponse)
                         
