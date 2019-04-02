@@ -14,7 +14,6 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		656D50FB2061F8EE00EE0B73 /* Giraffe_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656D50FA2061F8EE00EE0B73 /* Giraffe_Tests.swift */; };
-		656D51032061FB8200EE0B73 /* SHA1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656D51022061FB8200EE0B73 /* SHA1Tests.swift */; };
 		65CA57E22137D38C003A7A91 /* Repo+Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CA57E12137D38C003A7A91 /* Repo+Resource.swift */; };
 		65CA57E42137D395003A7A91 /* Repo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CA57E32137D395003A7A91 /* Repo.swift */; };
 		65CA57E62137D6B0003A7A91 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CA57E52137D6B0003A7A91 /* App.swift */; };
@@ -51,7 +50,6 @@
 		656D50F82061F8EE00EE0B73 /* Giraffe_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Giraffe_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		656D50FA2061F8EE00EE0B73 /* Giraffe_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Giraffe_Tests.swift; sourceTree = "<group>"; };
 		656D50FC2061F8EE00EE0B73 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		656D51022061FB8200EE0B73 /* SHA1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SHA1Tests.swift; sourceTree = "<group>"; };
 		65CA57E12137D38C003A7A91 /* Repo+Resource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Repo+Resource.swift"; sourceTree = "<group>"; };
 		65CA57E32137D395003A7A91 /* Repo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repo.swift; sourceTree = "<group>"; };
 		65CA57E52137D6B0003A7A91 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
@@ -156,7 +154,6 @@
 			children = (
 				656D50FA2061F8EE00EE0B73 /* Giraffe_Tests.swift */,
 				656D50FC2061F8EE00EE0B73 /* Info.plist */,
-				656D51022061FB8200EE0B73 /* SHA1Tests.swift */,
 			);
 			path = Giraffe_Tests;
 			sourceTree = "<group>";
@@ -254,6 +251,7 @@
 					};
 					656D50F72061F8EE00EE0B73 = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
@@ -422,7 +420,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				656D51032061FB8200EE0B73 /* SHA1Tests.swift in Sources */,
 				656D50FB2061F8EE00EE0B73 /* Giraffe_Tests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -572,7 +569,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -588,7 +585,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
@@ -612,7 +609,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.derekcoder.Giraffe-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Giraffe_Example.app/Giraffe_Example";
 			};
@@ -636,7 +633,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.derekcoder.Giraffe-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Giraffe_Example.app/Giraffe_Example";
 			};

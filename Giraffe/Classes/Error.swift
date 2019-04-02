@@ -15,6 +15,8 @@ public enum HTTPStatus: Int {
     case noContent = 204
     case resetContent = 205
     
+    case notModified = 304
+    
     case badRequest = 400
     case unauthorized = 401
     case paymentRequired = 402
@@ -35,14 +37,14 @@ public enum HTTPStatus: Int {
 }
 
 extension HTTPStatus {
-    var success: Bool {
+    public var success: Bool {
         if rawValue >= 200 && rawValue < 300 {
             return true
         }
         return false
     }
     
-    var failure: Bool {
+    public var failure: Bool {
         return !success
     }
 }
@@ -50,4 +52,35 @@ extension HTTPStatus {
 public enum GiraffeError: Swift.Error {
     case invalidResponse
     case notHTTP
+    case noCacheData
+    case notModified
+}
+
+public extension Swift.Error {
+    var giraffeError: GiraffeError? {
+        let error = self as? GiraffeError
+        return error
+    }
+    
+    var isGiraffe: Bool { return (self is GiraffeError) }
+    
+    var isNoCacheData: Bool {
+        guard let ge = giraffeError else { return false }
+        return ge == .noCacheData
+    }
+    
+    var isNotHTTP: Bool {
+        guard let ge = giraffeError else { return false }
+        return ge == .notHTTP
+    }
+    
+    var isInvalidResponse: Bool {
+        guard let ge = giraffeError else { return false }
+        return ge == .invalidResponse
+    }
+    
+    var isNotModified: Bool {
+        guard let ge = giraffeError else { return false }
+        return ge == .notModified
+    }    
 }

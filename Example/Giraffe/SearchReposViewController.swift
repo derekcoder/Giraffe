@@ -22,7 +22,7 @@ class SearchReposViewController: UITableViewController {
             self?.spinner.stopAnimating()
             switch result {
             case .failure(let error): print(error.localizedDescription)
-            case .success(let repos):
+            case .success(let repos, _):
                 self?.repos = repos
                 self?.tableView.reloadData()
             }

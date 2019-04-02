@@ -22,26 +22,40 @@ class ReposViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         refreshControl?.beginRefreshing()
-        refresh()
+        loadRepos(strategy: .cacheThenReload)
     }
     
-    private func loadRepos() {
-        webservice.load(user.reposResource) { [weak self] result in
+    private func loadRepos(strategy: Giraffe.LoadStrategy) {
+        let option = Giraffe.Option(strategy: strategy, expiration: .days(2), httpCacheEnabled: true)
+        webservice.load(user.reposResource, option: option) { [weak self] result in
             guard let self = self else { return }
             self.refreshControl?.endRefreshing()
             switch result {
-            case .failure(let error): print(error.localizedDescription)
-            case .success(let repos):
+            case .failure(let error):
+                if error.isNotModified {
+                    print("No new data to pull")
+                } else {
+                    print("error: \(error)")
+                }
+            case let .success(repos, isCached):
+                print("loaded \(isCached ? "cached" : "latest") repos")
                 self.repos = repos
                 self.tableView.reloadData()
             }
         }
     }
     
-    // MARK: - Action
+    // MARK: - Action Methods
 
     @IBAction func refresh() {
-        loadRepos()
+        loadRepos(strategy: .onlyReload)
+    }
+    
+    @IBAction func removeCache() {
+        webservice.removeCache(for: user.reposResource)
+        webservice.removeHTTPCache(for: user.reposResource)
+        repos.removeAll()
+        tableView.reloadData()
     }
 
     // MARK: - UITableViewDataSource & UITableViewDelegate

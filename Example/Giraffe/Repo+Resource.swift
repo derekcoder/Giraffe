@@ -19,23 +19,24 @@ extension Repo {
     }
     
     static func searchResource(text: String) -> Resource<[Repo]> {
-        let url = Config.baseURL.appendingPathComponent("search/repositories").encoded(parameters: ["q": "\(text)+language:swift"])
-        return Resource(url: url, parseJSON: { obj, _, _ in
+        let url = Config.baseURL.appendingPathComponent("search/repositories")
+                    .appendingQueryItems(["q": "\(text)+language:swift"])
+        return Resource(url: url, parseJSON: { obj, _, _, isCached in
             guard let json = obj as? JSONDictionary, let items = json["items"] as? [JSONDictionary] else {
                 return Result(error: GiraffeError.invalidResponse)
             }
             let repos = items.compactMap(Repo.init)
-            return Result(value: repos)
+            return Result(value: repos, isCached: isCached)
         })
     }
     
     var resource: Resource<Repo> {
         let url = Config.baseURL.appendingPathComponent("repos/\(fullName)")
-        return Resource(url: url, parseJSON: { obj, _, _ in
+        return Resource(url: url, parseJSON: { obj, _, _, isCached in
             guard let json = obj as? JSONDictionary, let repo = Repo(json: json) else {
                 return Result(error: GiraffeError.invalidResponse)
             }
-            return Result(value: repo)
+            return Result(value: repo, isCached: isCached)
         })
     }
 }
