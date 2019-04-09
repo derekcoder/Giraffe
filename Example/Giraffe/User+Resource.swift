@@ -21,33 +21,38 @@ extension User {
     
     static func resource(for login: String) -> Resource<User> {
         let url = Config.baseURL.appendingPathComponent("users/\(login)")
-        return Resource(url: url, parseJSON: { obj, response, _, isCached in
-            guard let json = obj as? JSONDictionary, let user = User(json: json) else {
-                return Result(error: GiraffeError.invalidResponse)
+        return Resource(url: url) { response in
+            guard let obj = response.jsonObject,
+                let json = obj as? JSONDictionary,
+                let user = User(json: json) else {
+                return Result.failure(.invalidResponse)
             }
-            return Result(value: user, isCached: isCached)
-        })
+            return Result.success(user)
+        }
     }
     
     var avatarResource: Resource<UIImage?>? {
         guard let avatar = avatar else { return nil }
         guard let url = URL(string: avatar) else { return nil }
-        return Resource(url: url, parse: { data, _, _, isCached in
-            guard let data = data else { return Result(value: nil, isCached: isCached) }
-            let image = UIImage(data: data)
-            return Result(value: image, isCached: isCached)
-        })
+        return Resource(url: url) { response in
+            if let data = response.data {
+                return Result.success(UIImage(data: data))
+            } else {
+                return Result.success(nil)
+            }
+        }
     }
     
     var reposResource: Resource<[Repo]> {
         let url = Config.baseURL.appendingPathComponent("/users/\(login)/repos")
                     .appendingQueryItems(["sort": "pushed"])
-        return Resource(url: url, parseJSON: { obj, _, _, isCached in
-            guard let json = obj as? [JSONDictionary] else {
-                return Result(error: GiraffeError.invalidResponse)
+        return Resource(url: url) { response in
+            guard let obj = response.jsonObject,
+                let json = obj as? [JSONDictionary] else {
+                return Result.failure(.invalidResponse)
             }
             let repos = json.compactMap(Repo.init)
-            return Result(value: repos, isCached: isCached)
-        })
+            return Result.success(repos)
+        }
     }
 }

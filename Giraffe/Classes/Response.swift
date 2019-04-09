@@ -7,25 +7,40 @@
 
 import Foundation
 
-public struct Response<Value> {
-    let data: Data?
-    let error: Error?
-    let httpResponse: HTTPURLResponse?
-    
-    var result: Result<Value, APIError>
-    let isCached: Bool
+public struct ResourceResponse {
+    public let data: Data?
+    public let httpResponse: HTTPURLResponse
+    public let isCached: Bool
 }
 
-public extension Response {
-    func jsonObject() throws -> Any {
-        if let data = data, error == nil {
-            do {
-                return try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions())
-            } catch {
-                throw APIError.invalidResponse(data)
-            }
-        } else {
-            throw APIError.invalidResponse(data)
+public struct ResultResponse<Value> {
+    public let data: Data?
+    public let error: Error?
+    public let httpResponse: HTTPURLResponse?
+    
+    public var result: Result<Value, APIError>
+    public let isCached: Bool
+}
+
+public extension ResourceResponse {
+    var jsonObject: Any? {
+        guard let data = data else { return nil }
+        return try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions())
+    }
+}
+
+public extension Result where Failure == APIError {
+    var value: Success? {
+        switch self {
+        case .failure: return nil
+        case .success(let value): return value
+        }
+    }
+    
+    var error: APIError? {
+        switch self {
+        case .failure(let error): return error
+        case .success: return nil
         }
     }
 }

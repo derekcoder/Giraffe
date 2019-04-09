@@ -27,18 +27,26 @@ class ReposViewController: UITableViewController {
     
     private func loadRepos(strategy: Giraffe.LoadStrategy) {
         let option = Giraffe.Option(strategy: strategy, expiration: .days(2), httpCacheEnabled: true)
-        webservice.load(user.reposResource, option: option) { [weak self] result in
+        webservice.load(user.reposResource, option: option) { [weak self] response in
             guard let self = self else { return }
             self.refreshControl?.endRefreshing()
-            switch result {
+            switch response.result {
             case .failure(let error):
-                if error.isNotModified {
-                    print("No new data to pull")
-                } else {
-                    print("error: \(error)")
+                switch error {
+                case .requestTimeout: print("Request time out")
+                case .invalidResponse: print("Not http url response")
+                case .apiFailed(let responseError):
+                    switch responseError {
+                    case .entryNotFound: print("Entry not found")
+                    case .notModified: print("No new data to pull")
+                    case .permissionDenied: print("Permission denied")
+                    case .serverDied: print("Server died")
+                    case .others(let statusCode): print("Others response error: \(statusCode)")
+                    }
+                case .apiResultFailed(let resultError): print("Result error: \(resultError)")
                 }
-            case let .success(repos, isCached):
-                print("loaded \(isCached ? "cached" : "latest") repos")
+            case .success(let repos):
+                print("loaded \(response.isCached ? "cached" : "latest") repos")
                 self.repos = repos
                 self.tableView.reloadData()
             }

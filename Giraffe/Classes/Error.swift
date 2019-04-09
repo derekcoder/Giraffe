@@ -89,9 +89,8 @@ public extension Swift.Error {
 
 public enum APIError: Error {
     case requestTimeout               // 没有得到响应
-    case notHTTPURLResponse           // 得到响应，但是 response 不是 HTTPURLResponse
     case apiFailed(APIResponseError)  // 得到响应，但是 HTTP Status Code 非 200
-    case invalidResponse(Data?)        // 得到响应且 Status Code 为 200，但是无法正确解析数据
+    case invalidResponse              // 得到响应且 Status Code 为 200，但是无法正确解析数据
     case apiResultFailed(Error)       // 请求和响应都正常，但是 API 的结果是失败的
 }
 
@@ -121,6 +120,6 @@ public extension Int {
     }
     
     var failureStatus: Bool {
-        return !success
+        return !successStatus
     }
 }

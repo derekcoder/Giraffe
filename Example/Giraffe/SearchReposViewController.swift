@@ -18,13 +18,16 @@ class SearchReposViewController: UITableViewController {
     private func search(text: String) {
         spinner.startAnimating()
         let resource = Repo.searchResource(text: text)
-        webservice.load(resource) { [weak self] result in
-            self?.spinner.stopAnimating()
-            switch result {
-            case .failure(let error): print(error.localizedDescription)
-            case .success(let repos, _):
-                self?.repos = repos
-                self?.tableView.reloadData()
+        webservice.load(resource) { [weak self] response in
+            guard let self = self else { return }
+            self.spinner.stopAnimating()
+            
+            switch response.result {
+            case .failure(let error):
+                print(error.localizedDescription)
+            case .success(let repos):
+                self.repos = repos
+                self.tableView.reloadData()
             }
         }
     }

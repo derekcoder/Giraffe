@@ -24,13 +24,14 @@ extension Todo {
         self.title = title
     }
     
-    static let all = Resource<[Todo]>(url: url, parseJSON: { json, _, _, isCached in
-        guard let dicts = json as? [JSONDictionary] else {
-            return Result(error: GiraffeError.invalidResponse)
+    static let all = Resource<[Todo]>(url: url) { response in
+        guard let obj = response.jsonObject,
+            let json = obj as? [JSONDictionary] else {
+            return Result.failure(.invalidResponse)
         }
-        let value = dicts.compactMap(Todo.init)
-        return Result(value: value, isCached: isCached)
-    })
+        let todos = json.compactMap(Todo.init)
+        return Result.success(todos)
+    }
 }
 
 
@@ -40,8 +41,8 @@ class Giraffe_Tests: XCTestCase {
         let expectation = XCTestExpectation(description: "Testing load todos")
         
         let webservice = Webservice()
-        webservice.load(Todo.all) { result in
-            XCTAssertNotNil(result.value, "No episodes was loaded.")
+        webservice.load(Todo.all) { response in
+            XCTAssertNotNil(response.result.value, "No episodes was loaded.")
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 10.0)

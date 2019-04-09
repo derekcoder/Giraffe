@@ -7,18 +7,22 @@
 
 import Foundation
 
+public enum CacheError: Error {
+    case noCacheData
+}
+
 struct CachedResponse<A> {
     let resource: Resource<A>
-    let response: URLResponse?
+    let httpResponse: HTTPURLResponse
     let data: Data?
     let createdDate: Date
     var expired: Bool
 }
 
 extension CachedResponse {
-    init(resource: Resource<A>, response: URLResponse?, data: Data?) {
+    init(resource: Resource<A>, httpResponse: HTTPURLResponse, data: Data?) {
         self.resource = resource
-        self.response = response
+        self.httpResponse = httpResponse
         self.data = data
         self.createdDate = Date()
         self.expired = false
@@ -30,7 +34,7 @@ extension CachedResponse {
     
     init(resource: Resource<A>, cachedURLResponse: CachedURLResponse) {
         self.resource = resource
-        self.response = cachedURLResponse.response
+        self.httpResponse = cachedURLResponse.response as! HTTPURLResponse
         self.data = cachedURLResponse.data
         
         let createdDate = cachedURLResponse.userInfo?["created_date"] as? Date
@@ -40,25 +44,17 @@ extension CachedResponse {
     }
     
     var cachedURLResponse: CachedURLResponse? {
-        guard let response = response, let data = data else { return nil }
+        guard let data = data else { return nil }
         let userInfo: [String: Any] = ["created_date": createdDate, "expired": expired]
-        let cachedURLResponse = CachedURLResponse(response: response, data: data, userInfo: userInfo, storagePolicy: .allowed)
+        let cachedURLResponse = CachedURLResponse(response: httpResponse, data: data, userInfo: userInfo, storagePolicy: .allowed)
         return cachedURLResponse
     }
     
-    var result: Result<A> {
-        return resource.parse(data: data, response: response, error: nil, isCached: true)
-    }
-    
-    var httpResponse: HTTPURLResponse? {
-        guard let httpResponse = response as? HTTPURLResponse else { return nil }
-        return httpResponse
-    }
-    
-    var isSuccess: Bool {
-        guard let httpResponse = httpResponse else { return false }
-        guard let httpStatus = HTTPStatus(rawValue: httpResponse.statusCode) else { return false }
-        return httpStatus.success
+    var result: Result<A, APIError> {
+        let resourceResponse = ResourceResponse(data: data,
+                                                httpResponse: httpResponse,
+                                                isCached: true)
+        return resource.parse(resourceResponse)
     }
 }
 

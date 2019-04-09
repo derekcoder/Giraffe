@@ -32,18 +32,26 @@ class UserDetailViewController: UITableViewController {
     private func loadUser(strategy: Giraffe.LoadStrategy) {
         let resource = User.resource(for: "derekcoder")
         let option = Giraffe.Option(strategy: strategy, expiration: .hours(2), httpCacheEnabled: true)
-        webservice.load(resource, option: option) { [weak self] result in
+        webservice.load(resource, option: option) { [weak self] response in
             guard let self = self else { return }
             self.refreshControl?.endRefreshing()
-            switch result {
+            switch response.result {
             case .failure(let error):
-                if error.isNotModified {
-                    print("No new data to pull")
-                } else {
-                    print("error: \(error)")
+                switch error {
+                case .requestTimeout: print("Request time out")
+                case .invalidResponse: print("Not http url response")
+                case .apiFailed(let responseError):
+                    switch responseError {
+                    case .entryNotFound: print("Entry not found")
+                    case .notModified: print("No new data to pull")
+                    case .permissionDenied: print("Permission denied")
+                    case .serverDied: print("Server died")
+                    case .others(let statusCode): print("Others response error: \(statusCode)")
+                    }
+                case .apiResultFailed(let resultError): print("Result error: \(resultError)")
                 }
-            case let .success(user, isCached):
-                print("loaded \(isCached ? "cached" : "latest") user")
+            case .success(let user):
+                print("loaded \(response.isCached ? "cached" : "latest") user")
                 self.refreshControl?.endRefreshing()
                 self.user = user
                 self.tableView.reloadData()
@@ -54,10 +62,10 @@ class UserDetailViewController: UITableViewController {
     
     private func loadAvatar() {
         guard let resource = user?.avatarResource else { return }
-        webservice.load(resource) { [weak self] result in
-            switch result {
+        webservice.load(resource) { [weak self] response in
+            switch response.result {
             case .failure(let error): print(error.localizedDescription)
-            case .success(let image, _): self?.updateAvatarImageView(with: image)
+            case .success(let image): self?.updateAvatarImageView(with: image)
             }
         }
     }
