@@ -23,14 +23,18 @@ public final class Webservice {
         configuration.httpCacheManager.removeHTTPCache(for: resource.url.absoluteString)
     }
     
-    public func load<A>(_ resource: Resource<A>, option: Giraffe.Option = Giraffe.Option(), completion: @escaping (ResultResponse<A>) -> ()) {
+    public func load<A>(_ resource: Resource<A>,
+                        option: Giraffe.Option = Giraffe.Option(),
+                        completion: @escaping (ResultResponse<A>) -> ()) {
         
-        // 判断当前的请示是否是 GET 请求。如果不是，直接发送 API 请求
+        // Check if the current request is a GET request.
         guard case .get = resource.method else {
+            // If not, send the API request directly.
             sendRequest(for: resource, httpCacheEnabled: option.httpCacheEnabled, completion: completion)
             return
         }
 
+        // If it is, check the caching strategy.
         switch option.strategy {
         case .onlyReload: sendRequest(for: resource, httpCacheEnabled: option.httpCacheEnabled, completion: completion)
         case .onlyCache:
@@ -89,7 +93,8 @@ public final class Webservice {
         case .cacheOrReload:
             CallbackQueue.globalAsync.execute {
                 self.printDebugMessage("loading cached data", for: resource)
-                if let cachedResponse = self.loadCachedResponse(for: resource, expiration: option.expiration) {
+                if let cachedResponse = self.loadCachedResponse(for: resource,
+                                                                expiration: option.expiration) {
                     let result = cachedResponse.result
                     let resultResponse = ResultResponse(data: cachedResponse.data,
                                                         error: nil,
@@ -112,7 +117,10 @@ public final class Webservice {
         }
     }
         
-    private func sendRequest<A>(for resource: Resource<A>, httpCacheEnabled: Bool, completion: @escaping (ResultResponse<A>) -> ()) {
+    private func sendRequest<A>(for resource: Resource<A>,
+                                httpCacheEnabled: Bool,
+                                completion: @escaping (ResultResponse<A>) -> ()) {
+        
         var request = URLRequest(resource: resource,
                                  authenticationToken: configuration.authenticationToken,
                                  headers: configuration.headers)
@@ -136,53 +144,72 @@ public final class Webservice {
             guard let self = self else { return }
             CallbackQueue.globalAsync.execute {
                 
-                // 判断 response 是否为 HTTPURLResponse。如果不是，直接返回 notHTTPURLResponse 错误
+                // Check if the request times out.
+                guard error?._code != NSURLErrorTimedOut else {
+                    // If it is, return response with .requestTimeout error directly.
+                    let resultResponse = ResultResponse<A>(data: data,
+                                                           error: error,
+                                                           httpResponse: nil,
+                                                           result: .failure(.requestTimeout),
+                                                           isCached: false)
+                    CallbackQueue.mainAsync.execute {
+                        self.printDebugMessage("failed to load data: \(resultResponse.result)", for: resource)
+                        completion(resultResponse)
+                    }
+                    return
+                }
+                
+                // Check if response is HTTPURLResponse.
                 guard let httpResponse = response as? HTTPURLResponse else {
+                    // If not, return response with .invalidResponse error directly.
                     let resultResponse = ResultResponse<A>(data: data,
                                                            error: error,
                                                            httpResponse: nil,
                                                            result: .failure(.invalidResponse),
                                                            isCached: false)
                     CallbackQueue.mainAsync.execute {
-                        self.printDebugMessage("failed to load data from request: not http url response", for: resource)
+                        self.printDebugMessage("failed to load data: not http url response", for: resource)
                         completion(resultResponse)
                     }
                     return
                 }
                 
-                // 判断当前的请求是否成功
+                // Check if the current request is successful.
                 let statusCode = httpResponse.statusCode
-                if error != nil || statusCode.failureStatus { // 得到响应且 Status Code 为 200..<300
-                    var resultResponse = ResultResponse<A>(data: data,
+                if statusCode.failureStatus { // status code not in 200..<300
+                    // If not, return response with .apiFailed error.
+                    let resultResponse = ResultResponse<A>(data: data,
                                                            error: error,
                                                            httpResponse: httpResponse,
                                                            result: .failure(.apiFailed(statusCode.responseError)),
                                                            isCached: false)
-
-                    if error?._code == NSURLErrorTimedOut {
-                        resultResponse.result = .failure(.requestTimeout)
-                    }
                     CallbackQueue.mainAsync.execute {
-                        self.printDebugMessage("failed to load data from request: \(resultResponse.result)", for: resource)
+                        self.printDebugMessage("failed to load data: \(resultResponse.result)", for: resource)
                         completion(resultResponse)
                     }
-                } else { // 得到响应且 Status Code 为 200..<300
-                    // 保存到缓存
+                } else { // status code in 200..<300
+                    // Save to cache
                     if case .get = resource.method {
-                        let cachedResponse = CachedResponse(resource: resource, httpResponse: httpResponse, data: data)
+                        let cachedResponse = CachedResponse(resource: resource,
+                                                            httpResponse: httpResponse,
+                                                            data: data)
                         
-                        // Local Cache
+                        // local cache
                         self.printDebugMessage("saving data into cache", for: resource)
                         self.saveCachedResponse(cachedResponse)
                         
-                        // HTTP Cache
+                        // http cache
                         if httpCacheEnabled {
                             self.configuration.httpCacheManager.setHTTPCache(urlString: resource.url.absoluteString,
                                                                             response: httpResponse)
                         }
                     }
 
-                    let resourceResponse = ResourceResponse(data: data, httpResponse: httpResponse, isCached: false)
+                    // Parse data to get result, then return response
+                    // This step may produce .apiResultFailed error in resource parse closure
+                    let resourceResponse = ResourceResponse(data: data,
+                                                            httpResponse: httpResponse,
+                                                            isCached: false)
                     let result = resource.parse(resourceResponse)
                     let resultResponse = ResultResponse(data: data,
                                                         error: error,

@@ -22,15 +22,33 @@ public struct Giraffe {
         
         public init() { }
     }
-    
-    public enum LoadStrategy {
+}
+
+public extension Giraffe {
+    struct Option {
+        public var strategy: Giraffe.LoadStrategy
+        public var expiration: Giraffe.CacheExpiration
+        public var httpCacheEnabled: Bool
+        
+        public init(strategy: Giraffe.LoadStrategy = .onlyReload, expiration: Giraffe.CacheExpiration = .none, httpCacheEnabled: Bool = false) {
+            self.strategy = strategy
+            self.expiration = expiration
+            self.httpCacheEnabled = httpCacheEnabled
+        }
+    }
+}
+
+public extension Giraffe {
+    enum LoadStrategy {
         case onlyReload
         case onlyCache
         case cacheThenReload
         case cacheOrReload
     }
-    
-    public enum CacheExpiration {
+}
+
+public extension Giraffe {
+    enum CacheExpiration {
         case none
         case seconds(TimeInterval)
         case hours(Int)
@@ -52,91 +70,6 @@ public struct Giraffe {
             return date < miniExpirationDate
         }
     }
-    
-    public struct Option {
-        public var strategy: Giraffe.LoadStrategy
-        public var expiration: Giraffe.CacheExpiration
-        public var httpCacheEnabled: Bool
-        
-        public init(strategy: Giraffe.LoadStrategy = .onlyReload, expiration: Giraffe.CacheExpiration = .none, httpCacheEnabled: Bool = false) {
-            self.strategy = strategy
-            self.expiration = expiration
-            self.httpCacheEnabled = httpCacheEnabled
-        }
-    }
-}
-
-public enum CallbackQueue {
-    case mainAsync
-    case globalAsync
-    
-    public func execute(_ block: @escaping () -> ()) {
-        switch self {
-        case .mainAsync: DispatchQueue.main.async { block() }
-        case .globalAsync: DispatchQueue.global().async { block() }
-        }
-    }
 }
 
 public typealias JSONDictionary = [String: Any]
-
-public extension URL {
-    mutating func appendQueryItems(_ items: [String: String]) {
-        self = appendingQueryItems(items)
-    }
-    
-    func appendingQueryItems(_ items: [String: String]) -> URL {
-        guard var urlComps = URLComponents(url: self, resolvingAgainstBaseURL: true) else { return self }
-        
-        let currentItems = urlComps.queryItems ?? []
-        let filteredItems = currentItems.filter { !items.keys.contains($0.name) }
-        let addingItems = items.map { URLQueryItem(name: $0, value: $1) }
-        urlComps.queryItems = filteredItems + addingItems
-        
-        return urlComps.url ?? self
-    }
-}
-
-public extension String {
-    var escapedForURLQuery: String {
-        return self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? self
-    }
-}
-
-public enum BoolEncoding {
-    case numberic, literal
-    
-    func encode(value: Bool) -> String {
-        switch self {
-        case .numberic: return value ? "1" : "0"
-        case .literal: return value ? "true" : "false"
-        }
-    }
-}
-
-extension NSNumber {
-    fileprivate var isBool: Bool { return CFBooleanGetTypeID() == CFGetTypeID(self) }
-}
-
-extension Dictionary where Key == String {
-    func query(boolEncoding: BoolEncoding = .numberic) -> String {
-        
-        func queryComponent(key: String, value: Any) -> (String, String)? {
-            if let value = value as? NSNumber {
-                if value.isBool {
-                    return (key, boolEncoding.encode(value: value.boolValue))
-                } else {
-                    return (key, "\(value)")
-                }
-            } else if let value = value as? Bool {
-                return (key, boolEncoding.encode(value: value))
-            } else {
-                return (key, "\(value)")
-            }
-        }
-        
-        let components = self.compactMap { queryComponent(key: $0, value: $1) }
-        let result = components.map { "\($0)=\($1)"}.joined(separator: "&")
-        return result
-    }
-}

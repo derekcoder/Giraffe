@@ -19,7 +19,7 @@ class HTTPCacheManager {
     func setHTTPCache(urlString: String, response: HTTPURLResponse) {
         let headers = response.allHeaderFields
         
-        guard response.statusCode == HTTPStatus.ok.rawValue else { return }
+        guard response.statusCode == 200 else { return }
         
         let eTag = headers["Etag"] as? String
         let lastModified = headers["Last-Modified"] as? String

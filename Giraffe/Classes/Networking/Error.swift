@@ -7,6 +7,7 @@
 
 import Foundation
 
+/*
 public enum HTTPStatus: Int {
     case ok = 200
     
@@ -48,44 +49,7 @@ extension HTTPStatus {
         return !success
     }
 }
-
-public enum GiraffeError: Swift.Error {
-    case invalidResponse
-    case notHTTP
-    case noCacheData
-    case notModified
-}
-
-public extension Swift.Error {
-    var giraffeError: GiraffeError? {
-        let error = self as? GiraffeError
-        return error
-    }
-    
-    var isGiraffe: Bool { return (self is GiraffeError) }
-    
-    var isNoCacheData: Bool {
-        guard let ge = giraffeError else { return false }
-        return ge == .noCacheData
-    }
-    
-    var isNotHTTP: Bool {
-        guard let ge = giraffeError else { return false }
-        return ge == .notHTTP
-    }
-    
-    var isInvalidResponse: Bool {
-        guard let ge = giraffeError else { return false }
-        return ge == .invalidResponse
-    }
-    
-    var isNotModified: Bool {
-        guard let ge = giraffeError else { return false }
-        return ge == .notModified
-    }    
-}
-
-////////////////////
+*/
 
 public enum APIError: Error {
     case requestTimeout               // 没有得到响应
@@ -104,7 +68,7 @@ public extension APIError {
     }
 }
 
-public extension Int {
+extension Int {
     var responseError: APIError.APIResponseError {
         switch self {
         case 304: return .notModified

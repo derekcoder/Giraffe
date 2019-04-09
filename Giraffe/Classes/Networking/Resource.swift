@@ -60,35 +60,4 @@ extension Resource {
             try! JSONSerialization.data(withJSONObject: jsonObject, options: JSONSerialization.WritingOptions())
         }
     }
-
-    /*
-    public init(url: URL, method: HttpMethod<Data?> = .get, headers: [HTTPRequestHeaderField: String]? = nil, parseJSON: @escaping (Any?, HTTPURLResponse, Swift.Error?, Bool) -> Result<A>) {
-        self.url = url
-        self.method = method
-        self.headers = headers
-        self.parse = { data, response, error, isCached in
-            if let data = data, error == nil {
-                let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions())
-                return parseJSON(json, response, error, isCached)
-            } else {
-                return parseJSON(nil, response, error, isCached)
-            }
-        }
-    }
-    
-    public init(url: URL, jsonMethod: HttpMethod<Any>, headers: [HTTPRequestHeaderField: String]? = nil, parseJSON: @escaping (Any?, HTTPURLResponse, Swift.Error?, Bool) -> Result<A>) {
-        self.url = url
-        self.method = jsonMethod.map { jsonObject in
-            try! JSONSerialization.data(withJSONObject: jsonObject, options: JSONSerialization.WritingOptions())
-        }
-        self.headers = headers
-        self.parse = { data, response, error, isCached in
-            if let data = data, error == nil {
-                let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions())
-                return parseJSON(json, response, error, isCached)
-            } else {
-                return parseJSON(nil, response, error, isCached)
-            }
-        }
-    }*/
 }
