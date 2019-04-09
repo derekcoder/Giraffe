@@ -84,3 +84,43 @@ public extension Swift.Error {
         return ge == .notModified
     }    
 }
+
+////////////////////
+
+public enum APIError: Error {
+    case requestTimeout               // 没有得到响应
+    case notHTTPURLResponse           // 得到响应，但是 response 不是 HTTPURLResponse
+    case apiFailed(APIResponseError)  // 得到响应，但是 HTTP Status Code 非 200
+    case invalidResponse(Data?)        // 得到响应且 Status Code 为 200，但是无法正确解析数据
+    case apiResultFailed(Error)       // 请求和响应都正常，但是 API 的结果是失败的
+}
+
+public extension APIError {
+    enum APIResponseError {
+        case notModified       // 304
+        case permissionDenied  // 403
+        case entryNotFound     // 404
+        case serverDied        // 500
+        case others(statusCode: Int)
+    }
+}
+
+public extension Int {
+    var responseError: APIError.APIResponseError {
+        switch self {
+        case 304: return .notModified
+        case 403: return .permissionDenied
+        case 404: return .entryNotFound
+        case 500: return .serverDied
+        default: return .others(statusCode: self)
+        }
+    }
+    
+    var successStatus: Bool {
+        return self >= 200 && self < 300
+    }
+    
+    var failureStatus: Bool {
+        return !success
+    }
+}

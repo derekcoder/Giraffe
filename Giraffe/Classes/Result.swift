@@ -7,6 +7,7 @@
 
 import Foundation
 
+/*
 public enum Result<A> {
     case success(A, isCached: Bool)
     case failure(Swift.Error)
@@ -30,8 +31,9 @@ extension Result {
         guard case .failure(let e) = self else { return nil }
         return e
     }
-}
+}*/
 
+/*
 extension Resource {
     func parse(data: Data?, response: URLResponse?, error: Error?, isCached: Bool) -> Result<A> {
         guard let httpResponse = response as? HTTPURLResponse else {
@@ -40,4 +42,4 @@ extension Resource {
         let result = parse(data, httpResponse, error, isCached)
         return result
     }
-}
+}*/

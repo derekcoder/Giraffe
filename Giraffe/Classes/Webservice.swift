@@ -23,18 +23,12 @@ public final class Webservice {
         configuration.httpCacheManager.removeHTTPCache(for: resource.url.absoluteString)
     }
     
-    public func load<A>(_ resource: Resource<A>, option: Giraffe.Option = Giraffe.Option(), completion: @escaping (Result<A>) -> ()) {
-        load(resource, option: option) { result, _ in
-            completion(result)
-        }
-    }
-    
-    public func load<A>(_ resource: Resource<A>, option: Giraffe.Option = Giraffe.Option(), completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
+    public func load<A>(_ resource: Resource<A>, option: Giraffe.Option = Giraffe.Option(), completion: @escaping (Response<A>) -> ()) {
         guard case .get = resource.method else {
             sendRequest(for: resource, httpCacheEnabled: option.httpCacheEnabled, completion: completion)
             return
         }
-        
+        /*
         switch option.strategy {
         case .onlyReload: sendRequest(for: resource, httpCacheEnabled: option.httpCacheEnabled, completion: completion)
         case .onlyCache:
@@ -87,10 +81,10 @@ public final class Webservice {
                     }
                 }
             }
-        }
+        }*/
     }
         
-    private func sendRequest<A>(for resource: Resource<A>, httpCacheEnabled: Bool, completion: @escaping (Result<A>, HTTPURLResponse?) -> ()) {
+    private func sendRequest<A>(for resource: Resource<A>, httpCacheEnabled: Bool, completion: @escaping (Response<A>) -> ()) {
         var request = URLRequest(resource: resource, authenticationToken: configuration.authenticationToken, headers: configuration.headers)
         
         if httpCacheEnabled, let httpCache = configuration.httpCacheManager.httpCache(for: resource.url.absoluteString) {
@@ -107,31 +101,60 @@ public final class Webservice {
         session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
             guard let self = self else { return }
             CallbackQueue.globalAsync.execute {
-                let cachedResponse = CachedResponse(resource: resource, response: response, data: data)
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    let resultResponse = Response<A>(data: data,
+                                                     error: error,
+                                                     httpResponse: nil,
+                                                     result: .failure(.notHTTPURLResponse),
+                                                     isCached: false)
+                    CallbackQueue.mainAsync.execute {
+                        completion(resultResponse)
+                    }
+                    return
+                }
+                
+                let statusCode = httpResponse.statusCode
+                if let error = error, statusCode.failureStatus {
+                    var resultResponse = Response<A>(data: data,
+                                                     error: error,
+                                                     httpResponse: httpResponse,
+                                                     result: .failure(.apiFailed(statusCode.responseError)),
+                                                     isCached: false)
+
+                    if error._code == NSURLErrorTimedOut {
+                        resultResponse.result = .failure(.requestTimeout)
+                    }
+                    CallbackQueue.mainAsync.execute {
+                        completion(resultResponse)
+                    }
+                } else {
+                    
+                }
                 
                 if case .get = resource.method {
+                    let cachedResponse = CachedResponse(resource: resource, response: response, data: data)
+
+                    // Local Cache
                     if cachedResponse.isSuccess {
                         self.printDebugMessage("saving data into cache", for: resource)
                         self.saveCachedResponse(cachedResponse)
                     }
                     
+                    // HTTP Cache
                     if httpCacheEnabled, let httpURLResponse = cachedResponse.httpResponse {
                         self.configuration.httpCacheManager.setHTTPCache(urlString: resource.url.absoluteString,
                                                                           response: httpURLResponse)
-                        
-                        if httpURLResponse.statusCode == HTTPStatus.notModified.rawValue {
-                            CallbackQueue.mainAsync.execute {
-                                completion(Result(error: GiraffeError.notModified), cachedResponse.httpResponse)
-                            }
-                            return
-                        }
                     }
                 }
                 
                 let result = resource.parse(data: data, response: response, error: error, isCached: false)
+                let response = Response<A>(result: result,
+                                           data: data,
+                                           httpResponse: httpResponse,
+                                           isCached: false)
                 CallbackQueue.mainAsync.execute {
                     self.printDebugMessage("loaded data from request", for: resource)
-                    completion(result, cachedResponse.httpResponse)
+                    completion(response)
                 }
             }
         }).resume()

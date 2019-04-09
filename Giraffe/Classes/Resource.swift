@@ -39,20 +39,20 @@ public enum HttpMethod<A> {
 public struct Resource<A> {
     public var url: URL
     public var method: HttpMethod<Data?> = .get
-    public var parse: (Data?, HTTPURLResponse, Swift.Error?, Bool) -> Result<A>
+    public var parse: (Response<A>) -> Result<A, APIError>
     public var headers: [HTTPRequestHeaderField: String]? = nil
     public var timeoutInterval: TimeInterval = 20.0 // in seconds, default: 60 seconds
 }
 
 extension Resource {
-    public init(url: URL, method: HttpMethod<Data?> = .get, headers: [HTTPRequestHeaderField: String]? = nil, parse: @escaping (Data?, HTTPURLResponse, Swift.Error?, Bool) -> Result<A>) {
+    public init(url: URL, method: HttpMethod<Data?> = .get, headers: [HTTPRequestHeaderField: String]? = nil, parse: @escaping (Response<A>) -> Result<A, APIError>) {
         self.url = url
-        self.parse = parse
         self.method = method
         self.headers = headers
+        self.parse = parse
     }
 
-    public init(url: URL, jsonMethod: HttpMethod<Any>, headers: [HTTPRequestHeaderField: String]? = nil, parse: @escaping (Data?, HTTPURLResponse, Swift.Error?, Bool) -> Result<A>) {
+    public init(url: URL, jsonMethod: HttpMethod<Any>, headers: [HTTPRequestHeaderField: String]? = nil, parse: @escaping (Response<A>) -> Result<A, APIError>) {
         self.url = url
         self.parse = parse
         self.headers = headers
@@ -61,6 +61,7 @@ extension Resource {
         }
     }
 
+    /*
     public init(url: URL, method: HttpMethod<Data?> = .get, headers: [HTTPRequestHeaderField: String]? = nil, parseJSON: @escaping (Any?, HTTPURLResponse, Swift.Error?, Bool) -> Result<A>) {
         self.url = url
         self.method = method
@@ -89,5 +90,5 @@ extension Resource {
                 return parseJSON(nil, response, error, isCached)
             }
         }
-    }
+    }*/
 }
