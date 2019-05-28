@@ -7,26 +7,12 @@
 
 import Foundation
 
-public struct ResourceResponse {
-    public let data: Data?
-    public let httpResponse: HTTPURLResponse
-    public let isCached: Bool
-}
-
-public struct ResultResponse<Value> {
+public struct Response<A> {
+    public var result: Result<A, APIError>
+    
     public let data: Data?
     public let error: Error?
     public let httpResponse: HTTPURLResponse?
-    
-    public var result: Result<Value, APIError>
-    public let isCached: Bool
-}
-
-public extension ResourceResponse {
-    var jsonObject: Any? {
-        guard let data = data else { return nil }
-        return try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions())
-    }
 }
 
 public extension Result where Failure == APIError {

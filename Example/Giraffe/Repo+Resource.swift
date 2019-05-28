@@ -21,9 +21,8 @@ extension Repo {
     static func searchResource(text: String) -> Resource<[Repo]> {
         let url = Config.baseURL.appendingPathComponent("search/repositories")
                     .appendingQueryItems(["q": "\(text)+language:swift"])
-        return Resource(url: url, parse: { response in
-            guard let obj = response.jsonObject,
-                let json = obj as? JSONDictionary,
+        return Resource(url: url, parseJSON: { obj in
+            guard let json = obj as? JSONDictionary,
                 let items = json["items"] as? [JSONDictionary] else {
                 return Result.failure(.invalidResponse)
             }
@@ -34,9 +33,8 @@ extension Repo {
     
     var resource: Resource<Repo> {
         let url = Config.baseURL.appendingPathComponent("repos/\(fullName)")
-        return Resource(url: url, parse: { response in
-            guard let obj = response.jsonObject,
-                let json = obj as? JSONDictionary,
+        return Resource(url: url, parseJSON: { obj in
+            guard let json = obj as? JSONDictionary,
                 let repo = Repo(json: json) else {
                 return Result.failure(.invalidResponse)
             }

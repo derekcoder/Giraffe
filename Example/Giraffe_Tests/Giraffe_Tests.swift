@@ -24,14 +24,13 @@ extension Todo {
         self.title = title
     }
     
-    static let all = Resource<[Todo]>(url: url) { response in
-        guard let obj = response.jsonObject,
-            let json = obj as? [JSONDictionary] else {
+    static let all = Resource<[Todo]>(url: url, parseJSON: { obj in
+        guard let json = obj as? [JSONDictionary] else {
             return Result.failure(.invalidResponse)
         }
         let todos = json.compactMap(Todo.init)
         return Result.success(todos)
-    }
+    })
 }
 
 

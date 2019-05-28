@@ -12,9 +12,9 @@ import Giraffe
 final class App {
     let window: UIWindow
     let webservice: Webservice = {
-        var config = Giraffe.Configuration()
-        config.debugEnabled = true
-        return Webservice(configuration: config)
+        var webservice = Webservice()
+        webservice.debugEnabled = true
+        return webservice
     }()
     
     init(window: UIWindow) {
@@ -37,11 +37,5 @@ final class App {
         reposVC.webservice = webservice
         reposVC.user = user
         from.pushViewController(reposVC, animated: true)
-    }
-    
-    private func configureSearchReposVC() {
-        let nav = window.rootViewController as! UINavigationController
-        let searchReposVC = nav.viewControllers[0] as! SearchReposViewController
-        searchReposVC.webservice = webservice
-    }
+    }    
 }

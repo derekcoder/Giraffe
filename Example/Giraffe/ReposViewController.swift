@@ -22,12 +22,11 @@ class ReposViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         refreshControl?.beginRefreshing()
-        loadRepos(strategy: .cacheThenReload)
+        loadRepos()
     }
     
-    private func loadRepos(strategy: Giraffe.LoadStrategy) {
-        let option = Giraffe.Option(strategy: strategy, expiration: .days(2), httpCacheEnabled: true)
-        webservice.load(user.reposResource, option: option) { [weak self] response in
+    private func loadRepos() {
+        webservice.load(user.reposResource) { [weak self] response in
             guard let self = self else { return }
             self.refreshControl?.endRefreshing()
             switch response.result {
@@ -35,18 +34,10 @@ class ReposViewController: UITableViewController {
                 switch error {
                 case .requestTimeout: print("Request time out")
                 case .invalidResponse: print("Not http url response")
-                case .apiFailed(let responseError):
-                    switch responseError {
-                    case .entryNotFound: print("Entry not found")
-                    case .notModified: print("No new data to pull")
-                    case .permissionDenied: print("Permission denied")
-                    case .serverDied: print("Server died")
-                    case .others(let statusCode): print("Others response error: \(statusCode)")
-                    }
-                case .apiResultFailed(let resultError): print("Result error: \(resultError)")
+                case .apiFailed(let statusCode): print("API failed with status code: \(statusCode)")
                 }
             case .success(let repos):
-                print("loaded \(response.isCached ? "cached" : "latest") repos")
+                print("loaded latest repos")
                 self.repos = repos
                 self.tableView.reloadData()
             }
@@ -56,16 +47,9 @@ class ReposViewController: UITableViewController {
     // MARK: - Action Methods
 
     @IBAction func refresh() {
-        loadRepos(strategy: .onlyReload)
+        loadRepos()
     }
     
-    @IBAction func removeCache() {
-        webservice.removeCache(for: user.reposResource)
-        webservice.removeHTTPCache(for: user.reposResource)
-        repos.removeAll()
-        tableView.reloadData()
-    }
-
     // MARK: - UITableViewDataSource & UITableViewDelegate
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
