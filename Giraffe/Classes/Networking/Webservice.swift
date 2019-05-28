@@ -20,18 +20,14 @@ public final class Webservice {
         self.headers = headers
     }
     
+    @discardableResult
     public func load<A>(_ resource: Resource<A>,
-                        completion: @escaping (Response<A>) -> ()) {
-        sendRequest(for: resource, completion: completion)
-    }
-        
-    private func sendRequest<A>(for resource: Resource<A>,
-                                completion: @escaping (Response<A>) -> ()) {
+                        completion: @escaping (Response<A>) -> ()) -> URLSessionDataTask {
         
         let request = URLRequest(resource: resource, headers: headers)
         
         logMessage("sending request", for: resource)
-        session.dataTask(with: request, completionHandler: {
+        let task = session.dataTask(with: request, completionHandler: {
             [weak self] data, response, error in
             guard let self = self else { return }
             
@@ -96,6 +92,8 @@ public final class Webservice {
                     }
                 }
             }
-        }).resume()
+        })
+        task.resume()
+        return task
     }
 }
