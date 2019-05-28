@@ -12,12 +12,11 @@ public final class Webservice {
     public let session: URLSession
     
     public var debugEnabled = false
-    public var headers: [HTTPRequestHeaderField: String]? = nil
+    public var headers: [HTTPRequestHeaderField: String] = [:]
         
-    public init(headers: [HTTPRequestHeaderField: String]? = nil) {
+    public init() {
         let sessionConfig = URLSessionConfiguration.default
         self.session = URLSession(configuration: sessionConfig)
-        self.headers = headers
     }
     
     @discardableResult
