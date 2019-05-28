@@ -17,20 +17,7 @@ extension Repo {
         self.fullName = fullName
         self.description = json["description"] as? String
     }
-    
-    static func searchResource(text: String) -> Resource<[Repo]> {
-        let url = Config.baseURL.appendingPathComponent("search/repositories")
-                    .appendingQueryItems(["q": "\(text)+language:swift"])
-        return Resource(url: url, parseJSON: { obj in
-            guard let json = obj as? JSONDictionary,
-                let items = json["items"] as? [JSONDictionary] else {
-                return Result.failure(.invalidResponse)
-            }
-            let repos = items.compactMap(Repo.init)
-            return Result.success(repos)
-        })
-    }
-    
+        
     var resource: Resource<Repo> {
         let url = Config.baseURL.appendingPathComponent("repos/\(fullName)")
         return Resource(url: url, parseJSON: { obj in
