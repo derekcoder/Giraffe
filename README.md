@@ -15,6 +15,7 @@
     - [x] DELETE
 - [x] HTTP headers
 - [x] Cancel request
+- [ ] Complete Documentation
 
 ## Requirements
 
@@ -176,6 +177,12 @@ webservice.load(post.deleteResource) { response in
     }
 }
 ```
+
+## Apps Using Giraffe
+
+|<img alt="Coderx" src="https://is2-ssl.mzstatic.com/image/thumb/Purple113/v4/2a/dd/cc/2addccec-4e19-0c9e-49c7-ca9032af70f5/source/100x100bb.jpg" width="48">| 
+| :---: |
+| [Coderx for GitHub](https://itunes.apple.com/app/apple-store/id1371929193?mt=8) | 
 
 ## References
 
