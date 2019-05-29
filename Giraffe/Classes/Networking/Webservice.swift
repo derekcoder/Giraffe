@@ -10,8 +10,6 @@ import Foundation
 
 public final class Webservice {
     public let session: URLSession
-    
-    public var debugEnabled = false
     public var headers: [HTTPRequestHeaderField: String] = [:]
         
     public init() {
@@ -25,10 +23,7 @@ public final class Webservice {
         
         let request = URLRequest(resource: resource, headers: headers)
         
-        logMessage("sending request", for: resource)
-        let task = session.dataTask(with: request, completionHandler: {
-            [weak self] data, response, error in
-            guard let self = self else { return }
+        let task = session.dataTask(with: request, completionHandler: { data, response, error in
             
             // Check if the request times out.
             guard error?._code != NSURLErrorTimedOut else {
@@ -37,10 +32,7 @@ public final class Webservice {
                                            error: error,
                                            httpResponse: nil)
                 
-                CallbackQueue.mainAsync.execute {
-                    self.logMessage("failed to load data: \(response.result)", for: resource)
-                    completion(response)
-                }
+                CallbackQueue.mainAsync.execute { completion(response) }
                 return
             }
             
@@ -52,10 +44,7 @@ public final class Webservice {
                                            error: error,
                                            httpResponse: nil)
                 
-                CallbackQueue.mainAsync.execute {
-                    self.logMessage("failed to load data: not http url response", for: resource)
-                    completion(response)
-                }
+                CallbackQueue.mainAsync.execute { completion(response) }
                 return
             }
 
@@ -70,10 +59,7 @@ public final class Webservice {
                                            error: error,
                                            httpResponse: httpResponse)
                 
-                CallbackQueue.mainAsync.execute {
-                    self.logMessage("failed to load data: \(response.result)", for: resource)
-                    completion(response)
-                }
+                CallbackQueue.mainAsync.execute { completion(response) }
             } else {
                 // status code in 200..<300
                 // call resource' parse to get result, then return response
@@ -85,10 +71,7 @@ public final class Webservice {
                                                error: error,
                                                httpResponse: httpResponse)
                     
-                    CallbackQueue.mainAsync.execute {
-                        self.logMessage("loaded data from request", for: resource)
-                        completion(response)
-                    }
+                    CallbackQueue.mainAsync.execute { completion(response) }
                 }
             }
         })

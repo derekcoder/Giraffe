@@ -16,8 +16,10 @@ public enum HttpMethod<A> {
     case put(data: A)
     case patch(data: A)
     case delete
-    
-    public var method: String {
+}
+
+public extension HttpMethod {
+    var method: String {
         switch self {
         case .get: return "GET"
         case .post: return "POST"
@@ -27,7 +29,7 @@ public enum HttpMethod<A> {
         }
     }
     
-    public func map<B>(f: (A) throws -> B) rethrows -> HttpMethod<B> {
+    func map<B>(f: (A) throws -> B) rethrows -> HttpMethod<B> {
         switch self {
         case .get: return .get
         case .post(let data): return .post(data: try f(data))
@@ -46,15 +48,15 @@ public struct Resource<A> {
     public var timeoutInterval: TimeInterval = 20.0 // in seconds, default: 60 seconds
 }
 
-extension Resource {
-    public init(url: URL, method: HttpMethod<Data?> = .get, headers: [HTTPRequestHeaderField: String]? = nil, parse: @escaping (Data?) -> Result<A, APIError>) {
+public extension Resource {
+    init(url: URL, method: HttpMethod<Data?> = .get, headers: [HTTPRequestHeaderField: String]? = nil, parse: @escaping (Data?) -> Result<A, APIError>) {
         self.url = url
         self.method = method
         self.headers = headers
         self.parse = parse
     }
     
-    public init(url: URL, method: HttpMethod<Data?> = .get, headers: [HTTPRequestHeaderField: String]? = nil, parseJSON: @escaping (Any) -> Result<A, APIError>) {
+    init(url: URL, method: HttpMethod<Data?> = .get, headers: [HTTPRequestHeaderField: String]? = nil, parseJSON: @escaping (Any) -> Result<A, APIError>) {
         self.url = url
         self.method = method
         self.headers = headers
@@ -67,7 +69,7 @@ extension Resource {
         }
     }
 
-    public init(url: URL, jsonMethod: HttpMethod<Any>, headers: [HTTPRequestHeaderField: String]? = nil, parse: @escaping (Data?) -> Result<A, APIError>) {
+    init(url: URL, jsonMethod: HttpMethod<Any>, headers: [HTTPRequestHeaderField: String]? = nil, parse: @escaping (Data?) -> Result<A, APIError>) {
         self.url = url
         self.parse = parse
         self.headers = headers
@@ -76,7 +78,7 @@ extension Resource {
         }
     }
     
-    public init(url: URL, jsonMethod: HttpMethod<Any>, headers: [HTTPRequestHeaderField: String]? = nil, parseJSON: @escaping (Any) -> Result<A, APIError>) {
+    init(url: URL, jsonMethod: HttpMethod<Any>, headers: [HTTPRequestHeaderField: String]? = nil, parseJSON: @escaping (Any) -> Result<A, APIError>) {
         self.url = url
         self.headers = headers
         self.method = jsonMethod.map { jsonObject in
@@ -90,5 +92,4 @@ extension Resource {
             return parseJSON(obj)
         }
     }
-
 }
