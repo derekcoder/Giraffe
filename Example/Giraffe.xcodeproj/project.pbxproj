@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		236401ADDF27401A04BBB905 /* Pods_Giraffe_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED484D1BA7D0D1EAD972B298 /* Pods_Giraffe_Tests.framework */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
-		607FACD81AFB9204008FA782 /* SearchReposViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* SearchReposViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
@@ -22,7 +21,6 @@
 		DC1D4C5321BB69F6004DCEEC /* User+Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1D4C5221BB69F6004DCEEC /* User+Resource.swift */; };
 		DC1D4C5521BB6DC6004DCEEC /* UserDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1D4C5421BB6DC6004DCEEC /* UserDetailViewController.swift */; };
 		DC1D4C5721BBA4A7004DCEEC /* ReposViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1D4C5621BBA4A7004DCEEC /* ReposViewController.swift */; };
-		DC1D4C5B21BBC334004DCEEC /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1D4C5A21BBC334004DCEEC /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,7 +41,6 @@
 		607FACD01AFB9204008FA782 /* Giraffe_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Giraffe_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		607FACD71AFB9204008FA782 /* SearchReposViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchReposViewController.swift; sourceTree = "<group>"; };
 		607FACDA1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -61,7 +58,6 @@
 		DC1D4C5221BB69F6004DCEEC /* User+Resource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+Resource.swift"; sourceTree = "<group>"; };
 		DC1D4C5421BB6DC6004DCEEC /* UserDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailViewController.swift; sourceTree = "<group>"; };
 		DC1D4C5621BBA4A7004DCEEC /* ReposViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReposViewController.swift; sourceTree = "<group>"; };
-		DC1D4C5A21BBC334004DCEEC /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		ED484D1BA7D0D1EAD972B298 /* Pods_Giraffe_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Giraffe_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -176,7 +172,6 @@
 				DC1D4C5221BB69F6004DCEEC /* User+Resource.swift */,
 				65CA57E32137D395003A7A91 /* Repo.swift */,
 				65CA57E12137D38C003A7A91 /* Repo+Resource.swift */,
-				DC1D4C5A21BBC334004DCEEC /* Constants.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -186,7 +181,6 @@
 			children = (
 				DC1D4C5421BB6DC6004DCEEC /* UserDetailViewController.swift */,
 				DC1D4C5621BBA4A7004DCEEC /* ReposViewController.swift */,
-				607FACD71AFB9204008FA782 /* SearchReposViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -242,15 +236,17 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = CocoaPods;
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = 73DV6R4Q82;
 						LastSwiftMigration = 0900;
 					};
 					656D50F72061F8EE00EE0B73 = {
 						CreatedOnToolsVersion = 9.2;
+						DevelopmentTeam = 73DV6R4Q82;
 						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 607FACCF1AFB9204008FA782;
@@ -259,7 +255,7 @@
 			};
 			buildConfigurationList = 607FACCB1AFB9204008FA782 /* Build configuration list for PBXProject "Giraffe" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -404,11 +400,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC1D4C5721BBA4A7004DCEEC /* ReposViewController.swift in Sources */,
-				607FACD81AFB9204008FA782 /* SearchReposViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				DC1D4C5521BB6DC6004DCEEC /* UserDetailViewController.swift in Sources */,
 				DC1D4C5121BB69B6004DCEEC /* User.swift in Sources */,
-				DC1D4C5B21BBC334004DCEEC /* Constants.swift in Sources */,
 				DC1D4C5321BB69F6004DCEEC /* User+Resource.swift in Sources */,
 				65CA57E22137D38C003A7A91 /* Repo+Resource.swift in Sources */,
 				65CA57E62137D6B0003A7A91 /* App.swift in Sources */,
@@ -458,6 +452,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -513,6 +508,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -562,6 +558,7 @@
 			baseConfigurationReference = 53132565214E8F0F6207E9CC /* Pods-Giraffe_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 73DV6R4Q82;
 				INFOPLIST_FILE = Giraffe/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -569,7 +566,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -578,6 +575,7 @@
 			baseConfigurationReference = 213FC6FE68B1C5387D5F4C80 /* Pods-Giraffe_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 73DV6R4Q82;
 				INFOPLIST_FILE = Giraffe/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -585,7 +583,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -601,6 +599,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 73DV6R4Q82;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = Giraffe_Tests/Info.plist;
@@ -609,7 +608,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.derekcoder.Giraffe-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Giraffe_Example.app/Giraffe_Example";
 			};
@@ -626,6 +625,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 73DV6R4Q82;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = Giraffe_Tests/Info.plist;
@@ -633,7 +633,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.derekcoder.Giraffe-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Giraffe_Example.app/Giraffe_Example";
 			};

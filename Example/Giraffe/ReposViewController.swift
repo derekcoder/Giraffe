@@ -22,23 +22,22 @@ class ReposViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         refreshControl?.beginRefreshing()
-        loadRepos(strategy: .cacheThenReload)
+        loadRepos()
     }
     
-    private func loadRepos(strategy: Giraffe.LoadStrategy) {
-        let option = Giraffe.Option(strategy: strategy, expiration: .days(2), httpCacheEnabled: true)
-        webservice.load(user.reposResource, option: option) { [weak self] result in
+    private func loadRepos() {
+        webservice.load(user.reposResource) { [weak self] response in
             guard let self = self else { return }
             self.refreshControl?.endRefreshing()
-            switch result {
+            switch response.result {
             case .failure(let error):
-                if error.isNotModified {
-                    print("No new data to pull")
-                } else {
-                    print("error: \(error)")
+                switch error {
+                case .requestTimeout: print("Request time out")
+                case .invalidResponse: print("Invalid response")
+                case .apiFailed(let statusCode): print("API failed with status code: \(statusCode)")
                 }
-            case let .success(repos, isCached):
-                print("loaded \(isCached ? "cached" : "latest") repos")
+            case .success(let repos):
+                print("loaded latest repos")
                 self.repos = repos
                 self.tableView.reloadData()
             }
@@ -48,22 +47,18 @@ class ReposViewController: UITableViewController {
     // MARK: - Action Methods
 
     @IBAction func refresh() {
-        loadRepos(strategy: .onlyReload)
+        loadRepos()
     }
+}
+
+extension ReposViewController {
     
-    @IBAction func removeCache() {
-        webservice.removeCache(for: user.reposResource)
-        webservice.removeHTTPCache(for: user.reposResource)
-        repos.removeAll()
-        tableView.reloadData()
-    }
-
     // MARK: - UITableViewDataSource & UITableViewDelegate
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return repos.count
     }
-
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RepoCell", for: indexPath) as! RepoCell
         let repo = repos[indexPath.row]

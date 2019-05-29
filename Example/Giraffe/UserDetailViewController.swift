@@ -26,24 +26,22 @@ class UserDetailViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         refreshControl?.beginRefreshing()
-        loadUser(strategy: .cacheThenReload)
+        loadUser()
     }
     
-    private func loadUser(strategy: Giraffe.LoadStrategy) {
+    private func loadUser() {
         let resource = User.resource(for: "derekcoder")
-        let option = Giraffe.Option(strategy: strategy, expiration: .hours(2), httpCacheEnabled: true)
-        webservice.load(resource, option: option) { [weak self] result in
+        webservice.load(resource) { [weak self] response in
             guard let self = self else { return }
             self.refreshControl?.endRefreshing()
-            switch result {
+            switch response.result {
             case .failure(let error):
-                if error.isNotModified {
-                    print("No new data to pull")
-                } else {
-                    print("error: \(error)")
+                switch error {
+                case .requestTimeout: print("Request time out")
+                case .invalidResponse: print("Invalid response")
+                case .apiFailed(let statusCode): print("API failed with status code: \(statusCode)")
                 }
-            case let .success(user, isCached):
-                print("loaded \(isCached ? "cached" : "latest") user")
+            case .success(let user):
                 self.refreshControl?.endRefreshing()
                 self.user = user
                 self.tableView.reloadData()
@@ -54,10 +52,10 @@ class UserDetailViewController: UITableViewController {
     
     private func loadAvatar() {
         guard let resource = user?.avatarResource else { return }
-        webservice.load(resource) { [weak self] result in
-            switch result {
+        webservice.load(resource) { [weak self] response in
+            switch response.result {
             case .failure(let error): print(error.localizedDescription)
-            case .success(let image, _): self?.updateAvatarImageView(with: image)
+            case .success(let image): self?.updateAvatarImageView(with: image)
             }
         }
     }
@@ -71,8 +69,11 @@ class UserDetailViewController: UITableViewController {
     // MARK: - Action
     
     @IBAction func refresh() {
-        loadUser(strategy: .onlyReload)
+        loadUser()
     }
+}
+
+extension UserDetailViewController {
     
     // MARK: - UITableViewDataSource & UITableViewDelegate
     

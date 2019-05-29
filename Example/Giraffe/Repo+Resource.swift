@@ -10,6 +10,8 @@ import Foundation
 import Giraffe
 
 extension Repo {
+    static let endPoint = URL(string: "https://api.github.com/repos")!
+    
     init?(json: JSONDictionary) {
         guard let id = json["id"] as? Int,
             let fullName = json["full_name"] as? String else { return nil }
@@ -17,26 +19,15 @@ extension Repo {
         self.fullName = fullName
         self.description = json["description"] as? String
     }
-    
-    static func searchResource(text: String) -> Resource<[Repo]> {
-        let url = Config.baseURL.appendingPathComponent("search/repositories")
-                    .appendingQueryItems(["q": "\(text)+language:swift"])
-        return Resource(url: url, parseJSON: { obj, _, _, isCached in
-            guard let json = obj as? JSONDictionary, let items = json["items"] as? [JSONDictionary] else {
-                return Result(error: GiraffeError.invalidResponse)
-            }
-            let repos = items.compactMap(Repo.init)
-            return Result(value: repos, isCached: isCached)
-        })
-    }
-    
+        
     var resource: Resource<Repo> {
-        let url = Config.baseURL.appendingPathComponent("repos/\(fullName)")
-        return Resource(url: url, parseJSON: { obj, _, _, isCached in
-            guard let json = obj as? JSONDictionary, let repo = Repo(json: json) else {
-                return Result(error: GiraffeError.invalidResponse)
+        let url = Repo.endPoint.appendingPathComponent(fullName)
+        return Resource(url: url, parseJSON: { obj in
+            guard let json = obj as? JSONDictionary,
+                let repo = Repo(json: json) else {
+                return Result.failure(.invalidResponse)
             }
-            return Result(value: repo, isCached: isCached)
+            return Result.success(repo)
         })
     }
 }
