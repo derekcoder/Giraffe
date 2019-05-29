@@ -38,7 +38,7 @@ class UserDetailViewController: UITableViewController {
             case .failure(let error):
                 switch error {
                 case .requestTimeout: print("Request time out")
-                case .invalidResponse: print("Not http url response")
+                case .invalidResponse: print("Invalid response")
                 case .apiFailed(let statusCode): print("API failed with status code: \(statusCode)")
                 }
             case .success(let user):
@@ -71,6 +71,9 @@ class UserDetailViewController: UITableViewController {
     @IBAction func refresh() {
         loadUser()
     }
+}
+
+extension UserDetailViewController {
     
     // MARK: - UITableViewDataSource & UITableViewDelegate
     

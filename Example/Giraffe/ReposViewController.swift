@@ -33,7 +33,7 @@ class ReposViewController: UITableViewController {
             case .failure(let error):
                 switch error {
                 case .requestTimeout: print("Request time out")
-                case .invalidResponse: print("Not http url response")
+                case .invalidResponse: print("Invalid response")
                 case .apiFailed(let statusCode): print("API failed with status code: \(statusCode)")
                 }
             case .success(let repos):
@@ -49,13 +49,16 @@ class ReposViewController: UITableViewController {
     @IBAction func refresh() {
         loadRepos()
     }
+}
+
+extension ReposViewController {
     
     // MARK: - UITableViewDataSource & UITableViewDelegate
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return repos.count
     }
-
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RepoCell", for: indexPath) as! RepoCell
         let repo = repos[indexPath.row]
