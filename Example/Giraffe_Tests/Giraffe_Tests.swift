@@ -89,7 +89,7 @@ extension Post {
     
     var deleteResource: Resource<Bool> {
         let url = Post.endPoint.appendingPathComponent("\(id)")
-        return Resource(url: url, jsonMethod: .delete, parse: { _ in
+        return Resource(url: url, method: .delete, parse: { _ in
             return Result.success(true)
         })
     }
