@@ -177,9 +177,10 @@ webservice.load(post.deleteResource) { response in
 }
 ```
 
-## Thanks
+## References
 
-Special thanks [SwiftTalk](https://talk.objc.io/). Some code borrowed from SwiftTalk.
+- [Swift Talk](https://talk.objc.io) - [Tiny Networking Library](https://talk.objc.io/episodes/S01E1-tiny-networking-library).
+- [@onevcat](https://github.com/onevcat) - [Result<T> 还是 Result<T, E: Error>](https://onevcat.com/2018/10/swift-result-error/)
 
 ## License
 
