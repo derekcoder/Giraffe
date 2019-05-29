@@ -10,6 +10,8 @@ import Foundation
 import Giraffe
 
 extension User {
+    static let endPoint = URL(string: "https://api.github.com/users")!
+    
     init?(json: JSONDictionary) {
         guard let id = json["id"] as? Int,
             let login = json["login"] as? String else { return nil }
@@ -20,7 +22,7 @@ extension User {
     }
     
     static func resource(for login: String) -> Resource<User> {
-        let url = Config.baseURL.appendingPathComponent("users/\(login)")
+        let url = User.endPoint.appendingPathComponent(login)
         return Resource(url: url, parseJSON: { obj in
             guard let json = obj as? JSONDictionary,
                 let user = User(json: json) else {
@@ -43,8 +45,9 @@ extension User {
     }
     
     var reposResource: Resource<[Repo]> {
-        let url = Config.baseURL.appendingPathComponent("/users/\(login)/repos")
-                    .appendingQueryItems(["sort": "pushed"])
+        let url = User.endPoint
+            .appendingPathComponent("\(login)/repos")
+            .appendingQueryItems(["sort": "pushed"])
         return Resource(url: url, parseJSON: { obj in
             guard let json = obj as? [JSONDictionary] else {
                 return Result.failure(.invalidResponse)

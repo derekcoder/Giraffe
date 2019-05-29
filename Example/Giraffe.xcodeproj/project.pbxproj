@@ -21,7 +21,6 @@
 		DC1D4C5321BB69F6004DCEEC /* User+Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1D4C5221BB69F6004DCEEC /* User+Resource.swift */; };
 		DC1D4C5521BB6DC6004DCEEC /* UserDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1D4C5421BB6DC6004DCEEC /* UserDetailViewController.swift */; };
 		DC1D4C5721BBA4A7004DCEEC /* ReposViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1D4C5621BBA4A7004DCEEC /* ReposViewController.swift */; };
-		DC1D4C5B21BBC334004DCEEC /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1D4C5A21BBC334004DCEEC /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,7 +58,6 @@
 		DC1D4C5221BB69F6004DCEEC /* User+Resource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+Resource.swift"; sourceTree = "<group>"; };
 		DC1D4C5421BB6DC6004DCEEC /* UserDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailViewController.swift; sourceTree = "<group>"; };
 		DC1D4C5621BBA4A7004DCEEC /* ReposViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReposViewController.swift; sourceTree = "<group>"; };
-		DC1D4C5A21BBC334004DCEEC /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		ED484D1BA7D0D1EAD972B298 /* Pods_Giraffe_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Giraffe_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -174,7 +172,6 @@
 				DC1D4C5221BB69F6004DCEEC /* User+Resource.swift */,
 				65CA57E32137D395003A7A91 /* Repo.swift */,
 				65CA57E12137D38C003A7A91 /* Repo+Resource.swift */,
-				DC1D4C5A21BBC334004DCEEC /* Constants.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -406,7 +403,6 @@
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				DC1D4C5521BB6DC6004DCEEC /* UserDetailViewController.swift in Sources */,
 				DC1D4C5121BB69B6004DCEEC /* User.swift in Sources */,
-				DC1D4C5B21BBC334004DCEEC /* Constants.swift in Sources */,
 				DC1D4C5321BB69F6004DCEEC /* User+Resource.swift in Sources */,
 				65CA57E22137D38C003A7A91 /* Repo+Resource.swift in Sources */,
 				65CA57E62137D6B0003A7A91 /* App.swift in Sources */,

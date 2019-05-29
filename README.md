@@ -12,12 +12,11 @@ Ideas and some of codes are referenced by [SwiftTalk](https://talk.objc.io/).
 - [x] HTTP Method
     - [x] GET
     - [x] POST
-    - [x] DELETE
     - [x] PUT
     - [x] PATCH
+    - [x] DELETE
 - [x] HTTP headers
-- [x] Authorization
-- [ ] Cancel request
+- [x] Cancel request
 
       
 
