@@ -1,7 +1,5 @@
 # Giraffe
 
-Ideas and some of codes are referenced by [SwiftTalk](https://talk.objc.io/).
-
 [![CI Status](http://img.shields.io/travis/derekcoder@gmail.com/Giraffe.svg?style=flat)](https://travis-ci.org/derekcoder@gmail.com/Giraffe)
 [![Version](https://img.shields.io/cocoapods/v/Giraffe.svg?style=flat)](http://cocoapods.org/pods/Giraffe)
 [![License](https://img.shields.io/cocoapods/l/Giraffe.svg?style=flat)](http://cocoapods.org/pods/Giraffe)
@@ -18,13 +16,11 @@ Ideas and some of codes are referenced by [SwiftTalk](https://talk.objc.io/).
 - [x] HTTP headers
 - [x] Cancel request
 
-      
-
-## Example
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
 ## Requirements
+
+- iOS 10.0+
+- Swift 5+
+- Xcode 10.2+
 
 ## Installation
 
@@ -35,9 +31,159 @@ it, simply add the following line to your Podfile:
 pod 'Giraffe'
 ```
 
+## Usage
+
+```swift
+struct Post {
+    let id: Int
+    let title: String
+    let body: String
+}
+
+extension Post {
+    static let endPoint = URL(string: "https://jsonplaceholder.typicode.com/posts")!
+    
+    init?(json: JSONDictionary) {
+        guard let id = json["id"] as? Int,
+            let title = json["title"] as? String,
+            let body = json["body"] as? String else { return nil }
+        self.id = id
+        self.title = title
+        self.body = body
+    }
+}
+
+let webservice = Webservice()
+```
+
+### GET
+
+```swift
+extension Post {
+    static var postsResource: Resource<[Post]> {
+        return Resource<[Post]>(url: Post.endPoint, parseJSON: { obj in
+            guard let json = obj as? [JSONDictionary] else {
+                return Result.failure(.invalidResponse)
+            }
+            let posts = json.compactMap(Post.init)
+            return Result.success(posts)
+        })
+    }
+}
+
+webservice.load(Post.postsResource) { response in 
+    switch response {
+    case .failure(let error): // handle error
+    case .success(let posts): // posts: [Post]
+    }
+}
+```
+
+### POST
+
+```swift
+extension Post {
+    static func createResource(title: String, body: String) -> Resource<Post> {
+        let data: JSONDictionary = ["title": title, "body": body]
+        return Resource(url: Post.endPoint, jsonMethod: .post(data: data), parseJSON: { obj in
+            guard let json = obj as? JSONDictionary,
+                let post = Post(json: json) else {
+                return Result.failure(.invalidResponse)
+            }
+            return Result.success(post)
+        })
+    }
+}
+
+let resource = Post.createResource(title: "xxx", body: "xxx")
+webservice.load(resource) { response in 
+    switch response {
+    case .failure(let error): // handle error
+    case .success(let post):  // post: Post
+    }
+}
+```
+
+### PUT
+
+```swift
+extension Post {
+    var updateResource: Resource<Post> {
+        let url = Post.endPoint.appendingPathComponent("\(id)")
+        let data: JSONDictionary = ["id": id, "title": title, "body": body]
+        return Resource(url: url, jsonMethod: .put(data: data), parseJSON: { obj in
+            guard let json = obj as? JSONDictionary,
+                let post = Post(json: json) else {
+                return Result.failure(.invalidResponse)
+            }
+            return Result.success(post)
+        })
+    }
+}
+
+let post = Post(id: xxx, title: "xxx", body: "xxx")
+webservice.load(post.updateResource) { response in 
+    switch response {
+    case .failure(let error): // handle error
+    case .success(let post):  // post: Post
+    }
+}
+```
+
+### PATCH
+
+```swift
+extension Post {
+    var udpateTitleResource: Resource<Post> {
+        let url = Post.endPoint.appendingPathComponent("\(id)")
+        let data: JSONDictionary = ["title": title]
+        return Resource(url: url, jsonMethod: .patch(data: data), parseJSON: { obj in
+            guard let json = obj as? JSONDictionary,
+                let post = Post(json: json) else {
+                return Result.failure(.invalidResponse)
+            }
+            return Result.success(post)
+        })
+    }
+}
+
+let post = Post(id: xxx, title: "xxx", body: "xxx")
+webservice.load(post.udpateTitleResource) { response in 
+    switch response {
+    case .failure(let error): // handle error
+    case .success(let post):  // post: Post
+    }
+}
+```
+
+### DELETE
+
+```swift
+extension Post {
+  var deleteResource: Resource<Bool> {
+        let url = Post.endPoint.appendingPathComponent("\(id)")
+        return Resource(url: url, method: .delete, parse: { _ in
+            return Result.success(true)
+        })
+    }
+}
+
+let post = Post(id: xxx, title: "xxx", body: "xxx")
+webservice.load(post.deleteResource) { response in 
+    switch response {
+    case .failure(let error): // handle error
+    case .success(let flag):  // flag: Bool
+    }
+}
+```
+
 ## Author
 
 derekcoder@gmail.com
+
+## Thanks
+
+Special thanks [SwiftTalk](https://talk.objc.io/). Some code borrowed from SwiftTalk.
 
 ## License
 
