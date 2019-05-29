@@ -177,10 +177,6 @@ webservice.load(post.deleteResource) { response in
 }
 ```
 
-## Author
-
-derekcoder@gmail.com
-
 ## Thanks
 
 Special thanks [SwiftTalk](https://talk.objc.io/). Some code borrowed from SwiftTalk.
