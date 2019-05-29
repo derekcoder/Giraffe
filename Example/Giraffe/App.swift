@@ -11,11 +11,7 @@ import Giraffe
 
 final class App {
     let window: UIWindow
-    let webservice: Webservice = {
-        var webservice = Webservice()
-        webservice.debugEnabled = true
-        return webservice
-    }()
+    let webservice = Webservice()
     
     init(window: UIWindow) {
         self.window = window

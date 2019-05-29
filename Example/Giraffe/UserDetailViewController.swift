@@ -42,7 +42,6 @@ class UserDetailViewController: UITableViewController {
                 case .apiFailed(let statusCode): print("API failed with status code: \(statusCode)")
                 }
             case .success(let user):
-                print("loaded latest user")
                 self.refreshControl?.endRefreshing()
                 self.user = user
                 self.tableView.reloadData()
