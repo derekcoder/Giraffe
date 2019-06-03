@@ -7,32 +7,64 @@
 
 import Foundation
 
-public enum HTTPRequestHeaderField: String {
-    case accept = "Accept"
-    case acceptCharset = "Accept-Charset"
-    case acceptEncoding = "Accept-Encoding"
-    case acceptLanguage = "Accept-Language"
-    case authorization = "Authorization"
-    
-    case cacheControl = "Cache-Control"
-    case contentMD5 = "Content-MD5"
-    case contentLength = "Content-Length"
-    case contentTransferEncoding = "Content-Transfer-Encoding"
-    case contentType = "Content-Type"
-    case cookie = "Cookie"
-    case cookie2 = "Cookie 2"
-    
-    case expect = "Expect"
-    
-    case ifMatch = "If-Match"
-    case ifModifiedSince = "If-Modified-Since"
-    case ifRange = "If-Range"
-    case ifNoneMatch = "If-None-Match"
-    case ifUnmodifiedSince = "If-Unmodified-Since"
-    
-    case transferEncoding = "Tranfer-Encoding"
+public enum HTTPRequestHeaderField {
+    case accept
+    case acceptCharset
+    case acceptEncoding
+    case acceptLanguage
+    case authorization
+    case cacheControl
+    case contentMD5
+    case contentLength
+    case contentTransferEncoding
+    case contentType
+    case cookie
+    case cookie2
+    case expect
+    case ifMatch
+    case ifModifiedSince
+    case ifRange
+    case ifNoneMatch
+    case ifUnmodifiedSince
+    case transferEncoding
+    case userAgent
+    case custom(String)
+}
 
-    case userAgent = "User-Agent"
+extension HTTPRequestHeaderField: Hashable {
+    public var key: String {
+        switch self {
+        case .accept: return "Accept"
+        case .acceptCharset: return "Accept-Charset"
+        case .acceptEncoding: return "Accept-Encoding"
+        case .acceptLanguage: return "Accept-Language"
+        case .authorization: return "Authorization"
+        case .cacheControl: return "Cache-Control"
+        case .contentMD5: return "Content-MD5"
+        case .contentLength: return "Content-Length"
+        case .contentTransferEncoding: return "Content-Transfer-Encoding"
+        case .contentType: return "Content-Type"
+        case .cookie: return "Cookie"
+        case .cookie2: return "Cookie 2"
+        case .expect: return "Expect"
+        case .ifMatch: return "If-Match"
+        case .ifModifiedSince: return "If-Modified-Since"
+        case .ifRange: return "If-Range"
+        case .ifNoneMatch: return "If-None-Match"
+        case .ifUnmodifiedSince: return "If-Unmodified-Since"
+        case .transferEncoding: return "Tranfer-Encoding"
+        case .userAgent: return "User-Agent"
+        case .custom(let v): return v
+        }
+    }
+    
+    public static func ==(lhs: HTTPRequestHeaderField, rhs: HTTPRequestHeaderField) -> Bool {
+        return lhs.key == rhs.key
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(key)
+    }
 }
 
 public enum HTTPResponseHeaderField: String {

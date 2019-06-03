@@ -48,10 +48,10 @@ public extension URLRequest {
     }
     
     mutating func setHeaderValue(_ value: String?, for field: HTTPRequestHeaderField) {
-        setValue(value, forHTTPHeaderField: field.rawValue)
+        setValue(value, forHTTPHeaderField: field.key)
     }
     
     func headerValue(for field: HTTPRequestHeaderField) -> String? {
-        return value(forHTTPHeaderField: field.rawValue)
+        return value(forHTTPHeaderField: field.key)
     }
 }
