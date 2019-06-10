@@ -45,15 +45,15 @@ extension User {
     }
     
     var reposResource: Resource<[Repo]> {
-        let url = User.endPoint
-            .appendingPathComponent("\(login)/repos")
-            .appendingQueryItems(["sort": "pushed"])
-        return Resource(url: url, parseJSON: { obj in
+        let url = User.endPoint.appendingPathComponent("\(login)/repos")
+        var resource: Resource<[Repo]> = Resource(url: url, parseJSON: { obj in
             guard let json = obj as? [JSONDictionary] else {
                 return Result.failure(.invalidResponse)
             }
             let repos = json.compactMap(Repo.init)
             return Result.success(repos)
         })
+        resource.parameters = ["sort": "pushed"]
+        return resource
     }
 }
