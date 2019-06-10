@@ -8,8 +8,6 @@
 
 import Foundation
 
-public typealias JSONDictionary = [String: Any]
-
 public enum HttpMethod<A> {
     case get
     case post(data: A)
@@ -44,22 +42,21 @@ public struct Resource<A> {
     public var url: URL
     public var method: HttpMethod<Data?> = .get
     public var parse: (Data?) -> Result<A, APIError>
-    public var headers: [HTTPRequestHeaderField: String]? = nil
+    public var headers: Headers? = nil
+    public var parameters: Parameters? = nil
     public var timeoutInterval: TimeInterval = 20.0 // in seconds, default: 60 seconds
 }
 
 public extension Resource {
-    init(url: URL, method: HttpMethod<Data?> = .get, headers: [HTTPRequestHeaderField: String]? = nil, parse: @escaping (Data?) -> Result<A, APIError>) {
+    init(url: URL, method: HttpMethod<Data?> = .get, parse: @escaping (Data?) -> Result<A, APIError>) {
         self.url = url
         self.method = method
-        self.headers = headers
         self.parse = parse
     }
     
-    init(url: URL, method: HttpMethod<Data?> = .get, headers: [HTTPRequestHeaderField: String]? = nil, parseJSON: @escaping (Any) -> Result<A, APIError>) {
+    init(url: URL, method: HttpMethod<Data?> = .get, parseJSON: @escaping (Any) -> Result<A, APIError>) {
         self.url = url
         self.method = method
-        self.headers = headers
         self.parse = { data in
             guard let data = data,
                 let obj = try? JSONSerialization.jsonObject(with: data, options: []) else {
@@ -69,18 +66,16 @@ public extension Resource {
         }
     }
 
-    init(url: URL, jsonMethod: HttpMethod<Any>, headers: [HTTPRequestHeaderField: String]? = nil, parse: @escaping (Data?) -> Result<A, APIError>) {
+    init(url: URL, jsonMethod: HttpMethod<Any>, parse: @escaping (Data?) -> Result<A, APIError>) {
         self.url = url
         self.parse = parse
-        self.headers = headers
         self.method = jsonMethod.map { jsonObject in
             try! JSONSerialization.data(withJSONObject: jsonObject, options: [])
         }
     }
     
-    init(url: URL, jsonMethod: HttpMethod<Any>, headers: [HTTPRequestHeaderField: String]? = nil, parseJSON: @escaping (Any) -> Result<A, APIError>) {
+    init(url: URL, jsonMethod: HttpMethod<Any>, parseJSON: @escaping (Any) -> Result<A, APIError>) {
         self.url = url
-        self.headers = headers
         self.method = jsonMethod.map { jsonObject in
             try! JSONSerialization.data(withJSONObject: jsonObject, options: [])
         }

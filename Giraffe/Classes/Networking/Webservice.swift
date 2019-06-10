@@ -10,7 +10,7 @@ import Foundation
 
 public final class Webservice {
     public let session: URLSession
-    public var headers: [HTTPRequestHeaderField: String] = [:]
+    public var headers: Headers = [:]
         
     public init() {
         let sessionConfig = URLSessionConfiguration.default
