@@ -13,8 +13,9 @@
     - [x] PUT
     - [x] PATCH
     - [x] DELETE
-- [x] HTTP headers
-- [x] Cancel request
+- [x] HTTP Headers
+- [x] Cancel Request
+- [ ] Complete Tests
 - [ ] Complete Documentation
 
 ## Requirements
