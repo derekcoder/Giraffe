@@ -10,8 +10,10 @@ import XCTest
 @testable import Giraffe
 
 class ResourceTests: XCTestCase {
+    private static let json: JSONDictionary = ["count": 3]
     private let url: URL = URL(string: "https://www.apple.com")!
     private let method: HTTPMethod<Data?> = .get
+    private let jsonMethod: HTTPMethod<Any> = .post(data: ResourceTests.json)
     private let parse: (Data?) -> Result<Int, APIError> = { data in
         return Result.success(2)
     }
@@ -20,9 +22,7 @@ class ResourceTests: XCTestCase {
         let count = json["count"] as! Int
         return Result.success(count)
     }
-    private let obj: JSONDictionary = ["count": 3]
-    private var data: Data { return try! JSONSerialization.data(withJSONObject: obj, options: []) }
-    private var jsonMethod: HTTPMethod<Any> { return .post(data: obj) }
+    private let data = try! JSONSerialization.data(withJSONObject: ResourceTests.json, options: [])
 
     func testInitWithURLMethodParse() {
         let resource = Resource(url: url, method: method, parse: parse)
@@ -38,7 +38,7 @@ class ResourceTests: XCTestCase {
         let resource = Resource(url: url, method: method, parseJSON: parseJSON)
         XCTAssertEqual(resource.url, url)
         XCTAssertEqual(resource.method.method, method.method)
-        XCTAssertEqual(resource.parse(data).value, parseJSON(obj).value)
+        XCTAssertEqual(resource.parse(data).value, parseJSON(ResourceTests.json).value)
         XCTAssertNil(resource.headers)
         XCTAssertNil(resource.parameters)
         XCTAssertEqual(resource.timeoutInterval, 20)
@@ -60,7 +60,7 @@ class ResourceTests: XCTestCase {
         XCTAssertEqual(resource.url, url)
         XCTAssertEqual(resource.method.method, jsonMethod.method)
         XCTAssertEqual(resource.method.data, data)
-        XCTAssertEqual(resource.parse(data).value, parseJSON(obj).value)
+        XCTAssertEqual(resource.parse(data).value, parseJSON(ResourceTests.json).value)
         XCTAssertNil(resource.headers)
         XCTAssertNil(resource.parameters)
         XCTAssertEqual(resource.timeoutInterval, 20)

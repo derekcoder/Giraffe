@@ -13,6 +13,7 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		65431B2222AF4F4C0000B734 /* ResourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65431B2122AF4F4C0000B734 /* ResourceTests.swift */; };
+		65431B2622AF67C70000B734 /* HTTPMethodTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65431B2522AF67C70000B734 /* HTTPMethodTests.swift */; };
 		656D50FB2061F8EE00EE0B73 /* Giraffe_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656D50FA2061F8EE00EE0B73 /* Giraffe_Tests.swift */; };
 		65CA57E22137D38C003A7A91 /* Repo+Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CA57E12137D38C003A7A91 /* Repo+Resource.swift */; };
 		65CA57E42137D395003A7A91 /* Repo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CA57E32137D395003A7A91 /* Repo.swift */; };
@@ -46,6 +47,7 @@
 		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		65431B2122AF4F4C0000B734 /* ResourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceTests.swift; sourceTree = "<group>"; };
+		65431B2522AF67C70000B734 /* HTTPMethodTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPMethodTests.swift; sourceTree = "<group>"; };
 		656D50F82061F8EE00EE0B73 /* Giraffe_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Giraffe_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		656D50FA2061F8EE00EE0B73 /* Giraffe_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Giraffe_Tests.swift; sourceTree = "<group>"; };
 		656D50FC2061F8EE00EE0B73 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 				656D50FA2061F8EE00EE0B73 /* Giraffe_Tests.swift */,
 				656D50FC2061F8EE00EE0B73 /* Info.plist */,
 				65431B2122AF4F4C0000B734 /* ResourceTests.swift */,
+				65431B2522AF67C70000B734 /* HTTPMethodTests.swift */,
 			);
 			path = Giraffe_Tests;
 			sourceTree = "<group>";
@@ -417,6 +420,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65431B2622AF67C70000B734 /* HTTPMethodTests.swift in Sources */,
 				656D50FB2061F8EE00EE0B73 /* Giraffe_Tests.swift in Sources */,
 				65431B2222AF4F4C0000B734 /* ResourceTests.swift in Sources */,
 			);
