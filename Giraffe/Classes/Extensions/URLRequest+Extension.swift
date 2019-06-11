@@ -12,11 +12,7 @@ public extension URLRequest {
         self.init(url: resource.requestURL, timeoutInterval: timeoutInterval)
         
         configureBody(resource: resource)
-        
-        // default
-        setHeaderValue(MediaType.appJSON.rawValue, for: .contentType)
-        setHeaderValue(MediaType.appJSON.rawValue, for: .accept)
-        
+                
         // global
         headers?.forEach { setHeaderValue($1, for: $0) }
         

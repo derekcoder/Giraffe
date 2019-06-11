@@ -19,8 +19,6 @@ class URLRequestExtensionTests: XCTestCase {
         var request = URLRequest(resource: resource, headers: headers, timeoutInterval: 10)
         XCTAssertEqual(request.url, resource.requestURL)
         XCTAssertEqual(request.timeoutInterval, 10)
-        XCTAssertTrue(request.allHTTPHeaderFields!.contains { $0 == HTTPRequestHeaderField.contentType.key && $1 == MediaType.appJSON.rawValue })
-        XCTAssertTrue(request.allHTTPHeaderFields!.contains { $0 == HTTPRequestHeaderField.accept.key && $1 == MediaType.appJSON.rawValue })
         XCTAssertTrue(request.allHTTPHeaderFields!.contains { $0 == HTTPRequestHeaderField.authorization.key && $1 == "a" })
         
         resource.timeoutInterval = 30
