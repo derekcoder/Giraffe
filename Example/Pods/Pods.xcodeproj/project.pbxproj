@@ -14,6 +14,7 @@
 		410E189794B5553F8B93AC8E1378CE96 /* Giraffe-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D39D05F090171A176E5DA1C673CC644 /* Giraffe-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		652CF26C22AE66400075D29B /* Giraffe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652CF26B22AE66400075D29B /* Giraffe.swift */; };
 		65431B2422AF5F550000B734 /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65431B2322AF5F550000B734 /* HTTPMethod.swift */; };
+		65431B2E22AF8CD40000B734 /* Result+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65431B2D22AF8CD40000B734 /* Result+Extension.swift */; };
 		654FCF2C225CA0C700B72BB7 /* CallbackQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654FCF2B225CA0C700B72BB7 /* CallbackQueue.swift */; };
 		654FCF2F225CA14700B72BB7 /* Parameters+Append.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654FCF2E225CA14700B72BB7 /* Parameters+Append.swift */; };
 		65CA57F22137FC7F003A7A91 /* HTTPHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CA57EF2137FC7F003A7A91 /* HTTPHeader.swift */; };
@@ -56,6 +57,7 @@
 		5661B0109A7F0C24DD1DBE6AD35F949E /* Pods-Giraffe_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Giraffe_Tests-frameworks.sh"; sourceTree = "<group>"; };
 		652CF26B22AE66400075D29B /* Giraffe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Giraffe.swift; path = Giraffe/Classes/Giraffe.swift; sourceTree = "<group>"; };
 		65431B2322AF5F550000B734 /* HTTPMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPMethod.swift; sourceTree = "<group>"; };
+		65431B2D22AF8CD40000B734 /* Result+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+Extension.swift"; sourceTree = "<group>"; };
 		654FCF2B225CA0C700B72BB7 /* CallbackQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallbackQueue.swift; sourceTree = "<group>"; };
 		654FCF2E225CA14700B72BB7 /* Parameters+Append.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Parameters+Append.swift"; sourceTree = "<group>"; };
 		65CA57EF2137FC7F003A7A91 /* HTTPHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPHeader.swift; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 			isa = PBXGroup;
 			children = (
 				DCB0F9D521D522B2003224ED /* URLRequest+Extension.swift */,
+				65431B2D22AF8CD40000B734 /* Result+Extension.swift */,
 				654FCF2E225CA14700B72BB7 /* Parameters+Append.swift */,
 			);
 			name = Extensions;
@@ -193,8 +196,8 @@
 				65CA57EF2137FC7F003A7A91 /* HTTPHeader.swift */,
 				65431B2322AF5F550000B734 /* HTTPMethod.swift */,
 				D2DCCCACAC3773F40E83D0838D2D87E9 /* Resource.swift */,
-				DCD5BF79225B7E970024DB9E /* Response.swift */,
 				65CA57F32137FD47003A7A91 /* Error.swift */,
+				DCD5BF79225B7E970024DB9E /* Response.swift */,
 				3B4F0D0E4FDBAECAC66EE05CC7081D90 /* Webservice.swift */,
 			);
 			name = Networking;
@@ -398,6 +401,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65431B2E22AF8CD40000B734 /* Result+Extension.swift in Sources */,
 				65CA57F22137FC7F003A7A91 /* HTTPHeader.swift in Sources */,
 				804ADB1ED03A2080E24425A8D3CBDBA5 /* Giraffe-dummy.m in Sources */,
 				F2718DF4ADFBD3AA889AA5B443593811 /* Resource.swift in Sources */,

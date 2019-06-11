@@ -16,6 +16,8 @@
 		65431B2622AF67C70000B734 /* HTTPMethodTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65431B2522AF67C70000B734 /* HTTPMethodTests.swift */; };
 		65431B2822AF7E200000B734 /* URLRequestExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65431B2722AF7E200000B734 /* URLRequestExtensionTests.swift */; };
 		65431B2A22AF87FA0000B734 /* HTTPHeaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65431B2922AF87FA0000B734 /* HTTPHeaderTests.swift */; };
+		65431B2C22AF8AEB0000B734 /* ResultExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65431B2B22AF8AEB0000B734 /* ResultExtensionTests.swift */; };
+		65431B3022AF8D2A0000B734 /* ParametersExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65431B2F22AF8D2A0000B734 /* ParametersExtensionTests.swift */; };
 		656D50FB2061F8EE00EE0B73 /* Giraffe_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656D50FA2061F8EE00EE0B73 /* Giraffe_Tests.swift */; };
 		65CA57E22137D38C003A7A91 /* Repo+Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CA57E12137D38C003A7A91 /* Repo+Resource.swift */; };
 		65CA57E42137D395003A7A91 /* Repo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CA57E32137D395003A7A91 /* Repo.swift */; };
@@ -52,6 +54,8 @@
 		65431B2522AF67C70000B734 /* HTTPMethodTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPMethodTests.swift; sourceTree = "<group>"; };
 		65431B2722AF7E200000B734 /* URLRequestExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRequestExtensionTests.swift; sourceTree = "<group>"; };
 		65431B2922AF87FA0000B734 /* HTTPHeaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPHeaderTests.swift; sourceTree = "<group>"; };
+		65431B2B22AF8AEB0000B734 /* ResultExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultExtensionTests.swift; sourceTree = "<group>"; };
+		65431B2F22AF8D2A0000B734 /* ParametersExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParametersExtensionTests.swift; sourceTree = "<group>"; };
 		656D50F82061F8EE00EE0B73 /* Giraffe_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Giraffe_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		656D50FA2061F8EE00EE0B73 /* Giraffe_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Giraffe_Tests.swift; sourceTree = "<group>"; };
 		656D50FC2061F8EE00EE0B73 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -161,7 +165,9 @@
 				65431B2922AF87FA0000B734 /* HTTPHeaderTests.swift */,
 				65431B2522AF67C70000B734 /* HTTPMethodTests.swift */,
 				65431B2122AF4F4C0000B734 /* ResourceTests.swift */,
+				65431B2B22AF8AEB0000B734 /* ResultExtensionTests.swift */,
 				65431B2722AF7E200000B734 /* URLRequestExtensionTests.swift */,
+				65431B2F22AF8D2A0000B734 /* ParametersExtensionTests.swift */,
 			);
 			path = Giraffe_Tests;
 			sourceTree = "<group>";
@@ -428,8 +434,10 @@
 			files = (
 				65431B2622AF67C70000B734 /* HTTPMethodTests.swift in Sources */,
 				65431B2822AF7E200000B734 /* URLRequestExtensionTests.swift in Sources */,
+				65431B3022AF8D2A0000B734 /* ParametersExtensionTests.swift in Sources */,
 				65431B2A22AF87FA0000B734 /* HTTPHeaderTests.swift in Sources */,
 				656D50FB2061F8EE00EE0B73 /* Giraffe_Tests.swift in Sources */,
+				65431B2C22AF8AEB0000B734 /* ResultExtensionTests.swift in Sources */,
 				65431B2222AF4F4C0000B734 /* ResourceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

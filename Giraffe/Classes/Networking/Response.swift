@@ -14,19 +14,3 @@ public struct Response<A> {
     public let error: Error?
     public let httpResponse: HTTPURLResponse?
 }
-
-public extension Result where Failure == APIError {
-    var value: Success? {
-        switch self {
-        case .failure: return nil
-        case .success(let value): return value
-        }
-    }
-    
-    var error: APIError? {
-        switch self {
-        case .failure(let error): return error
-        case .success: return nil
-        }
-    }
-}
