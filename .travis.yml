@@ -4,11 +4,11 @@ language: swift
 branches:
   only:
     - master
-    
+
 env:
   global:
     - WORKSPACE=Example/Giraffe.xcworkspace
-    - SCHEME=Giraffe-Example
+    - SCHEME=Giraffe-Example SWIFT_VERSION=5.0
     - SDK=iphonesimulator12.0
   matrix:
     - DESTINATION="platform=iOS Simulator,name=iPhone SE,OS=12.0"
