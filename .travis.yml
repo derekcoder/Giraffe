@@ -1,6 +1,19 @@
+
+osx_image: xcode10
 language: swift
-osx_image: xcode10.2
+branches:
+  only:
+    - master
+    
+env:
+  global:
+    - WORKSPACE=Example/Giraffe.xcworkspace
+    - SCHEME=Giraffe-Example
+    - SDK=iphonesimulator12.0
+  matrix:
+    - DESTINATION="platform=iOS Simulator,name=iPhone SE,OS=12.0"
+
+podfile: Example/Podfile
 
 script:
-- set -o pipefail && xcodebuild test -enableCodeCoverage YES -workspace Example/Giraffe.xcworkspace -scheme Giraffe-Example -sdk iphonesimulator10.2 ONLY_ACTIVE_ARCH=NO | xcpretty
-- pod lib lint
+  - set -o pipefail && xcodebuild -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug ONLY_ACTIVE_ARCH=NO build | xcpretty -c
