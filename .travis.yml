@@ -16,4 +16,5 @@ env:
 podfile: Example/Podfile
 
 script:
+  - swift -version
   - set -o pipefail && xcodebuild -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug ONLY_ACTIVE_ARCH=NO build | xcpretty -c
