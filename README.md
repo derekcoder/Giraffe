@@ -15,7 +15,7 @@
     - [x] DELETE
 - [x] HTTP Headers
 - [x] Cancel Request
-- [ ] Complete Tests
+- [x] Complete Tests
 - [ ] Complete Documentation
 
 ## Requirements
