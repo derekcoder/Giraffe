@@ -8,13 +8,13 @@
 import Foundation
 
 extension Parameters {
-    mutating func appendParameters(_ parameters: Parameters) {
-        self = appendingParameters(parameters)
-    }
-    
     func appendingParameters(_ parameters: Parameters) -> Parameters {
         return parameters.merging(self) { _, new in new }
     }
+
+    mutating func appendParameters(_ parameters: Parameters) {
+        self = appendingParameters(parameters)
+    }    
 }
 
 public extension String {

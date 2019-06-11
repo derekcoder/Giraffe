@@ -8,39 +8,9 @@
 
 import Foundation
 
-public enum HttpMethod<A> {
-    case get
-    case post(data: A)
-    case put(data: A)
-    case patch(data: A)
-    case delete
-}
-
-public extension HttpMethod {
-    var method: String {
-        switch self {
-        case .get: return "GET"
-        case .post: return "POST"
-        case .put: return "PUT"
-        case .patch: return "PATCH"
-        case .delete: return "DELETE"
-        }
-    }
-    
-    func map<B>(f: (A) throws -> B) rethrows -> HttpMethod<B> {
-        switch self {
-        case .get: return .get
-        case .post(let data): return .post(data: try f(data))
-        case .put(let data): return .put(data: try f(data))
-        case .patch(let data): return .patch(data: try f(data))
-        case .delete: return .delete
-        }
-    }
-}
-
 public struct Resource<A> {
     public var url: URL
-    public var method: HttpMethod<Data?> = .get
+    public var method: HTTPMethod<Data?> = .get
     public var parse: (Data?) -> Result<A, APIError>
     public var headers: Headers? = nil
     public var parameters: Parameters? = nil
@@ -48,13 +18,13 @@ public struct Resource<A> {
 }
 
 public extension Resource {
-    init(url: URL, method: HttpMethod<Data?> = .get, parse: @escaping (Data?) -> Result<A, APIError>) {
+    init(url: URL, method: HTTPMethod<Data?> = .get, parse: @escaping (Data?) -> Result<A, APIError>) {
         self.url = url
         self.method = method
         self.parse = parse
     }
     
-    init(url: URL, method: HttpMethod<Data?> = .get, parseJSON: @escaping (Any) -> Result<A, APIError>) {
+    init(url: URL, method: HTTPMethod<Data?> = .get, parseJSON: @escaping (Any) -> Result<A, APIError>) {
         self.url = url
         self.method = method
         self.parse = { data in
@@ -66,7 +36,7 @@ public extension Resource {
         }
     }
 
-    init(url: URL, jsonMethod: HttpMethod<Any>, parse: @escaping (Data?) -> Result<A, APIError>) {
+    init(url: URL, jsonMethod: HTTPMethod<Any>, parse: @escaping (Data?) -> Result<A, APIError>) {
         self.url = url
         self.parse = parse
         self.method = jsonMethod.map { jsonObject in
@@ -74,7 +44,7 @@ public extension Resource {
         }
     }
     
-    init(url: URL, jsonMethod: HttpMethod<Any>, parseJSON: @escaping (Any) -> Result<A, APIError>) {
+    init(url: URL, jsonMethod: HTTPMethod<Any>, parseJSON: @escaping (Any) -> Result<A, APIError>) {
         self.url = url
         self.method = jsonMethod.map { jsonObject in
             try! JSONSerialization.data(withJSONObject: jsonObject, options: [])
@@ -86,5 +56,22 @@ public extension Resource {
             }
             return parseJSON(obj)
         }
+    }
+}
+
+public extension Resource {
+    var requestURL: URL {
+        if var urlComponent = URLComponents(url: url, resolvingAgainstBaseURL: false),
+            let parameters = parameters,
+            !parameters.isEmpty {
+            
+            let queryItems = parameters.map { URLQueryItem(name: $0, value: $1) }
+            urlComponent.queryItems = queryItems
+            
+            if let newURL = urlComponent.url {
+                return newURL
+            }
+        }
+        return url
     }
 }
