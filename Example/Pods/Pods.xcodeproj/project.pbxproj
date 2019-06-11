@@ -191,10 +191,10 @@
 			isa = PBXGroup;
 			children = (
 				65CA57EF2137FC7F003A7A91 /* HTTPHeader.swift */,
-				65CA57F32137FD47003A7A91 /* Error.swift */,
-				DCD5BF79225B7E970024DB9E /* Response.swift */,
 				65431B2322AF5F550000B734 /* HTTPMethod.swift */,
 				D2DCCCACAC3773F40E83D0838D2D87E9 /* Resource.swift */,
+				DCD5BF79225B7E970024DB9E /* Response.swift */,
+				65CA57F32137FD47003A7A91 /* Error.swift */,
 				3B4F0D0E4FDBAECAC66EE05CC7081D90 /* Webservice.swift */,
 			);
 			name = Networking;

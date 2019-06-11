@@ -52,7 +52,7 @@ extension HTTPRequestHeaderField: Hashable {
         case .ifRange: return "If-Range"
         case .ifNoneMatch: return "If-None-Match"
         case .ifUnmodifiedSince: return "If-Unmodified-Since"
-        case .transferEncoding: return "Tranfer-Encoding"
+        case .transferEncoding: return "Transfer-Encoding"
         case .userAgent: return "User-Agent"
         case .custom(let v): return v
         }
@@ -65,45 +65,6 @@ extension HTTPRequestHeaderField: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(key)
     }
-}
-
-public enum HTTPResponseHeaderField: String {
-    case allow = "Allow"
-    
-    case connection = "Connection"
-    case contentDisposition = "Content-Disposition"
-    case contentEncoding = "Content-Encoding"
-    case contentLanguage = "Content-Language"
-    case contentLength = "Content-Length"
-    case contentLocation = "Content-Location"
-    case contentMD5 = "Content-MD5"
-    case contentRange = "Content-Range"
-    case contentType = "Content-Type"
-    
-    case date = "Date"
-    case deltaBase = "Delta-Base"
-    
-    case expires = "Expires"
-    case im = "IM"
-    case lastModified = "Last-Modified"
-    case link = "Link"
-    case location = "Location"
-    case pragma = "Pragma"
-    case proxyAuthenticate = "Proxy-Authenticate"
-    case publicKeyPins = "Public-Key-Pins"
-    case retryAfter = "Retry-After"
-    case server = "Server"
-    case setCookie = "Set-Cookie"
-    case strictTransportSecurity = "Strict-Transport-Security"
-    case trailer = "Trailer"
-    case transferEncoding = "Transfer-Encoding"
-    case tk = "Tk"
-    case upgrade = "Upgrade"
-    case vary = "Vary"
-    case via = "Via"
-    case warning = "Warning"
-    case wwwAuthenticate = "WWW-Authenticate"
-    case xFrameOptions = "X-Frame-Options"
 }
 
 public enum MediaType: String {
