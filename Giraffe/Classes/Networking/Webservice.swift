@@ -11,6 +11,7 @@ import Foundation
 public final class Webservice {
     public let session: URLSession
     public var headers: Headers = [:]
+    public var timeoutInterval: TimeInterval = 60 // in seconds
         
     public init() {
         let sessionConfig = URLSessionConfiguration.default
@@ -21,7 +22,9 @@ public final class Webservice {
     public func load<A>(_ resource: Resource<A>,
                         completion: @escaping (Response<A>) -> ()) -> URLSessionDataTask {
         
-        let request = URLRequest(resource: resource, headers: headers)
+        let request = URLRequest(resource: resource,
+                                 headers: headers,
+                                 timeoutInterval: timeoutInterval)
         
         let task = session.dataTask(with: request, completionHandler: { data, response, error in
             

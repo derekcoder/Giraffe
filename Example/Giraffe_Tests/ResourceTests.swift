@@ -31,7 +31,7 @@ class ResourceTests: XCTestCase {
         XCTAssertEqual(resource.parse(nil).value, parse(nil).value)
         XCTAssertNil(resource.headers)
         XCTAssertNil(resource.parameters)
-        XCTAssertEqual(resource.timeoutInterval, 20)
+        XCTAssertNil(resource.timeoutInterval)
     }
     
     func testInitWithURLMethodParseJSON() {
@@ -41,7 +41,7 @@ class ResourceTests: XCTestCase {
         XCTAssertEqual(resource.parse(data).value, parseJSON(ResourceTests.json).value)
         XCTAssertNil(resource.headers)
         XCTAssertNil(resource.parameters)
-        XCTAssertEqual(resource.timeoutInterval, 20)
+        XCTAssertNil(resource.timeoutInterval)
     }
     
     func testInitWithURLJSONMethodParse() {
@@ -52,7 +52,7 @@ class ResourceTests: XCTestCase {
         XCTAssertEqual(resource.parse(nil).value, parse(nil).value)
         XCTAssertNil(resource.headers)
         XCTAssertNil(resource.parameters)
-        XCTAssertEqual(resource.timeoutInterval, 20)
+        XCTAssertNil(resource.timeoutInterval)
     }
     
     func testInitWithURLJSONMethodParseJSON() {
@@ -63,7 +63,7 @@ class ResourceTests: XCTestCase {
         XCTAssertEqual(resource.parse(data).value, parseJSON(ResourceTests.json).value)
         XCTAssertNil(resource.headers)
         XCTAssertNil(resource.parameters)
-        XCTAssertEqual(resource.timeoutInterval, 20)
+        XCTAssertNil(resource.timeoutInterval)
     }
     
     func testRequstURL() {

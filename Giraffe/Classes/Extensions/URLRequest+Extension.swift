@@ -8,19 +8,23 @@
 import Foundation
 
 public extension URLRequest {
-    init<A>(resource: Resource<A>, headers: Headers? = nil) {
-        self.init(url: resource.requestURL, timeoutInterval: resource.timeoutInterval)
+    init<A>(resource: Resource<A>, headers: Headers? = nil, timeoutInterval: TimeInterval) {
+        self.init(url: resource.requestURL, timeoutInterval: timeoutInterval)
         
         configureBody(resource: resource)
         
+        // default
         setHeaderValue(MediaType.appJSON.rawValue, for: .contentType)
         setHeaderValue(MediaType.appJSON.rawValue, for: .accept)
         
-        // set global headers first
+        // global
         headers?.forEach { setHeaderValue($1, for: $0) }
         
-        // set specific headers for this resource
+        // resource specific
         resource.headers?.forEach { setHeaderValue($1, for: $0) }
+        if let timeoutInterval = resource.timeoutInterval {
+            self.timeoutInterval = timeoutInterval
+        }
     }
 }
 

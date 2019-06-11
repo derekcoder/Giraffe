@@ -14,7 +14,7 @@ public struct Resource<A> {
     public var parse: (Data?) -> Result<A, APIError>
     public var headers: Headers? = nil
     public var parameters: Parameters? = nil
-    public var timeoutInterval: TimeInterval = 20.0 // in seconds, default: 60 seconds
+    public var timeoutInterval: TimeInterval? = nil
 }
 
 public extension Resource {
