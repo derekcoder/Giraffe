@@ -9,7 +9,7 @@ env:
   global:
     - WORKSPACE=Example/Giraffe.xcworkspace
     - SCHEME=Giraffe-Example
-    - SDK=iphonesimulator12.0
+    - SDK=iphonesimulator12.2
   matrix:
     - DESTINATION="platform=iOS Simulator,name=iPhone SE,OS=12.0"
 
