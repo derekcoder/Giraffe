@@ -29,14 +29,8 @@ Giraffe is a lightweight and elegant networking library in swift. The idea and m
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '10.0'
-
-  s.source_files = 'Giraffe/Classes/**/*'
   
-  # s.resource_bundles = {
-  #   'Giraffe' => ['Giraffe/Assets/*.png']
-  # }
+  s.swift_version = '5.0'
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.source_files = 'Giraffe/Classes/**/*'  
 end
