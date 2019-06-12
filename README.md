@@ -1,6 +1,6 @@
 # Giraffe
 
-[![CI Status](http://img.shields.io/travis/derekcoder@gmail.com/Giraffe.svg?style=flat)](https://travis-ci.org/derekcoder@gmail.com/Giraffe)
+[![CI Status](http://img.shields.io/travis/derekcoder/Giraffe.svg?style=flat)](https://travis-ci.org/derekcoder/Giraffe)
 [![Version](https://img.shields.io/cocoapods/v/Giraffe.svg?style=flat)](http://cocoapods.org/pods/Giraffe)
 [![License](https://img.shields.io/cocoapods/l/Giraffe.svg?style=flat)](http://cocoapods.org/pods/Giraffe)
 [![Platform](https://img.shields.io/cocoapods/p/Giraffe.svg?style=flat)](http://cocoapods.org/pods/Giraffe)
