@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Parameters {
+public extension Parameters {
     func appendingParameters(_ parameters: Parameters) -> Parameters {
         return self.merging(parameters) { _, new in new }
     }
