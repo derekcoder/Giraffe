@@ -8,11 +8,11 @@
 import Foundation
 
 public extension Parameters {
-    func appendingParameters(_ parameters: Parameters) -> Parameters {
-        return self.merging(parameters) { _, new in new }
-    }
-
-    mutating func appendParameters(_ parameters: Parameters) {
-        self = appendingParameters(parameters)
-    }    
+  func appendingParameters(_ parameters: Parameters) -> Parameters {
+    return self.merging(parameters) { _, new in new }
+  }
+  
+  mutating func appendParameters(_ parameters: Parameters) {
+    self = appendingParameters(parameters)
+  }
 }
