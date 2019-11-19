@@ -27,18 +27,30 @@ public extension Resource {
     self.parse = parse
   }
   
+  init(url: URL, method: HTTPMethod<Data?> = .get, parseData: @escaping (Data?) -> Result<A, APIError>) {
+    self.url = url
+    self.method = method
+    self.parseData = { data, _ in parseData(data) }
+  }
+  
   init(url: URL, method: HTTPMethod<Data?> = .get, parseData: @escaping (Data?, HTTPURLResponse) -> Result<A, APIError>) {
     self.url = url
     self.method = method
     self.parseData = parseData
   }
   
+  init(url: URL, method: HTTPMethod<Data?> = .get, parseJSON: @escaping (Any) -> Result<A, APIError>) {
+    self.url = url
+    self.method = method
+    self.parseJSON = { obj, _ in parseJSON(obj) }
+  }
+      
   init(url: URL, method: HTTPMethod<Data?> = .get, parseJSON: @escaping (Any, HTTPURLResponse) -> Result<A, APIError>) {
     self.url = url
     self.method = method
     self.parseJSON = parseJSON
   }
-      
+  
   init(url: URL, jsonMethod: HTTPMethod<Any>, parse: @escaping (HTTPURLResponse) -> Result<A, APIError>) {
     self.url = url
     self.method = jsonMethod.map { jsonObject in
@@ -47,12 +59,28 @@ public extension Resource {
     self.parse = parse
   }
 
+  init(url: URL, jsonMethod: HTTPMethod<Any>, parseData: @escaping (Data?) -> Result<A, APIError>) {
+    self.url = url
+    self.method = jsonMethod.map { jsonObject in
+      try! JSONSerialization.data(withJSONObject: jsonObject, options: [])
+    }
+    self.parseData = { data, _ in parseData(data) }
+  }
+  
   init(url: URL, jsonMethod: HTTPMethod<Any>, parseData: @escaping (Data?, HTTPURLResponse) -> Result<A, APIError>) {
     self.url = url
     self.method = jsonMethod.map { jsonObject in
       try! JSONSerialization.data(withJSONObject: jsonObject, options: [])
     }
     self.parseData = parseData
+  }
+  
+  init(url: URL, jsonMethod: HTTPMethod<Any>, parseJSON: @escaping (Any) -> Result<A, APIError>) {
+    self.url = url
+    self.method = jsonMethod.map { jsonObject in
+      try! JSONSerialization.data(withJSONObject: jsonObject, options: [])
+    }
+    self.parseJSON = { obj, _ in parseJSON(obj) }
   }
   
   init(url: URL, jsonMethod: HTTPMethod<Any>, parseJSON: @escaping (Any, HTTPURLResponse) -> Result<A, APIError>) {
