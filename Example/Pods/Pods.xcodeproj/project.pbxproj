@@ -17,6 +17,7 @@
 		65431B2E22AF8CD40000B734 /* Result+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65431B2D22AF8CD40000B734 /* Result+Extension.swift */; };
 		654FCF2C225CA0C700B72BB7 /* CallbackQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654FCF2B225CA0C700B72BB7 /* CallbackQueue.swift */; };
 		654FCF2F225CA14700B72BB7 /* Parameters+Append.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654FCF2E225CA14700B72BB7 /* Parameters+Append.swift */; };
+		65C82D832383F5190097E9C1 /* HTTPStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C82D822383F5190097E9C1 /* HTTPStatus.swift */; };
 		65CA57F22137FC7F003A7A91 /* HTTPHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CA57EF2137FC7F003A7A91 /* HTTPHeader.swift */; };
 		65CA57F42137FD47003A7A91 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CA57F32137FD47003A7A91 /* Error.swift */; };
 		7B24BFB976A37EBE9D10D3EC445CBFFA /* Pods-Giraffe_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1182120D1D846E7CDC4AB15F737BAFBD /* Pods-Giraffe_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -60,6 +61,7 @@
 		65431B2D22AF8CD40000B734 /* Result+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+Extension.swift"; sourceTree = "<group>"; };
 		654FCF2B225CA0C700B72BB7 /* CallbackQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallbackQueue.swift; sourceTree = "<group>"; };
 		654FCF2E225CA14700B72BB7 /* Parameters+Append.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Parameters+Append.swift"; sourceTree = "<group>"; };
+		65C82D822383F5190097E9C1 /* HTTPStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPStatus.swift; sourceTree = "<group>"; };
 		65CA57EF2137FC7F003A7A91 /* HTTPHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPHeader.swift; sourceTree = "<group>"; };
 		65CA57F32137FD47003A7A91 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -195,6 +197,7 @@
 			children = (
 				65CA57EF2137FC7F003A7A91 /* HTTPHeader.swift */,
 				65431B2322AF5F550000B734 /* HTTPMethod.swift */,
+				65C82D822383F5190097E9C1 /* HTTPStatus.swift */,
 				D2DCCCACAC3773F40E83D0838D2D87E9 /* Resource.swift */,
 				65CA57F32137FD47003A7A91 /* Error.swift */,
 				DCD5BF79225B7E970024DB9E /* Response.swift */,
@@ -409,6 +412,7 @@
 				654FCF2C225CA0C700B72BB7 /* CallbackQueue.swift in Sources */,
 				652CF26C22AE66400075D29B /* Giraffe.swift in Sources */,
 				DCB0F9D621D522B2003224ED /* URLRequest+Extension.swift in Sources */,
+				65C82D832383F5190097E9C1 /* HTTPStatus.swift in Sources */,
 				DCD5BF7A225B7E970024DB9E /* Response.swift in Sources */,
 				654FCF2F225CA14700B72BB7 /* Parameters+Append.swift in Sources */,
 				65CA57F42137FD47003A7A91 /* Error.swift in Sources */,
