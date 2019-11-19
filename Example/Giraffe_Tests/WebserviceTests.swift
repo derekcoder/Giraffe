@@ -57,7 +57,7 @@ class WebserviceTests: XCTestCase {
   
   func testHandleResponseFailedDueToStatusCode() {
     let httpResponse = HTTPURLResponse(url: resource.url, statusCode: 300, httpVersion: nil, headerFields: nil)!
-    let resource = Resource<Int>(url: WebserviceTests.url, parseData: { _ in return Result.success(1) })
+    let resource = Resource<Int>(url: WebserviceTests.url, parseData: { _, _ in return Result.success(1) })
 
     let expectation = XCTestExpectation(description: "The request should fail due to status code not in (200...299)")
     
@@ -197,7 +197,7 @@ extension Post {
   }
   
   static var postsResource: Resource<[Post]> {
-    return Resource<[Post]>(url: Post.endPoint, parseJSON: { obj in
+    return Resource<[Post]>(url: Post.endPoint, parseJSON: { obj, _ in
       guard let json = obj as? [JSONDictionary] else {
         return Result.failure(.invalidResponse)
       }
@@ -208,7 +208,7 @@ extension Post {
   
   static func createResource(title: String, body: String, userId: Int) -> Resource<Post> {
     let data: JSONDictionary = ["title": title, "body": body, "userId": 1]
-    return Resource(url: Post.endPoint, jsonMethod: .post(data: data), parseJSON: { obj in
+    return Resource(url: Post.endPoint, jsonMethod: .post(data: data), parseJSON: { obj, _ in
       guard let json = obj as? JSONDictionary,
         let post = Post(json: json) else {
           return Result.failure(.invalidResponse)
@@ -219,7 +219,7 @@ extension Post {
   
   var updateResource: Resource<Post> {
     let url = Post.endPoint.appendingPathComponent("\(id)")
-    return Resource(url: url, jsonMethod: .put(data: json), parseJSON: { obj in
+    return Resource(url: url, jsonMethod: .put(data: json), parseJSON: { obj, _ in
       guard let json = obj as? JSONDictionary,
         let post = Post(json: json) else {
           return Result.failure(.invalidResponse)
@@ -231,7 +231,7 @@ extension Post {
   var udpateTitleResource: Resource<Post> {
     let url = Post.endPoint.appendingPathComponent("\(id)")
     let data: JSONDictionary = ["title": title]
-    return Resource(url: url, jsonMethod: .patch(data: data), parseJSON: { obj in
+    return Resource(url: url, jsonMethod: .patch(data: data), parseJSON: { obj, _ in
       guard let json = obj as? JSONDictionary,
         let post = Post(json: json) else {
           return Result.failure(.invalidResponse)

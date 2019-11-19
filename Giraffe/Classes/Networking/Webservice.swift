@@ -76,7 +76,7 @@ public final class Webservice {
       if !((200...299).contains(statusCode)) {
         result = .failure(.apiFailed(statusCode))
       } else {
-        result = parseData(data)
+        result = parseData(data, httpResponse)
       }
     } else if let parseJSON = resource.parseJSON {
       if !((200...299).contains(statusCode)) {
@@ -84,7 +84,7 @@ public final class Webservice {
       } else {
         if let data = data,
           let obj = try? JSONSerialization.jsonObject(with: data, options: []) {
-          result = parseJSON(obj)
+          result = parseJSON(obj, httpResponse)
         } else {
           result = .failure(.invalidResponse)
         }

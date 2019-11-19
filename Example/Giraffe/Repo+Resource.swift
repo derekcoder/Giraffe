@@ -22,7 +22,7 @@ extension Repo {
   
   var resource: Resource<Repo> {
     let url = Repo.endPoint.appendingPathComponent(fullName)
-    return Resource(url: url, parseJSON: { obj in
+    return Resource(url: url, parseJSON: { obj, _ in
       guard let json = obj as? JSONDictionary,
         let repo = Repo(json: json) else {
         return Result.failure(.invalidResponse)

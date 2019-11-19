@@ -23,7 +23,7 @@ extension User {
   
   static func resource(for login: String) -> Resource<User> {
     let url = User.endPoint.appendingPathComponent(login)
-    return Resource(url: url, parseJSON: { obj in
+    return Resource(url: url, parseJSON: { obj, _ in
       guard let json = obj as? JSONDictionary,
         let user = User(json: json) else {
         return Result.failure(.invalidResponse)
@@ -35,7 +35,7 @@ extension User {
   var avatarResource: Resource<UIImage?>? {
     guard let avatar = avatar else { return nil }
     guard let url = URL(string: avatar) else { return nil }
-    return Resource(url: url, parseData: { data in
+    return Resource(url: url, parseData: { data, _ in
       if let data = data {
         return Result.success(UIImage(data: data))
       } else {
@@ -46,7 +46,7 @@ extension User {
   
   var reposResource: Resource<[Repo]> {
     let url = User.endPoint.appendingPathComponent("\(login)/repos")
-    var resource: Resource<[Repo]> = Resource(url: url, parseJSON: { obj in
+    var resource: Resource<[Repo]> = Resource(url: url, parseJSON: { obj, _ in
       guard let json = obj as? [JSONDictionary] else {
         return Result.failure(.invalidResponse)
       }
