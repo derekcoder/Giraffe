@@ -68,30 +68,37 @@ public final class Webservice {
       return
     }
     
-    // Check if the current request is successful.
     let statusCode = httpResponse.statusCode
-    if !((200...299).contains(statusCode)) {
-      // status code not in 200..<300
-      // return response with .apiFailed error.
-      let response = Response<A>(result: .failure(.apiFailed(statusCode)),
-                                 data: data,
-                                 error: error,
-                                 httpResponse: httpResponse)
-      
-      CallbackQueue.mainAsync.execute { completion(response) }
-    } else {
-      // status code in 200..<300
-      // call resource' parse to get result, then return response
-      // in the resource's parse, maybe get .invalidResponse error
-      CallbackQueue.globalAsync.execute {
-        let result = resource.parse(data)
-        let response = Response<A>(result: result,
-                                   data: data,
-                                   error: error,
-                                   httpResponse: httpResponse)
-        
-        CallbackQueue.mainAsync.execute { completion(response) }
+    let result: Result<A, APIError>
+    if let parse = resource.parse {
+      result = parse(httpResponse)
+    } else if let parseData = resource.parseData {
+      if !((200...299).contains(statusCode)) {
+        result = .failure(.apiFailed(statusCode))
+      } else {
+        result = parseData(data)
       }
+    } else if let parseJSON = resource.parseJSON {
+      if !((200...299).contains(statusCode)) {
+        result = .failure(.apiFailed(statusCode))
+      } else {
+        if let data = data,
+          let obj = try? JSONSerialization.jsonObject(with: data, options: []) {
+          result = parseJSON(obj)
+        } else {
+          result = .failure(.invalidResponse)
+        }
+      }
+    } else {
+      fatalError()
     }
+    
+    let response = Response<A>(
+      result: result,
+      data: data,
+      error: error,
+      httpResponse: httpResponse)
+    
+    CallbackQueue.mainAsync.execute { completion(response) }
   }
 }
