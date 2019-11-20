@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Giraffe'
-  s.version          = '1.2.3'
+  s.version          = '1.2.4'
   s.summary          = 'Lightweight & Elegant Networking Library in Swift'
 
 # This description is used to generate tags and improve search results.
