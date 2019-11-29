@@ -14,11 +14,16 @@ public final class Webservice {
                                  .accept: MediaType.appJSON.rawValue]
   public var timeoutInterval: TimeInterval = 60 // in seconds
   
-  public init() {
+  public init(requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy) {
     let sessionConfig = URLSessionConfiguration.default
+    sessionConfig.requestCachePolicy = requestCachePolicy
     self.session = URLSession(configuration: sessionConfig)
   }
   
+  public init(session: URLSession) {
+    self.session = session
+  }
+
   @discardableResult
   public func load<A>(_ resource: Resource<A>,
                       completion: @escaping (Response<A>) -> ()) -> URLSessionDataTask {
